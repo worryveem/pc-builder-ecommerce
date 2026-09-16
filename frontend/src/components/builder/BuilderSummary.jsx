@@ -2,6 +2,7 @@ import React from 'react';
 
 export const BuilderSummary = ({
   selectedComponents,
+  compatibility,
   onReset,
   onOpenSave,
   onOpenShare,
@@ -29,9 +30,16 @@ export const BuilderSummary = ({
 
       <div className="summary-stats">
         <div className="summary-stat-row">
-          <span>Số linh kiện đã chọn:</span>
+          <span>Linh kiện đã chọn:</span>
           <strong>{items.length} mục ({totalQuantity} món)</strong>
         </div>
+
+        {items.length > 0 && compatibility?.estimatedWattage != null && (
+          <div className="summary-stat-row">
+            <span>Công suất ước tính:</span>
+            <strong className="text-primary">{compatibility.estimatedWattage} W</strong>
+          </div>
+        )}
 
         <div className="summary-divider"></div>
 

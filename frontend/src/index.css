@@ -2345,5 +2345,202 @@ a {
   max-width: 520px;
 }
 
+/* ===================================================
+   PHASE 4D: POLISHED UI & SKELETON ANIMATIONS
+   =================================================== */
+.builder-header-top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.builder-subtitle {
+  color: var(--text-muted);
+  font-size: 1rem;
+  max-width: 600px;
+  margin: 0.35rem auto 1.5rem auto;
+}
+
+.current-build-name em {
+  color: var(--primary);
+  font-style: normal;
+  font-weight: 600;
+}
+
+.builder-progress-steps {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin: 1.25rem auto 0.5rem auto;
+  max-width: 780px;
+  flex-wrap: wrap;
+}
+
+.progress-step {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-full);
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+.progress-step .step-num {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+}
+
+.progress-step.step-completed {
+  background: #f0fdf4;
+  color: #16a34a;
+  border: 1px solid #bbf7d0;
+}
+
+.progress-step.step-completed .step-num {
+  background: #16a34a;
+  color: white;
+}
+
+.progress-step.step-active {
+  background: #eff6ff;
+  color: var(--primary);
+  border: 1px solid #bfdbfe;
+}
+
+.progress-step.step-active .step-num {
+  background: var(--primary);
+  color: white;
+}
+
+.progress-step.step-idle {
+  background: #f8fafc;
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+
+.progress-step.step-idle .step-num {
+  background: #e2e8f0;
+  color: var(--text-muted);
+}
+
+.step-connector {
+  width: 20px;
+  height: 2px;
+  background: var(--border);
+}
+
+@media (max-width: 640px) {
+  .step-connector {
+    display: none;
+  }
+}
+
+/* Neutral banner for CompatibilityPanel when empty */
+.status-banner.banner-neutral {
+  background-color: #f8fafc;
+  border-color: #cbd5e1;
+  color: #475569;
+}
+
+.status-banner.banner-neutral .status-icon {
+  background-color: #e2e8f0;
+  color: #475569;
+}
+
+.psu-missing-hint {
+  padding: 0.35rem 0.6rem;
+  background: #f8fafc;
+  border-radius: var(--radius-sm);
+  border: 1px dashed var(--border);
+}
+
+/* Loading skeleton with shimmer */
+.selector-loading-skeletons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.skeleton-card {
+  pointer-events: none;
+  border-color: #f1f5f9;
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: var(--radius-sm);
+}
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.skeleton-thumb {
+  width: 70px;
+  height: 70px;
+  flex-shrink: 0;
+}
+
+.skeleton-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.skeleton-line {
+  height: 12px;
+}
+
+.skeleton-line.w-75 { width: 75%; }
+.skeleton-line.w-50 { width: 50%; }
+
+.skeleton-tags-row {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.skeleton-tag {
+  width: 55px;
+  height: 18px;
+}
+
+.skeleton-action {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  min-width: 120px;
+}
+
+.skeleton-btn {
+  width: 90px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+}
+
+.builder-product-card {
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.builder-product-card:hover {
+  border-color: #93c5fd;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+}
+
+
 
 

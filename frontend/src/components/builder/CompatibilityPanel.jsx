@@ -29,24 +29,32 @@ export const CompatibilityPanel = ({ compatibility, selectedComponents, validati
           <div className="status-banner banner-error">
             <span className="status-icon">✕</span>
             <div className="status-text">
-              <strong>Cấu hình không tương thích!</strong>
-              <p>Phát hiện {errors.length} điểm xung đột phần cứng cần thay đổi.</p>
+              <strong>Không tương thích ({errors.length} lỗi phần cứng)</strong>
+              <p>Phát hiện điểm xung đột cần thay đổi trước khi lưu hoặc thêm vào giỏ.</p>
             </div>
           </div>
         ) : warnings.length > 0 ? (
           <div className="status-banner banner-warning">
             <span className="status-icon">⚠</span>
             <div className="status-text">
-              <strong>Tương thích (Có cảnh báo tối ưu)</strong>
-              <p>Cấu hình có thể hoạt động nhưng nên xem xét khuyến nghị bên dưới.</p>
+              <strong>Tương thích ({warnings.length} cảnh báo tối ưu)</strong>
+              <p>Cấu hình có thể hoạt động nhưng nên xem xét khuyến nghị về nguồn/kích thước.</p>
+            </div>
+          </div>
+        ) : selectedCount === 0 ? (
+          <div className="status-banner banner-neutral">
+            <span className="status-icon">⚙️</span>
+            <div className="status-text">
+              <strong>Đang dựng cấu hình</strong>
+              <p>Tiếp tục chọn linh kiện để kiểm tra tương thích toàn bộ hệ thống.</p>
             </div>
           </div>
         ) : (
           <div className="status-banner banner-success">
             <span className="status-icon">✓</span>
             <div className="status-text">
-              <strong>Tương thích hoàn toàn</strong>
-              <p>Các linh kiện phần cứng đã chọn hoạt động đồng bộ, tương thích tốt.</p>
+              <strong>Tương thích hoàn toàn (Compatible)</strong>
+              <p>Các linh kiện phần cứng đã chọn hoạt động đồng bộ và an toàn.</p>
             </div>
           </div>
         )}
@@ -79,7 +87,7 @@ export const CompatibilityPanel = ({ compatibility, selectedComponents, validati
 
       {/* Power Estimation Box */}
       <div className="power-box">
-        <h4 className="power-title">⚡ Ước Tính Điện Năng (Power Consumption)</h4>
+        <h4 className="power-title">⚡ Ước Tính Điện Năng (Power Estimate)</h4>
 
         {selectedCount > 0 ? (
           <>
@@ -94,21 +102,25 @@ export const CompatibilityPanel = ({ compatibility, selectedComponents, validati
               </div>
             </div>
 
-            {selectedPsuWattage && (
+            {selectedPsuWattage ? (
               <div className="psu-compare-row">
                 <span>Nguồn đã chọn: <strong>{selectedPsuWattage} W</strong></span>
                 {selectedPsuWattage < estimatedWattage ? (
-                  <span className="badge-error">Thiếu công suất</span>
+                  <span className="badge-error">✕ Thiếu công suất</span>
                 ) : selectedPsuWattage < recommendedPsuWattage ? (
-                  <span className="badge-warning">Dưới mức tối ưu</span>
+                  <span className="badge-warning">⚠ Dưới mức tối ưu</span>
                 ) : (
-                  <span className="badge-success">Dư dả an toàn</span>
+                  <span className="badge-success">✓ Đủ công suất</span>
                 )}
+              </div>
+            ) : (
+              <div className="psu-compare-row psu-missing-hint">
+                <span className="text-muted text-xs">💡 Chưa chọn nguồn (PSU) cho cấu hình.</span>
               </div>
             )}
           </>
         ) : (
-          <p className="power-empty-note">Chọn CPU, GPU hoặc Mainboard để ước tính công suất nguồn.</p>
+          <p className="power-empty-note">Chọn linh kiện để tính toán mức tiêu thụ điện và công suất nguồn.</p>
         )}
       </div>
 

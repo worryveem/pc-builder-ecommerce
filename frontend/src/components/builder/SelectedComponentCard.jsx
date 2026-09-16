@@ -88,7 +88,7 @@ export const SelectedComponentCard = ({
           </div>
         ) : (
           <div className="slot-empty-prompt">
-            <span className="empty-text">Chưa chọn linh kiện</span>
+            <span className="empty-text">Chưa chọn {category.name}</span>
           </div>
         )}
       </div>
@@ -149,11 +149,11 @@ export const SelectedComponentCard = ({
             </button>
             <button
               type="button"
-              className="btn-text-danger"
+              className="btn btn-sm btn-outline-danger"
               onClick={() => onRemove(category.slug)}
-              title="Xóa linh kiện này"
+              title="Xóa linh kiện khỏi cấu hình"
             >
-              ✕
+              Xóa
             </button>
           </div>
         ) : (
@@ -162,7 +162,7 @@ export const SelectedComponentCard = ({
             className="btn btn-sm btn-primary btn-choose"
             onClick={() => onOpenSelector(category)}
           >
-            + Chọn linh kiện
+            + Chọn {category.name}
           </button>
         )}
       </div>

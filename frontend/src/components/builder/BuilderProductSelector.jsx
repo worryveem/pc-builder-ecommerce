@@ -131,18 +131,34 @@ export const BuilderProductSelector = ({
         {/* Content list */}
         <div className="selector-modal-body">
           {loading ? (
-            <div className="selector-loading">
-              <div className="spinner"></div>
-              <p>Đang kiểm tra và tải các linh kiện tương thích...</p>
+            <div className="selector-loading-skeletons">
+              {[1, 2, 3, 4].map(n => (
+                <div key={n} className="builder-product-card skeleton-card">
+                  <div className="skeleton-thumb shimmer"></div>
+                  <div className="skeleton-details">
+                    <div className="skeleton-line shimmer w-75 mb-2"></div>
+                    <div className="skeleton-line shimmer w-50 mb-3"></div>
+                    <div className="skeleton-tags-row">
+                      <div className="skeleton-tag shimmer"></div>
+                      <div className="skeleton-tag shimmer"></div>
+                      <div className="skeleton-tag shimmer"></div>
+                    </div>
+                  </div>
+                  <div className="skeleton-action">
+                    <div className="skeleton-line shimmer w-50 mb-2"></div>
+                    <div className="skeleton-btn shimmer"></div>
+                  </div>
+                </div>
+              ))}
             </div>
           ) : error ? (
             <div className="alert alert-danger">{error}</div>
           ) : filteredProducts.length === 0 ? (
             <div className="selector-empty">
-              <span className="empty-icon">⚠️</span>
-              <h4>Không tìm thấy linh kiện phù hợp</h4>
+              <span className="empty-icon">🔍</span>
+              <h4>Không tìm thấy sản phẩm phù hợp</h4>
               <p>
-                Không có sản phẩm nào thỏa mãn điều kiện lọc hoặc tương thích với các linh kiện khác bạn đã chọn.
+                Thử thay đổi từ khóa tìm kiếm hoặc điều chỉnh lại bộ lọc thương hiệu/giá.
               </p>
             </div>
           ) : (

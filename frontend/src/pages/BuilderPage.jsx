@@ -321,13 +321,44 @@ export const BuilderPage = () => {
     <div className="container builder-page">
       {/* Page Header */}
       <div className="page-header builder-header">
-        <div className="builder-title-badge">⚡ Real-time Compatibility Engine</div>
-        <h1>{configurationName}</h1>
-        <p>
-          {configurationId
-            ? `Cấu hình đã lưu (ID: #${configurationId})${shareToken ? ` • Token: ${shareToken}` : ''}`
-            : 'Tự do lựa chọn linh kiện phần cứng máy tính với công cụ kiểm tra tương thích tự động và tính toán công suất nguồn thông minh.'}
+        <div className="builder-header-top">
+          <div className="builder-title-badge">⚡ Real-time Compatibility Engine</div>
+          {configurationId && (
+            <span className="badge badge-builder">
+              ✓ Đã lưu (#{configurationId})
+            </span>
+          )}
+        </div>
+        <h1>PC Builder</h1>
+        <p className="builder-subtitle">
+          Tự xây dựng cấu hình PC phù hợp với nhu cầu của bạn.
+          {configurationName && configurationName !== 'Untitled PC Build' && (
+            <span className="current-build-name"> — <em>{configurationName}</em></span>
+          )}
         </p>
+
+        {/* Small UI Progress Indicator */}
+        <div className="builder-progress-steps">
+          <div className={`progress-step ${Object.keys(selectedComponents).length > 0 ? 'step-completed' : 'step-active'}`}>
+            <span className="step-num">1</span>
+            <span className="step-label">Chọn linh kiện</span>
+          </div>
+          <div className="step-connector"></div>
+          <div className={`progress-step ${compatibility?.isCompatible && Object.keys(selectedComponents).length > 0 ? 'step-completed' : 'step-idle'}`}>
+            <span className="step-num">2</span>
+            <span className="step-label">Kiểm tra tương thích</span>
+          </div>
+          <div className="step-connector"></div>
+          <div className={`progress-step ${configurationId ? 'step-completed' : 'step-idle'}`}>
+            <span className="step-num">3</span>
+            <span className="step-label">Lưu cấu hình</span>
+          </div>
+          <div className="step-connector"></div>
+          <div className={`progress-step ${configurationId ? 'step-active' : 'step-idle'}`}>
+            <span className="step-num">4</span>
+            <span className="step-label">Thêm vào giỏ</span>
+          </div>
+        </div>
       </div>
 
       {errorMsg && <div className="alert alert-danger">{errorMsg}</div>}
@@ -391,6 +422,7 @@ export const BuilderPage = () => {
 
             <BuilderSummary
               selectedComponents={selectedComponents}
+              compatibility={compatibility}
               onReset={handleResetBuild}
               onOpenSave={handleOpenSaveModal}
               onOpenShare={() => setIsShareModalOpen(true)}

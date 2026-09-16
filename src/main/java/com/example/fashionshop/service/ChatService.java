@@ -13,10 +13,10 @@ import java.util.Map;
 @Service
 public class ChatService {
 
-    @Value("${openai.api.key}")
+    @Value("${openai.api.key:dummy-key}")
     private String apiKey;
 
-    @Value("${openai.api.model}")
+    @Value("${openai.api.model:gpt-3.5-turbo}")
     private String modelName;
 
     @Autowired

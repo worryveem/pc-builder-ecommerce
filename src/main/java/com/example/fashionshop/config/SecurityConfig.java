@@ -23,7 +23,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    @Value("${sendgrid.api-key}")
+    @Value("${sendgrid.api-key:SG.placeholder}")
     private String apiKey;
 
     @Autowired

@@ -7,7 +7,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
 public class WebclientConfig {
-    @Value("${openai.api.url}")
+    @Value("${openai.api.url:https://api.openai.com/v1}")
     private String baseUrl;
 
     @Bean

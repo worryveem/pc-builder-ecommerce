@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/ratings")
 @RequiredArgsConstructor
@@ -21,9 +23,9 @@ public class RatingController {
     @GetMapping("/product/{productId}")
     public ResponseEntity<?> getProductRatings(@PathVariable Integer productId) {
         ResponseData response = new ResponseData();
-        RatingSummaryResponse summary = ratingService.getRatingSummary(productId);
+        List<RatingResponse> ratings = ratingService.getRatingsByProductId(productId);
         response.setSuccess(true);
-        response.setData(summary);
+        response.setData(ratings);
         return ResponseEntity.ok(response);
     }
 

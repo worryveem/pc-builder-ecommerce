@@ -13,6 +13,11 @@ export const adminApi = {
     return response.data;
   },
 
+  createProduct: async (data) => {
+    const response = await axiosInstance.post('/admin/products', data);
+    return response.data;
+  },
+
   addProduct: async (data) => {
     const response = await axiosInstance.post('/admin/products', data);
     return response.data;
@@ -31,6 +36,11 @@ export const adminApi = {
   // Categories
   getCategories: async () => {
     const response = await axiosInstance.get('/admin/categories');
+    return response.data;
+  },
+
+  createCategory: async (data) => {
+    const response = await axiosInstance.post('/admin/category', data);
     return response.data;
   },
 
@@ -111,6 +121,12 @@ export const adminApi = {
 
   unbanUser: async (id) => {
     const response = await axiosInstance.patch(`/admin/users/${id}/unban`);
+    return response.data;
+  },
+
+  updateUserStatus: async (id, active) => {
+    const endpoint = active ? `/admin/users/${id}/unban` : `/admin/users/${id}/ban`;
+    const response = await axiosInstance.patch(endpoint);
     return response.data;
   }
 };

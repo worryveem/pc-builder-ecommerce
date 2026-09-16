@@ -10,8 +10,9 @@ export default function AdminUsersPage() {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const data = await adminApi.getUsers();
-      setUsers(Array.isArray(data) ? data : []);
+      const res = await adminApi.getUsers();
+      const list = Array.isArray(res) ? res : (Array.isArray(res?.data) ? res.data : []);
+      setUsers(list);
     } catch (err) {
       console.error('Error fetching users:', err);
       setError('Không thể tải danh sách tài khoản');

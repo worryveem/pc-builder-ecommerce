@@ -28,8 +28,9 @@ export default function AdminVouchersPage() {
   const fetchVouchers = async () => {
     try {
       setLoading(true);
-      const data = await adminApi.getVouchers();
-      setVouchers(Array.isArray(data) ? data : []);
+      const res = await adminApi.getVouchers();
+      const list = Array.isArray(res) ? res : (Array.isArray(res?.data) ? res.data : []);
+      setVouchers(list);
     } catch (err) {
       console.error('Error fetching vouchers:', err);
       setError('Không thể tải danh sách mã giảm giá');

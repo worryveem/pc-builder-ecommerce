@@ -63,6 +63,71 @@ public class AdminDashboardController {
                 .limit(5)
                 .collect(Collectors.toList());
 
+        // Weekly stats (last 7 days)
+        java.time.LocalDate today = java.time.LocalDate.now();
+        List<Map<String, Object>> weeklyStats = new java.util.ArrayList<>();
+        for (int i = 6; i >= 0; i--) {
+            java.time.LocalDate day = today.minusDays(i);
+            double dayRevenue = orders.stream()
+                    .filter(o -> o.getStatus() != OrderStatus.CANCELLED && o.getCreatedAt() != null)
+                    .filter(o -> o.getCreatedAt().toLocalDate().equals(day))
+                    .mapToDouble(o -> o.getTotalPrice() != null ? o.getTotalPrice() : 0.0)
+                    .sum();
+            long dayOrders = orders.stream()
+                    .filter(o -> o.getCreatedAt() != null && o.getCreatedAt().toLocalDate().equals(day))
+                    .count();
+
+            Map<String, Object> dayMap = new HashMap<>();
+            dayMap.put("label", day.format(java.time.format.DateTimeFormatter.ofPattern("dd/MM")));
+            dayMap.put("fullDate", day.toString());
+            dayMap.put("revenue", dayRevenue);
+            dayMap.put("orders", dayOrders);
+            weeklyStats.add(dayMap);
+        }
+
+        // Monthly stats (12 months of current year)
+        int currentYear = today.getYear();
+        List<Map<String, Object>> monthlyStats = new java.util.ArrayList<>();
+        for (int m = 1; m <= 12; m++) {
+            final int monthVal = m;
+            double monthRevenue = orders.stream()
+                    .filter(o -> o.getStatus() != OrderStatus.CANCELLED && o.getCreatedAt() != null)
+                    .filter(o -> o.getCreatedAt().getYear() == currentYear && o.getCreatedAt().getMonthValue() == monthVal)
+                    .mapToDouble(o -> o.getTotalPrice() != null ? o.getTotalPrice() : 0.0)
+                    .sum();
+            long monthOrders = orders.stream()
+                    .filter(o -> o.getCreatedAt() != null && o.getCreatedAt().getYear() == currentYear && o.getCreatedAt().getMonthValue() == monthVal)
+                    .count();
+
+            Map<String, Object> monthMap = new HashMap<>();
+            monthMap.put("label", "T" + monthVal);
+            monthMap.put("fullDate", "Tháng " + monthVal + "/" + currentYear);
+            monthMap.put("revenue", monthRevenue);
+            monthMap.put("orders", monthOrders);
+            monthlyStats.add(monthMap);
+        }
+
+        // Yearly stats (last 5 years)
+        List<Map<String, Object>> yearlyStats = new java.util.ArrayList<>();
+        for (int y = currentYear - 4; y <= currentYear; y++) {
+            final int yearVal = y;
+            double yearRevenue = orders.stream()
+                    .filter(o -> o.getStatus() != OrderStatus.CANCELLED && o.getCreatedAt() != null)
+                    .filter(o -> o.getCreatedAt().getYear() == yearVal)
+                    .mapToDouble(o -> o.getTotalPrice() != null ? o.getTotalPrice() : 0.0)
+                    .sum();
+            long yearOrders = orders.stream()
+                    .filter(o -> o.getCreatedAt() != null && o.getCreatedAt().getYear() == yearVal)
+                    .count();
+
+            Map<String, Object> yearMap = new HashMap<>();
+            yearMap.put("label", String.valueOf(yearVal));
+            yearMap.put("fullDate", "Năm " + yearVal);
+            yearMap.put("revenue", yearRevenue);
+            yearMap.put("orders", yearOrders);
+            yearlyStats.add(yearMap);
+        }
+
         Map<String, Object> stats = new HashMap<>();
         stats.put("totalProducts", totalProducts);
         stats.put("totalOrders", totalOrders);
@@ -71,6 +136,9 @@ public class AdminDashboardController {
         stats.put("lowStockCount", lowStockCount);
         stats.put("pendingOrdersCount", pendingOrdersCount);
         stats.put("recentOrders", recentOrders);
+        stats.put("weeklyStats", weeklyStats);
+        stats.put("monthlyStats", monthlyStats);
+        stats.put("yearlyStats", yearlyStats);
 
         ResponseData response = new ResponseData();
         response.setSuccess(true);

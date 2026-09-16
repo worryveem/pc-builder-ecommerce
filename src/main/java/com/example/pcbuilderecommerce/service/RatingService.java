@@ -43,11 +43,15 @@ public class RatingService {
         }
 
         int star = dto.getStar() != null ? Math.max(1, Math.min(5, dto.getStar())) : 
-                  (dto.getScore() != null ? Math.max(1, Math.min(5, dto.getScore())) : 5);
+                  (dto.getRating() != null ? Math.max(1, Math.min(5, dto.getRating())) :
+                  (dto.getScore() != null ? Math.max(1, Math.min(5, dto.getScore())) : 5));
 
-        Rating rating = new Rating();
-        rating.setUser(user);
-        rating.setProduct(product);
+        Rating rating = ratingRepository.findByUserIdAndProductId(user.getId(), product.getId());
+        if (rating == null) {
+            rating = new Rating();
+            rating.setUser(user);
+            rating.setProduct(product);
+        }
         rating.setStar(star);
         rating.setComment(dto.getComment() != null ? dto.getComment().trim() : "");
         rating.setCreated_at(LocalDateTime.now());

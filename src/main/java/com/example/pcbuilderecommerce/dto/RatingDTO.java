@@ -26,4 +26,10 @@ public class RatingDTO {
     public void setScore(Integer score) {
         this.star = score;
     }
+    public Integer getRating() {
+        return star;
+    }
+    public void setRating(Integer rating) {
+        this.star = rating;
+    }
 }

@@ -15,4 +15,8 @@ public class RatingSummaryResponse {
     private Double averageStar;
     private Integer totalRatings;
     private List<RatingResponse> ratings;
+
+    public Double getAverageRating() {
+        return averageStar;
+    }
 }

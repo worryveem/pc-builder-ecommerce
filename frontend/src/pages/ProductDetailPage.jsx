@@ -58,14 +58,15 @@ export const ProductDetailPage = () => {
       ]);
 
       if (reviewData.status === 'fulfilled') {
-        const revList = reviewData.value?.data || reviewData.value;
-        setRatings(Array.isArray(revList) ? revList : []);
+        const raw = reviewData.value?.data || reviewData.value;
+        const revList = Array.isArray(raw) ? raw : (Array.isArray(raw?.ratings) ? raw.ratings : []);
+        setRatings(revList);
       }
       if (summaryData.status === 'fulfilled') {
         const sum = summaryData.value?.data || summaryData.value;
         if (sum) {
           setRatingSummary({
-            averageRating: Number(sum.averageRating || 0),
+            averageRating: Number(sum.averageRating || sum.averageStar || 0),
             totalRatings: Number(sum.totalRatings || sum.totalReviews || 0)
           });
         }
@@ -163,7 +164,9 @@ export const ProductDetailPage = () => {
       setReviewMsg({ type: '', text: '' });
       await ratingApi.addRating({
         productId: Number(id),
+        star: userRating,
         rating: userRating,
+        score: userRating,
         comment: userComment
       });
       setReviewMsg({ type: 'success', text: 'Cảm ơn bạn đã gửi đánh giá!' });
@@ -617,9 +620,10 @@ export const ProductDetailPage = () => {
             {ratings.map((r, i) => (
               <div key={i} className="review-item">
                 <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.35rem' }}>
-                  <span className="reviewer-name">{r.userName || r.userFullName || 'Khách hàng'}</span>
+                  <span className="reviewer-name">{r.fullName || r.username || r.userFullName || r.userName || 'Khách hàng'}</span>
                   <span style={{ color: '#d97706', fontSize: '0.95rem' }}>
-                    {'★'.repeat(r.rating || r.star || 5)}
+                    {'★'.repeat(Math.max(1, Math.min(5, r.star || r.rating || r.score || 5)))}
+                    {'☆'.repeat(5 - Math.max(1, Math.min(5, r.star || r.rating || r.score || 5)))}
                   </span>
                   <span className="review-date">
                     {r.createdAt ? new Date(r.createdAt).toLocaleDateString('vi-VN') : 'Đã mua hàng'}

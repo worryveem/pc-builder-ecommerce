@@ -17,10 +17,19 @@ public class AdminOrderController {
     private OrderService orderService;
     // xem tat ca don hang
     @GetMapping ("/orders")
-    public ResponseEntity<?> getAllOrders() {
+    public ResponseEntity<?> getAllOrders(@RequestParam(required = false) String status) {
         ResponseData responseData = new ResponseData();
-        responseData.setData(orderService.getAllOrders());
-        return new ResponseEntity<>(responseData, HttpStatus.OK) ;
+        java.util.List<com.example.pcbuilderecommerce.dto.OrderDTO> orders = orderService.getAllOrders();
+        if (status != null && !status.trim().isEmpty()) {
+            try {
+                com.example.pcbuilderecommerce.common.OrderStatus orderStatus = com.example.pcbuilderecommerce.common.OrderStatus.valueOf(status.trim());
+                orders = orders.stream()
+                        .filter(o -> o.getStatus() == orderStatus)
+                        .toList();
+            } catch (Exception ignored) {}
+        }
+        responseData.setData(orders);
+        return new ResponseEntity<>(responseData, HttpStatus.OK);
     }
 
     // xem chi tiet don hang theo id

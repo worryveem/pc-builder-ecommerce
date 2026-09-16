@@ -36,8 +36,9 @@ export default function AdminCategoriesPage() {
   const fetchCategories = async () => {
     try {
       setLoading(true);
-      const data = await adminApi.getCategories();
-      setCategories(Array.isArray(data) ? data : []);
+      const res = await adminApi.getCategories();
+      const list = Array.isArray(res) ? res : (Array.isArray(res?.data) ? res.data : []);
+      setCategories(list);
     } catch (err) {
       console.error('Error fetching categories:', err);
       setError('Không thể tải danh sách danh mục');

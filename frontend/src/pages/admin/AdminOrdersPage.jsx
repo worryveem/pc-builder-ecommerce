@@ -23,8 +23,9 @@ export default function AdminOrdersPage() {
     try {
       setLoading(true);
       const params = statusFilter ? { status: statusFilter } : {};
-      const data = await adminApi.getOrders(params);
-      setOrders(Array.isArray(data) ? data : []);
+      const res = await adminApi.getOrders(params);
+      const data = Array.isArray(res) ? res : (Array.isArray(res?.data) ? res.data : []);
+      setOrders(data);
     } catch (err) {
       console.error('Error fetching admin orders:', err);
       setError('Không thể tải danh sách đơn hàng');
@@ -59,7 +60,8 @@ export default function AdminOrdersPage() {
   const handleViewDetail = async (order) => {
     try {
       setDetailLoading(true);
-      const detail = await adminApi.getOrderById(order.id);
+      const res = await adminApi.getOrderById(order.id);
+      const detail = res?.data || res;
       setSelectedOrder(detail || order);
     } catch (err) {
       console.error('Error fetching detail:', err);
@@ -126,8 +128,8 @@ export default function AdminOrdersPage() {
                   <tr key={order.id}>
                     <td><strong>#{order.id}</strong></td>
                     <td>
-                      <div>{order.recipientName || order.user?.fullName || order.user?.username || 'Khách hàng'}</div>
-                      <small className="text-muted">{order.recipientPhone || order.user?.phoneNumber || ''}</small>
+                      <div>{order.fullName || order.recipientName || order.user?.fullName || order.user?.username || 'Khách hàng'}</div>
+                      <small className="text-muted">{order.phone || order.recipientPhone || order.user?.phone || order.user?.phoneNumber || ''}</small>
                     </td>
                     <td>
                       {order.createdAt ? new Date(order.createdAt).toLocaleDateString('vi-VN', {
@@ -139,7 +141,7 @@ export default function AdminOrdersPage() {
                       }) : ''}
                     </td>
                     <td className="text-primary font-bold">
-                      {Number(order.totalAmount || 0).toLocaleString('vi-VN')} đ
+                      {Number(order.totalPrice || order.totalAmount || 0).toLocaleString('vi-VN')} đ
                     </td>
                     <td>{order.paymentMethod}</td>
                     <td>
@@ -196,16 +198,16 @@ export default function AdminOrdersPage() {
                 <div className="order-info-grid mb-4">
                   <div className="info-block">
                     <h4>Thông tin khách hàng</h4>
-                    <p><strong>Người nhận:</strong> {selectedOrder.recipientName || '---'}</p>
-                    <p><strong>Số điện thoại:</strong> {selectedOrder.recipientPhone || '---'}</p>
-                    <p><strong>Địa chỉ:</strong> {selectedOrder.shippingAddress || '---'}</p>
-                    {selectedOrder.note && <p><strong>Ghi chú:</strong> {selectedOrder.note}</p>}
+                    <p><strong>Người nhận:</strong> {selectedOrder.fullName || selectedOrder.recipientName || selectedOrder.user?.fullName || '---'}</p>
+                    <p><strong>Số điện thoại:</strong> {selectedOrder.phone || selectedOrder.recipientPhone || selectedOrder.user?.phone || '---'}</p>
+                    <p><strong>Địa chỉ:</strong> {selectedOrder.address || selectedOrder.shippingAddress || '---'}</p>
+                    {selectedOrder.notes && <p><strong>Ghi chú:</strong> {selectedOrder.notes}</p>}
                   </div>
                   <div className="info-block">
                     <h4>Thông tin thanh toán</h4>
-                    <p><strong>Phương thức:</strong> {selectedOrder.paymentMethod}</p>
+                    <p><strong>Phương thức:</strong> {selectedOrder.paymentMethod || 'COD'}</p>
                     <p><strong>Trạng thái:</strong> {selectedOrder.status}</p>
-                    <p><strong>Ngày tạo:</strong> {new Date(selectedOrder.createdAt).toLocaleString('vi-VN')}</p>
+                    <p><strong>Ngày tạo:</strong> {selectedOrder.createdAt ? new Date(selectedOrder.createdAt).toLocaleString('vi-VN') : '---'}</p>
                   </div>
                 </div>
 
@@ -214,13 +216,13 @@ export default function AdminOrdersPage() {
                   {(selectedOrder.orderItems || []).map((item, idx) => (
                     <div key={idx} className="admin-order-item-row">
                       <img
-                        src={item.productImage || '/placeholder.png'}
-                        alt={item.productName}
+                        src={item.product?.images?.[0]?.imageUrl || item.productImage || '/placeholder.svg'}
+                        alt={item.product?.name || item.productName || 'Sản phẩm'}
                         className="order-item-thumb"
-                        onError={(e) => { e.target.src = '/placeholder.png'; }}
+                        onError={(e) => { e.target.src = '/placeholder.svg'; }}
                       />
                       <div className="order-item-main-info">
-                        <span className="item-title">{item.productName}</span>
+                        <span className="item-title">{item.product?.name || item.productName || 'Sản phẩm'}</span>
                         {item.configurationId && (
                           <span className="badge-custom-pc-sm">PC Build #{item.configurationId}</span>
                         )}
@@ -237,7 +239,7 @@ export default function AdminOrdersPage() {
                 <div className="order-summary-panel">
                   <div className="summary-row">
                     <span>Tổng tiền hàng:</span>
-                    <span>{Number(selectedOrder.totalAmount || 0).toLocaleString('vi-VN')} đ</span>
+                    <span>{Number(selectedOrder.subtotal || selectedOrder.totalPrice || selectedOrder.totalAmount || 0).toLocaleString('vi-VN')} đ</span>
                   </div>
                   {selectedOrder.discountAmount > 0 && (
                     <div className="summary-row discount-text">
@@ -245,9 +247,15 @@ export default function AdminOrdersPage() {
                       <span>- {Number(selectedOrder.discountAmount || 0).toLocaleString('vi-VN')} đ</span>
                     </div>
                   )}
+                  {selectedOrder.shippingFee > 0 && (
+                    <div className="summary-row">
+                      <span>Phí vận chuyển:</span>
+                      <span>+ {Number(selectedOrder.shippingFee || 0).toLocaleString('vi-VN')} đ</span>
+                    </div>
+                  )}
                   <div className="summary-row total-highlight">
                     <span>Tổng thanh toán:</span>
-                    <strong>{Number(selectedOrder.finalAmount || selectedOrder.totalAmount || 0).toLocaleString('vi-VN')} đ</strong>
+                    <strong>{Number(selectedOrder.totalPrice || selectedOrder.finalAmount || selectedOrder.totalAmount || 0).toLocaleString('vi-VN')} đ</strong>
                   </div>
                 </div>
               </div>

@@ -44,12 +44,14 @@ export default function AdminProductsPage() {
   const fetchData = async () => {
     try {
       setLoading(true);
-      const [prods, cats] = await Promise.all([
+      const [prodsRes, catsRes] = await Promise.all([
         adminApi.getProducts(),
         categoryApi.getAllCategories()
       ]);
-      setProducts(Array.isArray(prods) ? prods : []);
-      setCategories(Array.isArray(cats) ? cats : []);
+      const prodList = Array.isArray(prodsRes) ? prodsRes : (Array.isArray(prodsRes?.data) ? prodsRes.data : []);
+      const catList = Array.isArray(catsRes) ? catsRes : (Array.isArray(catsRes?.data) ? catsRes.data : []);
+      setProducts(prodList);
+      setCategories(catList);
     } catch (err) {
       console.error('Error fetching admin products/categories:', err);
       setError('Không thể tải danh sách sản phẩm');

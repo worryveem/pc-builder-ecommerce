@@ -1,11 +1,20 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import { builderApi } from '../api/builderApi';
+import { useAuth } from '../context/AuthContext';
 import { SelectedComponentCard } from '../components/builder/SelectedComponentCard';
 import { CompatibilityPanel } from '../components/builder/CompatibilityPanel';
 import { BuilderSummary } from '../components/builder/BuilderSummary';
 import { BuilderProductSelector } from '../components/builder/BuilderProductSelector';
+import { SaveConfigurationModal } from '../components/builder/SaveConfigurationModal';
+import { ShareConfigurationModal } from '../components/builder/ShareConfigurationModal';
 
 export const BuilderPage = () => {
+  const { id } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
+
   const [categories, setCategories] = useState({ coreComponents: [], optionalSetupGear: [] });
   const [selectedComponents, setSelectedComponents] = useState({});
   const [compatibility, setCompatibility] = useState({
@@ -16,37 +25,20 @@ export const BuilderPage = () => {
     warnings: []
   });
 
+  const [configurationId, setConfigurationId] = useState(null);
+  const [configurationName, setConfigurationName] = useState('Untitled PC Build');
+  const [shareToken, setShareToken] = useState(null);
+
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [validating, setValidating] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [activeCategory, setActiveCategory] = useState(null);
 
-  // 1. Fetch builder categories on mount
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        setLoadingCategories(true);
-        setErrorMsg('');
-        const res = await builderApi.getCategories();
+  const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
-        if (res?.data) {
-          setCategories({
-            coreComponents: res.data.coreComponents || [],
-            optionalSetupGear: res.data.optionalSetupGear || []
-          });
-        }
-      } catch (err) {
-        console.error('Failed to load builder categories:', err);
-        setErrorMsg('Không thể nạp danh mục linh kiện builder từ máy chủ. Vui lòng kiểm tra lại kết nối.');
-      } finally {
-        setLoadingCategories(false);
-      }
-    };
-
-    fetchCategories();
-  }, []);
-
-  // 2. Validate configuration whenever selectedComponents change
+  // 1. Validate configuration whenever components change
   const triggerValidation = useCallback(async (currentSelected) => {
     const items = Object.values(currentSelected || {})
       .filter(item => item && item.product)
@@ -68,7 +60,93 @@ export const BuilderPage = () => {
     }
   }, []);
 
-  // 3. Selection / Replacement handler
+  // 2. Fetch builder categories on mount
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        setLoadingCategories(true);
+        setErrorMsg('');
+        const res = await builderApi.getCategories();
+
+        if (res?.data) {
+          const core = res.data.coreComponents || [];
+          const opt = res.data.optionalSetupGear || [];
+          setCategories({ coreComponents: core, optionalSetupGear: opt });
+        }
+      } catch (err) {
+        console.error('Failed to load builder categories:', err);
+        setErrorMsg('Không thể nạp danh mục linh kiện builder từ máy chủ. Vui lòng kiểm tra lại kết nối.');
+      } finally {
+        setLoadingCategories(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  // 3. Load configuration if id param exists or imported from shared page
+  useEffect(() => {
+    const loadConfig = async () => {
+      // Case A: Imported from shared configuration page via location.state
+      if (location.state?.importedConfig) {
+        const imported = location.state.importedConfig;
+        setConfigurationName(imported.name ? `${imported.name} (Tùy chỉnh)` : 'Cấu hình PC tùy chỉnh');
+        setConfigurationId(null); // New copy to customize and save
+        setShareToken(null);
+
+        const newSelected = {};
+        (imported.items || []).forEach(item => {
+          const prod = item.product;
+          const slug = prod?.category?.slug;
+          if (slug && prod) {
+            newSelected[slug] = {
+              product: prod,
+              quantity: item.quantity || 1
+            };
+          }
+        });
+
+        setSelectedComponents(newSelected);
+        triggerValidation(newSelected);
+        return;
+      }
+
+      // Case B: Load saved configuration by ID
+      if (id) {
+        try {
+          const res = await builderApi.getConfiguration(id);
+          if (res?.data) {
+            const data = res.data;
+            setConfigurationId(data.id);
+            setConfigurationName(data.name || 'Cấu hình PC đã lưu');
+            setShareToken(data.shareToken || null);
+
+            const newSelected = {};
+            (data.items || []).forEach(item => {
+              const prod = item.product;
+              const slug = prod?.category?.slug;
+              if (slug && prod) {
+                newSelected[slug] = {
+                  product: prod,
+                  quantity: item.quantity || 1
+                };
+              }
+            });
+
+            setSelectedComponents(newSelected);
+            triggerValidation(newSelected);
+          }
+        } catch (err) {
+          console.error('Failed to load configuration by id:', err);
+          setErrorMsg('Không thể tải cấu hình đã lưu. Có thể cấu hình không tồn tại hoặc bạn không có quyền truy cập.');
+        }
+      }
+    };
+
+    loadConfig();
+  }, [id, location.state, triggerValidation]);
+
+  // 4. Selection / Replacement handler
   const handleSelectProduct = (product) => {
     if (!activeCategory) return;
 
@@ -85,7 +163,7 @@ export const BuilderPage = () => {
     });
   };
 
-  // 4. Removal handler
+  // 5. Removal handler
   const handleRemoveComponent = (categorySlug) => {
     setSelectedComponents(prev => {
       const updated = { ...prev };
@@ -95,7 +173,7 @@ export const BuilderPage = () => {
     });
   };
 
-  // 5. Quantity update handler
+  // 6. Quantity update handler
   const handleUpdateQuantity = (categorySlug, newQuantity) => {
     if (newQuantity < 1) return;
 
@@ -113,11 +191,64 @@ export const BuilderPage = () => {
     });
   };
 
-  // 6. Reset build handler
+  // 7. Reset build handler
   const handleResetBuild = () => {
     if (!window.confirm('Bạn có chắc chắn muốn làm mới toàn bộ cấu hình đang chọn?')) return;
     setSelectedComponents({});
+    setConfigurationId(null);
+    setShareToken(null);
+    setConfigurationName('Untitled PC Build');
     triggerValidation({});
+  };
+
+  // 8. Open Save / Update modal
+  const handleOpenSaveModal = () => {
+    if (!isAuthenticated) {
+      if (window.confirm('Bạn cần đăng nhập tài khoản để lưu cấu hình PC. Chuyển đến trang Đăng nhập ngay?')) {
+        navigate('/login', { state: { from: location } });
+      }
+      return;
+    }
+    setIsSaveModalOpen(true);
+  };
+
+  // 9. Execute Save or Update
+  const handleSaveConfiguration = async (name) => {
+    const items = Object.values(selectedComponents)
+      .filter(i => i && i.product)
+      .map(i => ({
+        productId: i.product.id,
+        quantity: i.quantity || 1
+      }));
+
+    try {
+      setSaving(true);
+      setErrorMsg('');
+
+      let res;
+      if (configurationId) {
+        // Update existing configuration
+        res = await builderApi.updateConfiguration(configurationId, { name, items });
+      } else {
+        // Save brand new configuration
+        res = await builderApi.saveConfiguration({ name, items });
+      }
+
+      if (res?.data) {
+        setConfigurationId(res.data.id);
+        setConfigurationName(res.data.name);
+        setShareToken(res.data.shareToken);
+
+        setIsSaveModalOpen(false);
+        setIsShareModalOpen(true); // Open share modal to show success & copy link
+      }
+    } catch (err) {
+      console.error('Failed to save configuration:', err);
+      const msg = err.response?.data?.message || 'Có lỗi xảy ra khi lưu cấu hình. Vui lòng thử lại.';
+      setErrorMsg(msg);
+    } finally {
+      setSaving(false);
+    }
   };
 
   if (loadingCategories) {
@@ -134,8 +265,12 @@ export const BuilderPage = () => {
       {/* Page Header */}
       <div className="page-header builder-header">
         <div className="builder-title-badge">⚡ Real-time Compatibility Engine</div>
-        <h1>Xây Dựng Cấu Hình PC Thông Minh</h1>
-        <p>Tự do lựa chọn linh kiện phần cứng máy tính với công cụ kiểm tra tương thích tự động và tính toán công suất nguồn thông minh.</p>
+        <h1>{configurationName}</h1>
+        <p>
+          {configurationId
+            ? `Cấu hình đã lưu (ID: #${configurationId})${shareToken ? ` • Token: ${shareToken}` : ''}`
+            : 'Tự do lựa chọn linh kiện phần cứng máy tính với công cụ kiểm tra tương thích tự động và tính toán công suất nguồn thông minh.'}
+        </p>
       </div>
 
       {errorMsg && <div className="alert alert-danger">{errorMsg}</div>}
@@ -200,6 +335,11 @@ export const BuilderPage = () => {
             <BuilderSummary
               selectedComponents={selectedComponents}
               onReset={handleResetBuild}
+              onOpenSave={handleOpenSaveModal}
+              onOpenShare={() => setIsShareModalOpen(true)}
+              configurationId={configurationId}
+              shareToken={shareToken}
+              saving={saving}
             />
           </div>
         </aside>
@@ -215,6 +355,25 @@ export const BuilderPage = () => {
           onClose={() => setActiveCategory(null)}
         />
       )}
+
+      {/* Save / Update Configuration Modal */}
+      <SaveConfigurationModal
+        isOpen={isSaveModalOpen}
+        currentName={configurationName}
+        isUpdate={!!configurationId}
+        compatibility={compatibility}
+        onSave={handleSaveConfiguration}
+        onClose={() => setIsSaveModalOpen(false)}
+        saving={saving}
+      />
+
+      {/* Share Configuration Modal */}
+      <ShareConfigurationModal
+        isOpen={isShareModalOpen}
+        configurationName={configurationName}
+        shareToken={shareToken}
+        onClose={() => setIsShareModalOpen(false)}
+      />
     </div>
   );
 };

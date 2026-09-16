@@ -8,6 +8,7 @@ import { ProductsPage } from './pages/ProductsPage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
 import { CartPage } from './pages/CartPage';
 import { BuilderPage } from './pages/BuilderPage';
+import { SharedBuilderPage } from './pages/SharedBuilderPage';
 import { PlaceholderPage } from './pages/PlaceholderPage';
 import { ProtectedRoute } from './routes/ProtectedRoute';
 
@@ -20,6 +21,8 @@ function App() {
         <Route path="products" element={<ProductsPage />} />
         <Route path="products/:id" element={<ProductDetailPage />} />
         <Route path="builder" element={<BuilderPage />} />
+        <Route path="builder/configuration/:id" element={<BuilderPage />} />
+        <Route path="builder/share/:token" element={<SharedBuilderPage />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="register" element={<RegisterPage />} />
         <Route path="cart" element={<CartPage />} />

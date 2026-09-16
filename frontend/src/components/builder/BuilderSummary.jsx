@@ -1,6 +1,14 @@
 import React from 'react';
 
-export const BuilderSummary = ({ selectedComponents, onReset }) => {
+export const BuilderSummary = ({
+  selectedComponents,
+  onReset,
+  onOpenSave,
+  onOpenShare,
+  configurationId,
+  shareToken,
+  saving
+}) => {
   const items = Object.values(selectedComponents || {}).filter(item => item && item.product);
 
   const totalQuantity = items.reduce((sum, item) => sum + (item.quantity || 1), 0);
@@ -32,11 +40,37 @@ export const BuilderSummary = ({ selectedComponents, onReset }) => {
       </div>
 
       <div className="summary-actions">
+        {/* Save / Update Button */}
+        <button
+          type="button"
+          className="btn btn-primary btn-block mb-2"
+          onClick={onOpenSave}
+          disabled={items.length === 0 || saving}
+        >
+          {saving
+            ? 'Đang lưu...'
+            : configurationId
+            ? '💾 Cập nhật cấu hình'
+            : '💾 Lưu cấu hình'}
+        </button>
+
+        {/* Share Button (Active if shareToken exists) */}
+        {shareToken && (
+          <button
+            type="button"
+            className="btn btn-outline btn-block mb-2"
+            onClick={onOpenShare}
+          >
+            🔗 Chia sẻ cấu hình
+          </button>
+        )}
+
+        {/* Reset Button */}
         <button
           type="button"
           className="btn btn-outline-danger btn-block btn-sm"
           onClick={onReset}
-          disabled={items.length === 0}
+          disabled={items.length === 0 || saving}
         >
           🗑️ Làm mới cấu hình
         </button>

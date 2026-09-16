@@ -41,5 +41,29 @@ export const builderApi = {
   validateConfiguration: async (items) => {
     const response = await axiosInstance.post('/builder/validate', { items });
     return response.data;
+  },
+
+  /**
+   * Save new PC configuration (requires auth)
+   */
+  saveConfiguration: async ({ name, items }) => {
+    const response = await axiosInstance.post('/builder/configurations', { name, items });
+    return response.data;
+  },
+
+  /**
+   * Load saved PC configuration by ID or shareToken (public)
+   */
+  getConfiguration: async (idOrToken) => {
+    const response = await axiosInstance.get(`/builder/configurations/${idOrToken}`);
+    return response.data;
+  },
+
+  /**
+   * Update existing PC configuration by ID (requires ownership)
+   */
+  updateConfiguration: async (id, { name, items }) => {
+    const response = await axiosInstance.put(`/builder/configurations/${id}`, { name, items });
+    return response.data;
   }
 };

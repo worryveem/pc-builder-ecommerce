@@ -18,6 +18,8 @@ import java.util.stream.Collectors;
 @Service
 public class RecommendationService {
 
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(RecommendationService.class);
+
     @Value("${openai.api.key:dummy-key}")
     private String apiKey;
 
@@ -35,6 +37,9 @@ public class RecommendationService {
 
     public RecommendationResponse getRecommendations(RecommendationRequest request) {
         String query = (request != null && request.getQuery() != null) ? request.getQuery().trim() : "";
+        if (query.length() > 300) {
+            query = query.substring(0, 300);
+        }
         List<Product> allProducts = productRepository.findAll();
 
         if (allProducts.isEmpty()) {
@@ -54,7 +59,7 @@ public class RecommendationService {
                 }
             } catch (Exception e) {
                 // Log and gracefully fall back to database retrieval engine
-                System.err.println("OpenAI recommendation failed, falling back to local search engine: " + e.getMessage());
+                log.warn("OpenAI recommendation failed ({}), falling back to local search engine", e.getMessage());
             }
         }
 
@@ -62,9 +67,42 @@ public class RecommendationService {
         return fallbackLocalRecommendation(query, allProducts);
     }
 
+    private List<Product> selectTopCandidates(String userQuery, List<Product> products, int limit) {
+        String lowerQuery = (userQuery != null) ? userQuery.toLowerCase() : "";
+        List<Product> scored = new ArrayList<>(products);
+
+        scored.sort((p1, p2) -> {
+            int s1 = calculateRelevanceScore(p1, lowerQuery);
+            int s2 = calculateRelevanceScore(p2, lowerQuery);
+            return Integer.compare(s2, s1);
+        });
+
+        return scored.stream().limit(limit).collect(Collectors.toList());
+    }
+
+    private int calculateRelevanceScore(Product p, String lowerQuery) {
+        if (lowerQuery.isEmpty()) return 0;
+        int score = 0;
+        String name = (p.getName() != null) ? p.getName().toLowerCase() : "";
+        String brand = (p.getBrand() != null) ? p.getBrand().toLowerCase() : "";
+        String desc = (p.getDescription() != null) ? p.getDescription().toLowerCase() : "";
+        String cat = (p.getCategory() != null && p.getCategory().getName() != null) ? p.getCategory().getName().toLowerCase() : "";
+        String compType = (p.getCategory() != null && p.getCategory().getBuilderComponentType() != null) ? p.getCategory().getBuilderComponentType().toLowerCase() : "";
+
+        if (name.contains(lowerQuery)) score += 20;
+        for (String word : lowerQuery.split("\\s+")) {
+            if (word.length() < 2) continue;
+            if (name.contains(word)) score += 5;
+            if (brand.contains(word)) score += 4;
+            if (cat.contains(word) || compType.contains(word)) score += 5;
+            if (desc.contains(word)) score += 2;
+        }
+        return score;
+    }
+
     private RecommendationResponse queryOpenAiForRecommendations(String userQuery, List<Product> products) {
-        // Limit candidates to 20 products to keep prompt token size light
-        List<Product> candidates = products.stream().limit(20).collect(Collectors.toList());
+        // Smart candidates selection: top relevant products for user query
+        List<Product> candidates = selectTopCandidates(userQuery, products, 20);
 
         StringBuilder catalogPrompt = new StringBuilder();
         for (Product p : candidates) {

@@ -1,43 +1,54 @@
 services:
 
-  db:
+  mysql:
     image: mysql:8.0
-    container_name: fashionshop_db
-
+    container_name: pcbuilder_mysql
+    restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-root}
       MYSQL_DATABASE: fashion_shop
-
     ports:
       - "3306:3306"
-
     volumes:
-      - mysql_data:/var/lib/mysql
-
+      - pcbuilder_db_data:/var/lib/mysql
     networks:
-      - fashionshop_network
+      - pcbuilder_net
 
   backend:
-    build: .
-    container_name: fashionshop_backend
-
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pcbuilder_backend
+    restart: unless-stopped
     depends_on:
-      - db
-
+      - mysql
     ports:
       - "8080:8080"
-
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/fashion_shop?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Ho_Chi_Minh
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
-
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/fashion_shop?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=Asia/Ho_Chi_Minh
+      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME:-root}
+      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD:-root}
+      JWT_SECRET: ${JWT_SECRET:-404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970}
+      OPENAI_API_KEY: ${OPENAI_API_KEY:-}
     networks:
-      - fashionshop_network
+      - pcbuilder_net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: pcbuilder_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    ports:
+      - "80:80"
+    networks:
+      - pcbuilder_net
 
 volumes:
-  mysql_data:
+  pcbuilder_db_data:
 
 networks:
-  fashionshop_network:
+  pcbuilder_net:
     driver: bridge

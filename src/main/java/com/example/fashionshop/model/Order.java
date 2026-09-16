@@ -12,7 +12,10 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(name = "orders")
+@Table(name = "orders", indexes = {
+    @Index(name = "idx_orders_user", columnList = "user_id"),
+    @Index(name = "idx_orders_status", columnList = "order_status")
+})
 public class Order {
 
     @Id

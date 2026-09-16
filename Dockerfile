@@ -1,10 +1,12 @@
-FROM openjdk:17-ea-jdk-alpine3.14*
-
+# Multi-stage build for PC Builder E-commerce Backend
+FROM maven:3.9-eclipse-temurin-17 AS build
 WORKDIR /app
+COPY pom.xml .
+COPY src ./src
+RUN mvn clean package -DskipTests
 
-COPY . .
-
-CMD ["java", "-jar", "target/demo-0.0.1-SNAPSHOT.jar"]
-
-
-# docker run -p 8080:8080 -e SPRING_DATASOURCE_URL=jdbc:mysql://host.docker.internal:3306/fashion_shop -e SPRING_DATASOURCE_USERNAME=root -e SPRING_DATASOURCE_PASSWORD=root fashionshop
+FROM eclipse-temurin:17-jre-alpine
+WORKDIR /app
+COPY --from=build /app/target/demo-0.0.1-SNAPSHOT.jar app.jar
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.jar"]

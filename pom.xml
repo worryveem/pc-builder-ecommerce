@@ -11,8 +11,8 @@
 	<groupId>com.example</groupId>
 	<artifactId>demo</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>demo</name>
-	<description>Demo project for Spring Boot</description>
+	<name>PC Builder E-commerce</name>
+	<description>PC Builder E-commerce Platform with AI Recommendation</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -166,7 +166,7 @@
 					</from>
 					<to>
 
-						<image>minhhoangtapchoi/clothing-store</image>
+						<image>pc-builder-ecommerce</image>
 						<tags>
 							<tag>latest</tag>
 							<tag>v1.0.0</tag>

@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Về Chúng Tôi - Sứ Mệnh & Câu Chuyện KiddieLuxe Kids</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --brand-primary: #1e293b;
+            --brand-accent: #FF6584;
+            --brand-gold: #FFB830;
+            --brand-soft-bg: #FFFDFB;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: #334155;
+            background-color: #ffffff;
+            overflow-x: hidden;
+        }
+
+        /* Hero Editorial Banner */
+        .about-hero {
+            position: relative;
+            min-height: 55vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: linear-gradient(rgba(26, 29, 46, 0.75), rgba(26, 29, 46, 0.85)), url('images/hero_kids.png') center/cover no-repeat;
+            color: #ffffff;
+            padding: 90px 20px 60px 20px;
+        }
+
+        .about-hero-tag {
+            display: inline-block;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #FFD166;
+            margin-bottom: 1.2rem;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 6px 20px;
+            border-radius: 30px;
+            backdrop-filter: blur(5px);
+        }
+
+        .about-hero-title {
+            font-family: var(--font-heading);
+            font-size: clamp(2.2rem, 5vw, 3.8rem);
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .about-hero-desc {
+            max-width: 750px;
+            margin: 0 auto;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: #e2e8f0;
+            font-weight: 400;
+        }
+
+        /* Container & Layout */
+        .about-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4.5rem 2rem;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 3.5rem;
+        }
+
+        .section-badge {
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-main-title {
+            font-family: var(--font-heading);
+            font-size: 2.4rem;
+            color: #1e293b;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+        }
+
+        .section-subtext {
+            color: #64748b;
+            font-size: 1.05rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Editorial Split Stories */
+        .story-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4.5rem;
+            align-items: center;
+            margin-bottom: 6rem;
+        }
+
+        .story-split.reverse {
+            direction: rtl;
+        }
+
+        .story-split.reverse .story-content {
+            direction: ltr;
+        }
+
+        .story-split.reverse .story-img-wrap {
+            direction: ltr;
+        }
+
+        .story-content h3 {
+            font-family: var(--font-heading);
+            font-size: 2rem;
+            line-height: 1.3;
+            color: #1e293b;
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+        }
+
+        .story-content p {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #475569;
+            margin-bottom: 1.2rem;
+        }
+
+        .quote-box {
+            border-left: 4px solid var(--primary);
+            padding: 1.2rem 1.8rem;
+            background: #FFF0F3;
+            border-radius: 0 12px 12px 0;
+            font-style: italic;
+            color: #1e293b;
+            margin: 2rem 0;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .story-img-wrap {
+            position: relative;
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+        }
+
+        .story-img-wrap img {
+            width: 100%;
+            height: 480px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .story-img-wrap:hover img {
+            transform: scale(1.04);
+        }
+
+        /* Pillars Grid (Values & Mission) */
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 2rem;
+            margin: 3.5rem 0;
+        }
+
+        .pillar-card {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pillar-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .pillar-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 15px 35px rgba(255, 101, 132, 0.12);
+            border-color: rgba(255, 101, 132, 0.3);
+        }
+
+        .pillar-card:hover::before {
+            opacity: 1;
+        }
+
+        .pillar-icon {
+            font-size: 2.6rem;
+            margin-bottom: 1.2rem;
+            display: inline-block;
+        }
+
+        .pillar-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 0.8rem;
+            font-family: var(--font-heading);
+        }
+
+        .pillar-desc {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: #64748b;
+        }
+
+        /* Stats Counter Section */
+        .stats-banner {
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            color: #ffffff;
+            border-radius: 24px;
+            padding: 3.5rem 2rem;
+            margin: 4rem 0;
+            box-shadow: 0 20px 40px rgba(15, 23, 42, 0.2);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item h4 {
+            font-family: var(--font-heading);
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #FFB830;
+            margin-bottom: 0.4rem;
+        }
+
+        .stat-item p {
+            color: #cbd5e1;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        /* 5-step process */
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 3rem 0;
+        }
+
+        .step-box {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 2rem 1.5rem;
+            position: relative;
+        }
+
+        .step-number {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--primary);
+            opacity: 0.3;
+            display: block;
+            margin-bottom: 0.8rem;
+        }
+
+        .step-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: #1e293b;
+            margin-bottom: 0.5rem;
+        }
+
+        .step-desc {
+            font-size: 0.9rem;
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        /* Founder note */
+        .founder-box {
+            background: linear-gradient(135deg, #FFF0F3 0%, #FFF8EE 100%);
+            border: 1px solid rgba(255, 101, 132, 0.2);
+            border-radius: 24px;
+            padding: 3.5rem;
+            margin-top: 5rem;
+        }
+
+        .founder-quote {
+            font-size: 1.15rem;
+            line-height: 1.9;
+            color: #334155;
+            font-style: italic;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .founder-author {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+        }
+
+        .founder-avatar {
+            width: 65px;
+            height: 65px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 900px) {
+            .story-split {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+            .story-split.reverse {
+                direction: ltr;
+            }
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .founder-box {
+                padding: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Top Announcement Bar -->
+    <div class="top-announcement">
+        🧸 Miễn phí vận chuyển toàn quốc cho mọi đơn hàng từ <strong>300.000đ</strong> | 100% Cotton Organic an toàn cho bé
+    </div>
+
+    <!-- Navigation Header -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <span class="logo-badge">KIDS</span>Kiddie<span>Luxe</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Trang Chủ</a></li>
+            <li><a href="products.html">Bộ Sưu Tập</a></li>
+            <li><a href="vouchers.html">Ưu Đãi</a></li>
+            <li><a href="wishlist.html">Yêu Thích</a></li>
+            <li><a href="about.html" class="active">Giới Thiệu</a></li>
+            <li><a href="track-order.html">Tra Cứu Đơn</a></li>
+        </ul>
+        <div class="nav-actions" id="auth-links"></div>
+    </nav>
+
+    <!-- Hero Header -->
+    <header class="about-hero">
+        <div>
+            <span class="about-hero-tag">Thương Hiệu Thời Trang Hữu Cơ Cho Trẻ Em</span>
+            <h1 class="about-hero-title">Khởi Nguồn Từ Tình Yêu<br>Nâng Niu Từng Bước Lớn Khôn</h1>
+            <p class="about-hero-desc">
+                Tại <strong>KiddieLuxe Kids</strong>, chúng tôi không đơn thuần may đo trang phục. Chúng tôi kiến tạo những kỷ niệm tuổi thơ tươi đẹp nhất qua từng sợi vải an lành, bền vững và tràn đầy tình thương của cha mẹ.
+            </p>
+        </div>
+    </header>
+
+    <main class="about-container">
+
+        <!-- Sứ Mệnh (Our Mission) -->
+        <section class="story-split">
+            <div class="story-content">
+                <span class="section-badge">Sứ Mệnh Của Chúng Tôi</span>
+                <h3>Từng Đường Kim Mũi Chỉ<br>Là Tình Yêu & Sự Nâng Niu</h3>
+                <p>
+                    Làn da của trẻ nhỏ vô cùng nhạy cảm và mỏng hơn da người lớn tới 5 lần. Ý thức sâu sắc được điều đó, sứ mệnh tối thượng của <strong>KiddieLuxe Kids</strong> là mang đến những sản phẩm thời trang <em>an toàn tuyệt đối</em>, thoáng khí và thân thiện tuyệt đối với làn da của bé.
+                </p>
+                <p>
+                    Chúng tôi kiên quyết bài trừ xu hướng "thời trang nhanh" độc hại. Mỗi chiếc áo, chiếc đầm hay set đồ sơ sinh tại KiddieLuxe đều được chế tác từ những nguyên liệu tự nhiên tinh khiết nhất: 100% Organic Cotton không hóa chất, lụa tơ tằm nguyên bản và sợi dệt tự nhiên cao cấp.
+                </p>
+                <div class="quote-box">
+                    "Trẻ thơ không cần trang phục cầu kỳ làm mất đi sự hồn nhiên, các em cần những bộ quần áo êm dịu nhất để tự do khám phá thế giới xung quanh một cách thoải mái và tự tin nhất."
+                </div>
+            </div>
+            <div class="story-img-wrap">
+                <img src="images/hero_kids.png" alt="Thủ công tinh xảo của KiddieLuxe Kids">
+            </div>
+        </section>
+
+        <!-- Tầm Nhìn (Our Vision) -->
+        <section class="story-split reverse">
+            <div class="story-content">
+                <span class="section-badge">Tầm Nhìn Đột Phá</span>
+                <h3>Trở Thành Biểu Tượng Thời Trang Bền Vững Hàng Đầu Cho Trẻ Em</h3>
+                <p>
+                    Tầm nhìn của KiddieLuxe đến năm 2030 là trở thành thương hiệu thời trang trẻ em và đồ sơ sinh hữu cơ được các bậc phụ huynh tin yêu hàng đầu tại Việt Nam.
+                </p>
+                <p>
+                    Chúng tôi mong muốn kiến tạo một hệ sinh thái thời trang tuần hoàn, nơi mà từng bộ trang phục không chỉ đẹp đẽ, đáng yêu mà còn mang trách nhiệm bảo vệ môi trường cho chính tương lai của thế hệ mầm non: từ 100% bao bì tự phân hủy sinh học đến công nghệ nhuộm sinh thái thực vật an toàn.
+                </p>
+                <p>
+                    Đến với KiddieLuxe Kids, mỗi gia đình không chỉ tìm thấy những bộ cánh tinh tế cho con yêu, mà còn cùng chúng tôi lan tỏa phong cách sống xanh, văn minh và tràn đầy yêu thương.
+                </p>
+            </div>
+            <div class="story-img-wrap">
+                <img src="images/girl_cardigan.png" alt="Nụ cười và hạnh phúc của bé yêu">
+            </div>
+        </section>
+
+        <!-- 4 Giá Trị Cốt Lõi (Core Values) -->
+        <section>
+            <div class="section-header">
+                <span class="section-badge">Giá Trị Cốt Lõi</span>
+                <h2 class="section-main-title">Bốn Trụ Cột Định Hình KiddieLuxe</h2>
+                <p class="section-subtext">Những nguyên tắc bất biến dẫn lối cho mọi bộ sưu tập và quyết định của chúng tôi.</p>
+            </div>
+
+            <div class="pillars-grid">
+                <div class="pillar-card">
+                    <div class="pillar-icon">🌿</div>
+                    <h3 class="pillar-title">An Toàn Tuyệt Đối</h3>
+                    <p class="pillar-desc">Chỉ sử dụng chất liệu vải đạt chứng nhận hữu cơ quốc tế OEKO-TEX® Standard 100. 100% không chứa tồn dư hóa chất nhuộm hay formaldehyde gây hại da.</p>
+                </div>
+
+                <div class="pillar-card">
+                    <div class="pillar-icon">✂️</div>
+                    <h3 class="pillar-title">Tỉ Mỉ Thủ Công</h3>
+                    <p class="pillar-desc">Ứng dụng kỹ thuật may phẳng (Flat-lock Seam) độc quyền, giấu đường chỉ thừa vào trong để bảo đảm bé chạy nhảy cả ngày không hề cộm ngứa hay đỏ rát.</p>
+                </div>
+
+                <div class="pillar-card">
+                    <div class="pillar-icon">🎨</div>
+                    <h3 class="pillar-title">Sáng Tạo & Cảm Hứng</h3>
+                    <p class="pillar-desc">Các thiết kế mang hơi thở thời trang hiện đại châu Âu nhưng vẫn giữ vẹn nguyên nét ngộ nghĩnh, tôn vinh trí tưởng tượng phong phú và cá tính riêng của từng bé.</p>
+                </div>
+
+                <div class="pillar-card">
+                    <div class="pillar-icon">🌍</div>
+                    <h3 class="pillar-title">Trách Nhiệm Bền Vững</h3>
+                    <p class="pillar-desc">Cam kết thời trang chậm (Slow Fashion) với độ bền vượt trội qua nhiều lần giặt. Sử dụng hộp giấy kraft tái sinh và mực in gốc nước thân thiện hành tinh.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Counter Section -->
+        <section class="stats-banner">
+            <div class="stats-grid">
+                <div class="stat-item">
+                    <h4>50.000+</h4>
+                    <p>Gia đình tin tưởng đồng hành</p>
+                </div>
+                <div class="stat-item">
+                    <h4>99.6%</h4>
+                    <p>Đánh giá hài lòng & yêu thích</p>
+                </div>
+                <div class="stat-item">
+                    <h4>85+</h4>
+                    <p>Mẫu thiết kế cao cấp độc quyền</p>
+                </div>
+                <div class="stat-item">
+                    <h4>100%</h4>
+                    <p>Chất liệu tự nhiên kiểm định</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quy trình kiểm định chất lượng 5 bước -->
+        <section>
+            <div class="section-header">
+                <span class="section-badge">Tiêu Chuẩn Sản Xuất</span>
+                <h2 class="section-main-title">Quy Trình Chuẩn Mực 5 Bước</h2>
+                <p class="section-subtext">Hành trình khắt khe để mỗi chiếc áo trao đến tay bé đều là một tác phẩm hoàn mỹ.</p>
+            </div>
+
+            <div class="process-steps">
+                <div class="step-box">
+                    <span class="step-number">01</span>
+                    <h4 class="step-title">Chọn Sợi Tự Nhiên</h4>
+                    <p class="step-desc">Nhập khẩu sợi cotton hữu cơ dài sợi, lanh tự nhiên và lụa tơ tằm từ các trang trại sinh thái uy tín.</p>
+                </div>
+                <div class="step-box">
+                    <span class="step-number">02</span>
+                    <h4 class="step-title">Nhuộm Không Độc Tố</h4>
+                    <p class="step-desc">Sử dụng bột màu chiết xuất thực vật, cố định màu bằng công nghệ áp suất nhiệt không dùng kim loại nặng.</p>
+                </div>
+                <div class="step-box">
+                    <span class="step-number">03</span>
+                    <h4 class="step-title">May Phẳng Chống Cộm</h4>
+                    <p class="step-desc">Đội ngũ thợ may lành nghề thực hiện kỹ thuật giấu viền chỉ, kiểm soát độ giãn đàn hồi từng mũi kim.</p>
+                </div>
+                <div class="step-box">
+                    <span class="step-number">04</span>
+                    <h4 class="step-title">Kiểm Định Da Liễu</h4>
+                    <p class="step-desc">Kiểm tra độ co rút, độ thoáng khí và thử nghiệm tương thích da liễu cho trẻ sơ sinh và trẻ nhỏ.</p>
+                </div>
+                <div class="step-box">
+                    <span class="step-number">05</span>
+                    <h4 class="step-title">Đóng Gói Thân Thiện</h4>
+                    <p class="step-desc">Ủ thơm bằng hương tinh dầu tự nhiên, đóng hộp giấy tái chế cao cấp sẵn sàng làm quà tặng trang trọng.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Lời Ngỏ Từ Nhà Sáng Lập -->
+        <section class="founder-box">
+            <p class="founder-quote">
+                "Khi chứng kiến con gái đầu lòng của mình bị mẩn đỏ vì những bộ quần áo may từ sợi tổng hợp kém chất lượng, tôi nhận ra rằng điều các con cần không phải là những bộ đồ màu mè lộng lẫy, mà là sự bảo bọc dịu dàng nhất từ sợi vải mẹ thiên nhiên ban tặng. KiddieLuxe Kids ra đời với trọn vẹn trái tim của người làm cha mẹ — bởi chúng tôi hiểu, con yêu là món quà quý giá nhất trong cuộc đời."
+            </p>
+            <div class="founder-author">
+                <img src="images/hero_kids.png" alt="Người sáng lập KiddieLuxe Kids" class="founder-avatar">
+                <div>
+                    <div style="font-weight: 700; color: #1e293b; font-size: 1.05rem;">Đội Ngũ Sáng Lập KiddieLuxe Kids</div>
+                    <div style="color: var(--text-muted); font-size: 0.9rem;">Thương hiệu thời trang an lành cho trẻ thơ</div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <a href="index.html" class="logo" style="margin-bottom: 1rem; display: inline-flex;">
+                    <span class="logo-badge">KIDS</span>Kiddie<span>Luxe</span>
+                </a>
+                <p style="color: #64748b; line-height: 1.6; margin-bottom: 1.2rem; font-size: 0.95rem;">
+                    Thương hiệu thời trang hữu cơ cao cấp dành cho trẻ em và sơ sinh hàng đầu Việt Nam. Nâng niu làn da nhạy cảm của bé.
+                </p>
+            </div>
+            <div class="footer-col">
+                <h4 class="footer-title">Bộ Sưu Tập</h4>
+                <ul class="footer-links">
+                    <li><a href="products.html?gender=BOY">Thời Trang Bé Trai</a></li>
+                    <li><a href="products.html?gender=GIRL">Váy Đầm Bé Gái</a></li>
+                    <li><a href="products.html?category=BABY">Đồ Sơ Sinh Organic</a></li>
+                    <li><a href="products.html?category=SALE">Ưu Đãi Đặc Biệt</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4 class="footer-title">Hỗ Trợ Phụ Huynh</h4>
+                <ul class="footer-links">
+                    <li><a href="track-order.html">Tra cứu đơn hàng</a></li>
+                    <li><a href="about.html">Bảng quy đổi kích cỡ</a></li>
+                    <li><a href="about.html">Chính sách đổi trả 7 ngày</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4 class="footer-title">Hotline Tư Vấn</h4>
+                <p style="color: #64748b; font-size: 0.95rem; margin-bottom: 0.5rem;">Thứ 2 - CN: 8:00 - 21:30</p>
+                <div style="font-size: 1.4rem; font-weight: 800; color: var(--primary);">1900 6868</div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 KiddieLuxe Kids Fashion. Tất cả các quyền được bảo lưu.</p>
+        </div>
+    </footer>
+
+    <!-- Chatbot Widget Button -->
+    <button class="chat-widget-btn" onclick="toggleChat()" title="Chat cùng chuyên gia tư vấn">💬</button>
+    <div class="chat-widget-box" id="chat-box">
+        <div class="chat-header">
+            <span>🧸 Tư vấn KiddieLuxe Kids</span>
+            <span style="cursor: pointer; font-size: 1.2rem;" onclick="toggleChat()">&times;</span>
+        </div>
+        <div class="chat-body" id="chat-body">
+            <div class="chat-msg">Xin chào! Chúng tôi có thể giúp gì cho mẹ và bé hôm nay ạ?</div>
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="chat-input" placeholder="Hỏi về chất liệu, chọn size...">
+            <button onclick="sendChatMessage()">➤</button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/api.js"></script>
+    <script src="js/chat-widget.js"></script>
+</body>
+</html>

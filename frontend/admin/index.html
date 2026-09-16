@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KiddieLuxe Kids - Admin Portal</title>
+    <link rel="stylesheet" href="css/admin.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            Kiddie<span>Luxe</span> <span class="admin-badge">ADMIN</span>
+        </div>
+        <ul class="nav-menu">
+            <li class="nav-item active" onclick="switchTab('dashboard')">
+                <span>📊</span> Tổng quan
+            </li>
+            <li class="nav-item" onclick="switchTab('products')">
+                <span>👕</span> Quần áo bé
+            </li>
+            <li class="nav-item" onclick="switchTab('categories')">
+                <span>🏷️</span> Danh mục
+            </li>
+            <li class="nav-item" onclick="switchTab('orders')">
+                <span>📦</span> Đơn hàng
+            </li>
+            <li class="nav-item" onclick="switchTab('vouchers')">
+                <span>🎟️</span> Khuyến mãi
+            </li>
+            <li class="nav-item" onclick="switchTab('users')">
+                <span>👥</span> Phụ huynh
+            </li>
+        </ul>
+        <div style="padding: 16px 20px; border-top: 1px solid rgba(255, 255, 255, 0.05); font-size: 0.8rem; color: #64748B;">
+            KiddieLuxe v2.4 Kids Store
+        </div>
+    </aside>
+
+    <!-- CONTENT -->
+    <main class="main-content">
+        <header class="topbar">
+            <div class="topbar-title">
+                <span>🧸</span> Hệ thống quản trị thời trang trẻ em cao cấp KiddieLuxe
+            </div>
+            <div class="user-profile">
+                <div class="admin-pill">
+                    <div class="admin-avatar-mini" id="admin-avatar">A</div>
+                    <span id="admin-name">Chưa đăng nhập</span>
+                </div>
+                <button class="btn-logout" onclick="logoutAdmin()">Đăng xuất 🚪</button>
+            </div>
+        </header>
+
+        <div class="page-wrapper">
+
+            <!-- DASHBOARD TAB -->
+            <div id="tab-dashboard" class="tab-section active">
+                <h2 class="page-title">Thống Kê Kinh Doanh & Vận Hành</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-bottom: 2rem;">
+                    
+                    <div class="stat-card-modern">
+                        <div class="stat-icon-wrapper" style="background: #FFF0F3; color: #FF6584;">
+                            💰
+                        </div>
+                        <div>
+                            <div class="stat-lbl">TỔNG DOANH THU</div>
+                            <div id="stat-revenue" class="stat-val" style="color: #FF6584;">0 đ</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card-modern">
+                        <div class="stat-icon-wrapper" style="background: #DCFCE7; color: #15803D;">
+                            👕
+                        </div>
+                        <div>
+                            <div class="stat-lbl">SẢN PHẨM TRẺ EM</div>
+                            <div id="stat-products" class="stat-val">0</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card-modern">
+                        <div class="stat-icon-wrapper" style="background: #FEF3C7; color: #B45309;">
+                            📦
+                        </div>
+                        <div>
+                            <div class="stat-lbl">TỔNG ĐƠN HÀNG</div>
+                            <div id="stat-orders" class="stat-val">0</div>
+                        </div>
+                    </div>
+
+                    <div class="stat-card-modern">
+                        <div class="stat-icon-wrapper" style="background: #E0F2FE; color: #0284C7;">
+                            👥
+                        </div>
+                        <div>
+                            <div class="stat-lbl">PHỤ HUYNH ĐĂNG KÝ</div>
+                            <div id="stat-users" class="stat-val">0</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-card" style="margin-bottom: 2rem;">
+                    <div class="card-header">
+                        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-main);">📈 Biểu đồ Doanh thu (7 ngày gần nhất)</h3>
+                        <span style="font-size: 0.85rem; color: var(--text-muted);">Đơn vị: VNĐ</span>
+                    </div>
+                    <div style="height: 300px; position: relative;">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PRODUCTS TAB -->
+            <div id="tab-products" class="tab-section">
+                <div class="card-header">
+                    <div>
+                        <h2 class="page-title" style="margin:0;">Quản lý Sản Phẩm Trẻ Em</h2>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.2rem;">Thêm mới, sửa đổi thông tin và quản lý size/tồn kho sản phẩm</p>
+                    </div>
+                    <button class="btn-primary" onclick="openProductModal()">+ Thêm Mẫu Mới</button>
+                </div>
+                <div class="data-card">
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Hình ảnh</th>
+                                    <th>Tên Sản Phẩm</th>
+                                    <th>Giá Bán</th>
+                                    <th>Tồn Kho / Kích Cỡ</th>
+                                    <th>Thao Tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tb-products">
+                                <tr>
+                                    <td colspan="6" style="text-align:center;">Đang tải danh sách sản phẩm...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CATEGORIES TAB -->
+            <div id="tab-categories" class="tab-section">
+                <div class="card-header">
+                    <div>
+                        <h2 class="page-title" style="margin:0;">Quản lý Danh Mục Thời Trang</h2>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.2rem;">Phân loại đồ bé trai, bé gái, sơ sinh và phụ kiện</p>
+                    </div>
+                    <button class="btn-primary" onclick="openCategoryModal()">+ Thêm Danh Mục Mới</button>
+                </div>
+                <div class="data-card">
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tên Danh Mục</th>
+                                    <th>Mô Tả Chi Tiết</th>
+                                    <th>Thao Tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tb-categories">
+                                <tr>
+                                    <td colspan="4" style="text-align:center;">Đang tải dữ liệu...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ORDERS TAB -->
+            <div id="tab-orders" class="tab-section">
+                <div class="card-header">
+                    <div>
+                        <h2 class="page-title" style="margin:0;">Quản lý Đơn Hàng Bé Yêu</h2>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.2rem;">Theo dõi đơn hàng, địa chỉ giao hàng và cập nhật tiến độ giao</p>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:0.6rem;">
+                        <label for="order-status-filter" style="font-weight:700; font-size:0.88rem; color:var(--text-muted);">Lọc theo trạng thái:</label>
+                        <select id="order-status-filter" style="padding:0.6rem 1rem; border-radius:var(--radius-sm); border:1.5px solid var(--border); background:white; font-size:0.9rem; font-weight:600;" onchange="filterOrders(this.value)">
+                            <option value="ALL">-- Tất cả đơn hàng --</option>
+                            <option value="PENDING">Chờ xử lý (PENDING)</option>
+                            <option value="CONFIRMED">Đã xác nhận (CONFIRMED)</option>
+                            <option value="SHIPPING">Đang giao hàng (SHIPPING)</option>
+                            <option value="DELIVERED">Đã hoàn thành (DELIVERED)</option>
+                            <option value="CANCELLED">Đã hủy (CANCELLED)</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="data-card">
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Mã Đơn</th>
+                                    <th>Người Nhận & SĐT</th>
+                                    <th>Địa Chỉ Giao Hàng</th>
+                                    <th>Tổng Tiền</th>
+                                    <th>Trạng Thái</th>
+                                    <th>Thao Tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tb-orders">
+                                <tr>
+                                    <td colspan="6" style="text-align:center;">Đang tải dữ liệu đơn hàng...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- VOUCHERS TAB -->
+            <div id="tab-vouchers" class="tab-section">
+                <div class="card-header">
+                    <div>
+                        <h2 class="page-title" style="margin:0;">Mã Khuyến Mãi (Vouchers)</h2>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.2rem;">Tạo các chương trình ưu đãi dành riêng cho phụ huynh và bé</p>
+                    </div>
+                    <button class="btn-primary" onclick="openVoucherModal()">+ Thêm Voucher Mới</button>
+                </div>
+                <div class="data-card">
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Mã Voucher</th>
+                                    <th>Loại Giảm</th>
+                                    <th>Mức Giảm</th>
+                                    <th>Đơn Tối Thiểu</th>
+                                    <th>Lượt Dùng</th>
+                                    <th>Trạng Thái</th>
+                                    <th>Thao Tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tb-vouchers">
+                                <tr>
+                                    <td colspan="8" style="text-align:center;">Đang tải dữ liệu...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- USERS TAB -->
+            <div id="tab-users" class="tab-section">
+                <div class="card-header">
+                    <div>
+                        <h2 class="page-title" style="margin:0;">Tài Khoản Phụ Huynh & Quản Trị</h2>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.2rem;">Quản lý phân quyền và trạng thái hoạt động của thành viên</p>
+                    </div>
+                    <button class="btn-primary" onclick="sendMail()">📧 Gửi Email Thông Báo</button>
+                </div>
+                <div class="data-card">
+                    <div class="table-responsive">
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Tài Khoản</th>
+                                    <th>Email</th>
+                                    <th>Số Điện Thoại</th>
+                                    <th>Phân Quyền</th>
+                                    <th>Trạng Thái</th>
+                                    <th>Thao Tác</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tb-users">
+                                <tr>
+                                    <td colspan="7" style="text-align:center;">Đang tải dữ liệu người dùng...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- MODAL ORDER DETAIL -->
+    <div id="admin-order-modal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 680px;">
+            <span class="modal-close" onclick="closeAdminOrderModal()">&times;</span>
+            <div id="admin-order-modal-body">
+                <!-- Injected by dashboard.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PRODUCT -->
+    <div id="modal-product" class="modal-overlay">
+        <div class="modal-content" style="max-width: 600px;">
+            <span class="modal-close" onclick="closeProductModal()">&times;</span>
+            <h2 id="modal-product-title" style="font-size: 1.4rem; color: var(--text-main); font-weight: 700;">Thêm Sản Phẩm Trẻ Em</h2>
+            <form id="form-product" style="margin-top: 1.5rem;">
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label>Mã Sản Phẩm (ID) (*)</label>
+                    <input type="number" id="prod-id" class="form-control" placeholder="Ví dụ: 201" required>
+                </div>
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label>Tên sản phẩm (*)</label>
+                    <input type="text" id="prod-name" class="form-control" placeholder="Ví dụ: Body Chip Hữu Cơ Sơ Sinh..." required>
+                </div>
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label>Giá bán (VNĐ) (*)</label>
+                    <input type="number" id="prod-price" class="form-control" placeholder="Ví dụ: 185000" required>
+                </div>
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label>Mô tả chất liệu & tính năng</label>
+                    <textarea id="prod-desc" class="form-control" placeholder="100% Cotton hữu cơ mềm mại cho làn da bé..." rows="3"></textarea>
+                </div>
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label>Tên file hình ảnh hoặc URL</label>
+                    <input type="text" id="prod-image" class="form-control" placeholder="Ví dụ: boy_jeans.png hoặc link ảnh...">
+                </div>
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label>Kích cỡ & Tồn kho sản phẩm</label>
+                    <div id="size-variants-container"
+                        style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.8rem; background: #F8FAFC; padding: 1.2rem; border-radius: var(--radius-sm); border: 1px solid var(--border);">
+                        <!-- Size S -->
+                        <div class="size-row" style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" class="size-checkbox" value="S" id="size-s" style="width: 18px; height: 18px;">
+                            <label for="size-s" style="min-width: 30px; margin:0; font-weight: 700;">S:</label>
+                            <input type="number" class="size-stock-input form-control" placeholder="SL" min="0" value="0" style="padding: 0.4rem; width: 70px;">
+                        </div>
+                        <!-- Size M -->
+                        <div class="size-row" style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" class="size-checkbox" value="M" id="size-m" style="width: 18px; height: 18px;">
+                            <label for="size-m" style="min-width: 30px; margin:0; font-weight: 700;">M:</label>
+                            <input type="number" class="size-stock-input form-control" placeholder="SL" min="0" value="0" style="padding: 0.4rem; width: 70px;">
+                        </div>
+                        <!-- Size L -->
+                        <div class="size-row" style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" class="size-checkbox" value="L" id="size-l" style="width: 18px; height: 18px;">
+                            <label for="size-l" style="min-width: 30px; margin:0; font-weight: 700;">L:</label>
+                            <input type="number" class="size-stock-input form-control" placeholder="SL" min="0" value="0" style="padding: 0.4rem; width: 70px;">
+                        </div>
+                        <!-- Size XL -->
+                        <div class="size-row" style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" class="size-checkbox" value="XL" id="size-xl" style="width: 18px; height: 18px;">
+                            <label for="size-xl" style="min-width: 30px; margin:0; font-weight: 700;">XL:</label>
+                            <input type="number" class="size-stock-input form-control" placeholder="SL" min="0" value="0" style="padding: 0.4rem; width: 70px;">
+                        </div>
+                        <!-- Size XXL -->
+                        <div class="size-row" style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" class="size-checkbox" value="XXL" id="size-xxl" style="width: 18px; height: 18px;">
+                            <label for="size-xxl" style="min-width: 30px; margin:0; font-weight: 700;">XXL:</label>
+                            <input type="number" class="size-stock-input form-control" placeholder="SL" min="0" value="0" style="padding: 0.4rem; width: 70px;">
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+                    <button type="submit" class="btn-primary" style="flex:1; justify-content: center;">Lưu Sản Phẩm</button>
+                    <button type="button" class="btn-logout" style="flex:1;" onclick="closeProductModal()">Hủy Bỏ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- CATEGORY MODAL -->
+    <div id="category-modal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 id="modal-category-title" style="font-size: 1.3rem; font-weight: 700; color: var(--text-main);">Thêm Danh Mục</h2>
+                <span class="close" onclick="closeCategoryModal()">&times;</span>
+            </div>
+            <form id="category-form" onsubmit="handleCategorySubmit(event)" style="margin-top: 1.2rem;">
+                <input type="hidden" id="cat-id">
+                <div class="form-group" style="margin-bottom: 1.2rem;">
+                    <label>Tên Danh Mục (*)</label>
+                    <input type="text" id="cat-name" required placeholder="Ví dụ: Váy Đầm Bé Gái" class="form-control">
+                </div>
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label>Mô Tả</label>
+                    <textarea id="cat-desc" rows="3" placeholder="Mô tả danh mục thời trang..." class="form-control"></textarea>
+                </div>
+                <div style="display:flex; gap:1rem;">
+                    <button type="submit" class="btn-primary" style="flex:1; justify-content: center;">Lưu Danh Mục</button>
+                    <button type="button" class="btn-logout" style="flex:1;" onclick="closeCategoryModal()">Hủy Bỏ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- VOUCHER MODAL -->
+    <div id="voucher-modal" class="modal">
+        <div class="modal-content" style="max-width: 550px;">
+            <div class="modal-header">
+                <h2 id="modal-voucher-title" style="font-size: 1.3rem; font-weight: 700; color: var(--text-main);">Thêm Voucher Mới</h2>
+                <span class="close" onclick="closeVoucherModal()">&times;</span>
+            </div>
+            <form id="voucher-form" onsubmit="handleVoucherSubmit(event)" style="margin-top: 1.2rem;">
+                <input type="hidden" id="voucher-id">
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label>Mã Voucher (* in hoa)</label>
+                    <input type="text" id="v-code" required placeholder="Ví dụ: KIDDIE10" class="form-control" style="text-transform:uppercase;">
+                </div>
+                <div class="form-group" style="margin-bottom: 1rem;">
+                    <label>Mô Tả Khuyến Mãi</label>
+                    <input type="text" id="v-desc" placeholder="Ví dụ: Giảm 10% mừng ngày quốc tế thiếu nhi..." class="form-control">
+                </div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <div>
+                        <label>Loại Giảm Giá</label>
+                        <select id="v-type" class="form-control" onchange="toggleVoucherTypeInput()">
+                            <option value="PERCENTAGE">Phần trăm (%)</option>
+                            <option value="FIXED_AMOUNT">Số tiền cố định (VNĐ)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label id="v-value-label">Mức Giảm (%)</label>
+                        <input type="number" id="v-value" required min="1" step="any" placeholder="10" class="form-control">
+                    </div>
+                </div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                    <div>
+                        <label>Đơn Tối Thiểu (VNĐ)</label>
+                        <input type="number" id="v-min" min="0" value="0" class="form-control">
+                    </div>
+                    <div>
+                        <label>Giảm Tối Đa (VNĐ)</label>
+                        <input type="number" id="v-max" min="0" placeholder="Để trống nếu không giới hạn" class="form-control">
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label>Giới Hạn Lượt Dùng</label>
+                    <input type="number" id="v-limit" min="1" value="100" class="form-control">
+                </div>
+                <div style="display:flex; gap:1rem;">
+                    <button type="submit" class="btn-primary" style="flex:1; justify-content: center;">Lưu Voucher</button>
+                    <button type="button" class="btn-logout" style="flex:1;" onclick="closeVoucherModal()">Hủy Bỏ</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+
+</html>

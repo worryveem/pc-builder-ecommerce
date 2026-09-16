@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kho Mã Giảm Giá & Voucher Ưu Đãi - KiddieLuxe Kids</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .voucher-page-header {
+            background: linear-gradient(135deg, #FFF5F7 0%, #FFF8E7 100%);
+            padding: 3rem 5%;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2.5rem;
+        }
+        .voucher-page-header h1 {
+            font-size: 2.3rem;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+        .voucher-page-header p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            max-width: 650px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        .voucher-guide-box {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 2rem;
+            margin: 3rem 0;
+            box-shadow: var(--shadow-sm);
+        }
+        .guide-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .guide-step-card {
+            background: #F8FAFC;
+            padding: 1.5rem;
+            border-radius: var(--radius-sm);
+            border-left: 4px solid var(--primary);
+        }
+        .guide-step-card strong {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-size: 1rem;
+            color: var(--text-main);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP NOTICE BAR -->
+    <div class="top-notice-bar">
+        <span class="badge">🎁 KHUYẾN MÃI</span>
+        <span>Nhập mã ngay để nhận ưu đãi lên đến 20% cùng chính sách Miễn phí vận chuyển toàn quốc!</span>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <span class="logo-icon">🧸</span>
+            Kiddie<span>Luxe</span>
+            <span class="tag-kids">Kids</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Trang Chủ</a></li>
+            <li><a href="products.html">Bộ Sưu Tập</a></li>
+            <li><a href="vouchers.html" class="active">Ưu Đãi</a></li>
+            <li><a href="wishlist.html">Yêu Thích</a></li>
+            <li><a href="about.html">Về Chúng Tôi</a></li>
+            <li><a href="track-order.html">Tra Cứu Đơn</a></li>
+        </ul>
+        <div class="nav-actions" id="auth-links"></div>
+    </nav>
+
+    <!-- HEADER -->
+    <header class="voucher-page-header">
+        <div class="container">
+            <span style="font-size: 2.2rem; display: inline-block; margin-bottom: 0.5rem;">🎉</span>
+            <h1>Kho Voucher & Mã Giảm Giá</h1>
+            <p>Thu thập các mã giảm giá hấp dẫn để mua sắm trang phục êm ái, an toàn nhất cho bé yêu với chi phí tiết kiệm nhất!</p>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Vouchers Grid -->
+        <div class="vouchers-grid" id="vouchers-container">
+            <div style="text-align: center; width: 100%; grid-column: 1 / -1; padding: 4rem 0;">
+                <p style="color: var(--text-muted);">Đang tải danh sách ưu đãi cho bé...</p>
+            </div>
+        </div>
+
+        <!-- How to Use Vouchers Guide -->
+        <div class="voucher-guide-box">
+            <h3 style="font-size: 1.3rem; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 0.6rem;">
+                <span>💡</span> Hướng Dẫn Sử Dụng Mã Giảm Giá
+            </h3>
+            <div class="guide-steps">
+                <div class="guide-step-card">
+                    <strong>Bước 1: Sao chép mã</strong>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0;">Bấm nút <strong>"Sao chép"</strong> tại voucher phù hợp với đơn hàng của ba mẹ.</p>
+                </div>
+                <div class="guide-step-card">
+                    <strong>Bước 2: Chọn đồ cho bé</strong>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0;">Khám phá bộ sưu tập quần áo organic và bấm <strong>"Thêm vào giỏ hàng"</strong>.</p>
+                </div>
+                <div class="guide-step-card">
+                    <strong>Bước 3: Dán mã khi thanh toán</strong>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin: 0;">Tại trang Thanh toán, dán mã vào ô <strong>"Mã voucher"</strong> rồi bấm Áp dụng để được giảm ngay!</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer-kids">
+        <div class="footer-inner">
+            <div class="footer-col">
+                <div class="logo" style="color: white; margin-bottom: 1rem;">
+                    <span class="logo-icon">🧸</span>
+                    Kiddie<span style="color: var(--primary);">Luxe</span>
+                </div>
+                <p style="color: #b2bec3; font-size: 0.92rem; line-height: 1.7;">
+                    Thương hiệu thời trang trẻ em & đồ sơ sinh organic hàng đầu. Từng sản phẩm đều được chọn lọc từ sợi bông tinh khiết nhất, mang lại sự êm ái tuyệt đối cho bé yêu.
+                </p>
+            </div>
+            <div class="footer-col">
+                <h3>Bộ Sưu Tập</h3>
+                <ul>
+                    <li><a href="products.html">👶 Đồ Sơ Sinh (0-12M)</a></li>
+                    <li><a href="products.html">👗 Váy Đầm Bé Gái</a></li>
+                    <li><a href="products.html">👕 Quần Áo Bé Trai</a></li>
+                    <li><a href="products.html">👟 Giày Tập Đi</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Hỗ Trợ Khách Hàng</h3>
+                <ul>
+                    <li><a href="track-order.html">Tra cứu đơn hàng</a></li>
+                    <li><a href="vouchers.html">Mã ưu đãi voucher</a></li>
+                    <li><a href="about.html">Chính sách đổi trả 7 ngày</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Tư Vấn Size Nhanh</h3>
+                <p style="color: #b2bec3; font-size: 0.9rem; margin-bottom: 0.8rem;">Hotline mẹ & bé (8:00 - 21:00):</p>
+                <div style="font-size: 1.3rem; font-weight: 800; color: var(--accent);">1900 6868</div>
+                <p style="color: #b2bec3; font-size: 0.85rem; margin-top: 0.5rem;">Miễn phí tư vấn kích cỡ theo cân nặng của bé.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 KiddieLuxe Kids Fashion. Nâng niu từng khoảnh khắc tuổi thơ của bé.
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/chat-widget.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadVouchers();
+        });
+
+        async function loadVouchers() {
+            const container = document.getElementById('vouchers-container');
+            if (!container) return;
+
+            // Default curated vouchers list in case DB has few or empty
+            const defaultVouchers = [
+                {
+                    code: 'KIDDIE10',
+                    discount: 10,
+                    type: 'PERCENT',
+                    description: 'Giảm 10% cho toàn bộ bộ sưu tập Organic mới nhất của bé.',
+                    minSpend: 200000,
+                    tag: 'HOT NHẤT'
+                },
+                {
+                    code: 'FREESHIP',
+                    discount: 30000,
+                    type: 'FIXED',
+                    description: 'Miễn phí vận chuyển toàn quốc cho đơn hàng từ 300.000đ.',
+                    minSpend: 300000,
+                    tag: 'MIỄN PHÍ SHIP'
+                },
+                {
+                    code: 'BEKHOE50K',
+                    discount: 50000,
+                    type: 'FIXED',
+                    description: 'Giảm ngay 50.000đ cho đơn hàng quần áo bé từ 400.000đ.',
+                    minSpend: 400000,
+                    tag: 'ƯU ĐÃI LỚN'
+                },
+                {
+                    code: 'NEWBORN15',
+                    discount: 15,
+                    type: 'PERCENT',
+                    description: 'Ưu đãi 15% cho các set đồ sơ sinh và phụ kiện cao cấp cho bé dưới 12 tháng.',
+                    minSpend: 250000,
+                    tag: 'SƠ SINH'
+                },
+                {
+                    code: 'KIDDIEVIP',
+                    discount: 100000,
+                    type: 'FIXED',
+                    description: 'Giảm khủng 100.000đ cho đơn hàng sắm đồ thời trang từ 800.000đ.',
+                    minSpend: 800000,
+                    tag: 'VIP MEMBER'
+                }
+            ];
+
+            try {
+                let vouchers = [];
+                try {
+                    const res = await fetchAPI('/vouchers');
+                    const apiVouchers = res.data || res || [];
+                    if (Array.isArray(apiVouchers) && apiVouchers.length > 0) {
+                        vouchers = apiVouchers;
+                    }
+                } catch(e) {
+                    console.log("Dùng danh sách voucher mặc định:", e);
+                }
+
+                if (vouchers.length === 0) {
+                    vouchers = defaultVouchers;
+                }
+
+                renderVouchers(vouchers, container);
+
+            } catch (err) {
+                console.error(err);
+                renderVouchers(defaultVouchers, container);
+            }
+        }
+
+        function renderVouchers(vouchers, container) {
+            container.innerHTML = '';
+            
+            vouchers.forEach(v => {
+                const code = v.code || 'KIDDIE';
+                let displayValue = '';
+                if (v.discountPercent || v.percent) {
+                    displayValue = `GIẢM ${v.discountPercent || v.percent}%`;
+                } else if (v.discountAmount) {
+                    displayValue = `GIẢM ${formatPrice(v.discountAmount)}`;
+                } else if (v.discount) {
+                    displayValue = v.type === 'PERCENT' ? `GIẢM ${v.discount}%` : `GIẢM ${formatPrice(v.discount)}`;
+                } else {
+                    displayValue = `GIẢM GIÁ ĐẶC BIỆT`;
+                }
+
+                const desc = v.description || (v.minSpend ? `Áp dụng cho đơn hàng từ ${formatPrice(v.minSpend)}` : 'Áp dụng cho mọi đơn hàng thời trang trẻ em.');
+                const tag = v.tag || 'MÃ ƯU ĐÃI';
+
+                const card = document.createElement('div');
+                card.className = 'voucher-ticket';
+                card.innerHTML = `
+                    <div class="voucher-header">
+                        <span class="voucher-tag">${tag}</span>
+                        <span style="font-size: 1.2rem;">🎟️</span>
+                    </div>
+                    <div class="voucher-value">${displayValue}</div>
+                    <div class="voucher-desc">${desc}</div>
+                    <div class="voucher-code-box">
+                        <span class="voucher-code-text">${code}</span>
+                        <button class="btn-copy-code" onclick="copyVoucherCode('${code}')">Sao Chép</button>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        window.copyVoucherCode = function(code) {
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(code).then(() => {
+                    showToast(`Đã sao chép mã "${code}" vào bộ nhớ tạm! 🎉`, 'success');
+                }).catch(() => {
+                    fallbackCopy(code);
+                });
+            } else {
+                fallbackCopy(code);
+            }
+        };
+
+        function fallbackCopy(text) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            ta.remove();
+            showToast(`Đã sao chép mã "${text}"! 🎉`, 'success');
+        }
+    </script>
+</body>
+</html>

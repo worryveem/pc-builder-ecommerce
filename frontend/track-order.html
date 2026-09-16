@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tra cứu đơn hàng - KiddieLuxe Kids</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .track-container { max-width: 860px; margin: 3rem auto; padding: 0 1.5rem; }
+        .lookup-box { 
+            background: white; 
+            padding: 2.5rem; 
+            border-radius: var(--radius-lg); 
+            box-shadow: var(--shadow-sm); 
+            border: 1px solid var(--border); 
+            text-align: center;
+        }
+        .lookup-input-group {
+            display: flex; 
+            gap: 1rem; 
+            max-width: 580px; 
+            margin: 1.5rem auto 0.5rem auto;
+        }
+        .order-card { 
+            background: white; 
+            border: 1px solid var(--border); 
+            border-radius: var(--radius-md); 
+            padding: 1.5rem 1.8rem; 
+            margin-top: 1.5rem; 
+            transition: all 0.3s ease; 
+        }
+        .order-card:hover { 
+            transform: translateY(-3px); 
+            box-shadow: var(--shadow-md); 
+            border-color: rgba(255, 101, 132, 0.3);
+        }
+        .order-meta { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            border-bottom: 1px solid #f3f4f6; 
+            padding-bottom: 1rem; 
+            margin-bottom: 1rem; 
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        .status-badge { 
+            padding: 0.35rem 0.9rem; 
+            border-radius: 999px; 
+            font-size: 0.8rem; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+        }
+        .status-pending { background: #fff8e1; color: #d97706; }
+        .status-confirmed { background: #e0f2fe; color: #0284c7; }
+        .status-shipping { background: #e0e7ff; color: #4338ca; }
+        .status-delivered, .status-completed { background: #dcfce7; color: #15803d; }
+        .status-cancelled { background: #fee2e2; color: #dc2626; }
+    </style>
+</head>
+<body>
+    <!-- TOP NOTICE BAR -->
+    <div class="top-notice-bar">
+        <span class="badge">🧸 BÉ YÊU</span>
+        <span>Cam kết 100% Cotton Organic an toàn cho da nhạy cảm của bé • Đổi trả tận nhà 7 ngày</span>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <span class="logo-icon">🧸</span>
+            Kiddie<span>Luxe</span>
+            <span class="tag-kids">Kids</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Trang Chủ</a></li>
+            <li><a href="products.html">Bộ Sưu Tập</a></li>
+            <li><a href="vouchers.html">Ưu Đãi</a></li>
+            <li><a href="wishlist.html">Yêu Thích</a></li>
+            <li><a href="about.html">Về Chúng Tôi</a></li>
+            <li><a href="track-order.html" class="active">Tra Cứu Đơn</a></li>
+        </ul>
+        <div class="nav-actions" id="auth-links"></div>
+    </nav>
+
+    <header class="page-header" style="background: linear-gradient(135deg, #FFF0F3 0%, #FFF8EE 100%); padding: 3rem 1rem; text-align: center; border-bottom: 1px solid var(--border);">
+        <div class="container">
+            <span class="badge badge-primary" style="margin-bottom: 0.8rem; font-size: 0.85rem; padding: 0.4rem 1rem;">🔍 Tra cứu nhanh</span>
+            <h1 style="font-family: var(--font-heading); font-size: 2.2rem; color: var(--text-main); margin-bottom: 0.5rem;">Tra Cứu Đơn Hàng Bé Yêu</h1>
+            <p style="color: var(--text-muted); font-size: 1rem;">Dành cho phụ huynh mua hàng không đăng nhập tài khoản</p>
+        </div>
+    </header>
+
+    <main class="track-container">
+        <div class="lookup-box">
+            <h2 style="font-size: 1.4rem; font-weight: 700; color: var(--text-main);">Nhập Email đã đặt hàng</h2>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin-top: 0.3rem;">Hệ thống sẽ tra cứu tất cả các đơn hàng được liên kết với email này</p>
+            <div class="lookup-input-group">
+                <input type="email" id="lookup-email" class="form-control" placeholder="Ví dụ: mebe@gmail.com..." style="flex: 1; padding: 0.85rem 1.2rem; border-radius: var(--radius-sm);">
+                <button class="btn btn-primary" onclick="lookupOrders()" style="white-space: nowrap; padding: 0.85rem 1.8rem;">
+                    Tra Cứu Ngay 🚀
+                </button>
+            </div>
+            <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted);">
+                💡 Quý khách vui lòng nhập đúng email đã điền trong đơn thanh toán.
+            </p>
+        </div>
+
+        <div id="results-container" style="margin-top: 2rem;">
+            <!-- Results populated here -->
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer-kids">
+        <div class="footer-inner">
+            <div class="footer-col">
+                <div class="logo" style="color: white; margin-bottom: 1rem;">
+                    <span class="logo-icon">🧸</span>
+                    Kiddie<span style="color: var(--primary);">Luxe</span>
+                </div>
+                <p style="color: #b2bec3; font-size: 0.92rem; line-height: 1.7;">
+                    Thương hiệu thời trang trẻ em & đồ sơ sinh organic hàng đầu. Từng sản phẩm đều được chọn lọc từ sợi bông tinh khiết nhất, mang lại sự êm ái tuyệt đối cho bé yêu.
+                </p>
+            </div>
+            <div class="footer-col">
+                <h3>Bộ Sưu Tập</h3>
+                <ul>
+                    <li><a href="products.html">👶 Đồ Sơ Sinh (0-12M)</a></li>
+                    <li><a href="products.html">👗 Váy Đầm Bé Gái</a></li>
+                    <li><a href="products.html">👕 Quần Áo Bé Trai</a></li>
+                    <li><a href="products.html">👟 Giày Tập Đi</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Hỗ Trợ Khách Hàng</h3>
+                <ul>
+                    <li><a href="track-order.html">Tra cứu đơn hàng</a></li>
+                    <li><a href="vouchers.html">Mã ưu đãi voucher</a></li>
+                    <li><a href="about.html">Chính sách đổi trả 7 ngày</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Tư Vấn Size Nhanh</h3>
+                <p style="color: #b2bec3; font-size: 0.9rem; margin-bottom: 0.8rem;">Hotline mẹ & bé (8:00 - 21:00):</p>
+                <div style="font-size: 1.3rem; font-weight: 800; color: var(--accent);">1900 6868</div>
+                <p style="color: #b2bec3; font-size: 0.85rem; margin-top: 0.5rem;">Miễn phí tư vấn kích cỡ theo cân nặng của bé.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 KiddieLuxe Kids Fashion. Nâng niu từng khoảnh khắc tuổi thơ của bé.
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/chat-widget.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const email = urlParams.get('email');
+            if (email) {
+                document.getElementById('lookup-email').value = email;
+                lookupOrders();
+            }
+        });
+
+        async function lookupOrders() {
+            const email = document.getElementById('lookup-email').value.trim();
+            const container = document.getElementById('results-container');
+            
+            if (!email) {
+                showToast('Vui lòng nhập email của bạn', 'warning');
+                return;
+            }
+
+            container.innerHTML = '<div style="text-align:center; padding: 2rem; color: var(--text-muted);">Đang tra cứu dữ liệu đơn hàng...</div>';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/order/guest?email=${encodeURIComponent(email)}`);
+                const orders = await response.json();
+
+                if (!orders || orders.length === 0) {
+                    container.innerHTML = `
+                        <div style="text-align: center; padding: 3.5rem 2rem; background: #fff; border-radius: var(--radius-md); border: 1px dashed var(--border);">
+                            <div style="font-size: 3rem; margin-bottom: 0.8rem;">📦</div>
+                            <h3 style="color: var(--text-main); font-weight: 700; margin-bottom: 0.5rem;">Không tìm thấy đơn hàng nào!</h3>
+                            <p style="color: var(--text-muted); font-size: 0.95rem;">Vui lòng kiểm tra lại địa chỉ email hoặc liên hệ tổng đài 1900 6868 để được hỗ trợ kiểm tra.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = `<h3 style="margin-bottom: 1.2rem; font-weight: 700; color: var(--text-main);">Tìm thấy ${orders.length} đơn hàng của bạn:</h3>`;
+                
+                orders.forEach(order => {
+                    const statusKey = (order.status || 'PENDING').toLowerCase();
+                    const statusClass = `status-${statusKey}`;
+                    const recipientName = order.fullName || 'Khách vãng lai';
+                    const orderDate = order.createdAt ? new Date(order.createdAt).toLocaleDateString('vi-VN') : 'Mới đặt';
+                    
+                    html += `
+                        <div class="order-card">
+                            <div class="order-meta">
+                                <div>
+                                    <span style="font-weight: 800; color: var(--primary); font-size: 1.05rem;">Mã ĐH: #${order.id}</span>
+                                    <span style="color: var(--text-muted); margin-left: 1rem; font-size: 0.9rem;">📅 Ngày đặt: ${orderDate}</span>
+                                </div>
+                                <span class="status-badge ${statusClass}">${order.status}</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+                                <div>
+                                    <div style="font-size: 0.95rem; color: var(--text-main); margin-bottom: 0.3rem;">
+                                        Người nhận: <strong>${recipientName}</strong>
+                                    </div>
+                                    <div style="font-size: 0.9rem; color: var(--text-muted);">
+                                        📞 SĐT: <strong>${order.phone || 'Chưa cung cấp'}</strong>
+                                    </div>
+                                    <div style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.2rem;">
+                                        📍 Địa chỉ: ${order.address || 'Giao theo thông tin email'}
+                                    </div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.2rem;">Tổng thanh toán</div>
+                                    <div style="font-size: 1.35rem; font-weight: 800; color: var(--primary);">${formatPrice(order.totalPrice)}</div>
+                                </div>
+                            </div>
+                            <div style="margin-top: 1.2rem; padding-top: 1rem; border-top: 1px dashed var(--border); display: flex; justify-content: space-between; align-items: center;">
+                                <span style="font-size: 0.85rem; color: var(--text-muted);">Phương thức: <b>${order.paymentMethod || 'COD'}</b></span>
+                                <button class="btn btn-outline" style="padding: 0.45rem 1.2rem; font-size: 0.9rem;" onclick="viewGuestDetail(${order.id}, '${email}')">
+                                    Xem Chi Tiết Đơn &rarr;
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                container.innerHTML = html;
+
+            } catch (err) {
+                console.error(err);
+                showToast('Lỗi khi tra cứu đơn hàng', 'error');
+                container.innerHTML = '<div style="text-align:center; color:var(--primary); padding: 2rem;">Đã có lỗi xảy ra khi kết nối hệ thống. Vui lòng thử lại sau.</div>';
+            }
+        }
+
+        window.viewGuestDetail = async function(id, email) {
+            try {
+                const res = await fetch(`${API_BASE_URL}/order/guest/${id}?email=${encodeURIComponent(email)}`);
+                const detail = await res.json();
+                showQuickOrderDetail(detail);
+            } catch (err) {
+                showToast('Không thể tải chi tiết đơn hàng', 'error');
+            }
+        };
+
+        function showQuickOrderDetail(order) {
+            let modal = document.getElementById('order-detail-modal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'order-detail-modal';
+                modal.className = 'modal-overlay';
+                document.body.appendChild(modal);
+            }
+            
+            const items = order.orderItems || [];
+            const itemsHtml = items.length > 0 ? items.map(item => {
+                let imgUrl = 'images/hero_kids.png';
+                let prodName = 'Sản phẩm trẻ em';
+                let sizeName = 'Chuẩn';
+                
+                if (item.variant) {
+                    if (item.variant.productResponse) {
+                        prodName = item.variant.productResponse.name || prodName;
+                        if (item.variant.productResponse.images && item.variant.productResponse.images.length > 0) {
+                            imgUrl = window.getImageUrl(item.variant.productResponse.images[0].imageUrl);
+                        }
+                    }
+                    if (item.variant.size) {
+                        sizeName = item.variant.size.name || sizeName;
+                    }
+                }
+
+                return `
+                <div style="display: flex; gap: 1rem; margin-bottom: 1rem; border-bottom: 1px solid #f0f0f0; padding-bottom: 1rem;">
+                    <img src="${imgUrl}" style="width: 70px; height: 70px; object-fit: cover; border-radius: 8px; border: 1px solid #eee;">
+                    <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                        <div style="display: flex; justify-content: space-between; gap: 1rem;">
+                            <div style="font-weight: 600; font-size: 0.95rem; color: #1e293b;">${prodName}</div>
+                            <div style="font-weight: 700; color: var(--primary);">${formatPrice(item.price)}</div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: flex-end; font-size: 0.85rem; color: #64748b;">
+                            <span>Size: <b>${sizeName}</b></span>
+                            <span>Số lượng: <b>x${item.quantity}</b></span>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('') : '<p style="color:#888; text-align:center; padding:1rem;">Không có chi tiết sản phẩm.</p>';
+
+            const name = order.fullName || 'Khách vãng lai';
+            const phone = order.phone || 'Chưa có SĐT';
+            const addressText = order.address || order.email;
+            const notesText = order.notes ? `<div style="margin-top:0.4rem; font-size:0.85rem; color:#d97706; background:#fffbeb; padding:0.4rem 0.8rem; border-radius:4px;"><b>Ghi chú:</b> ${order.notes}</div>` : '';
+
+            modal.innerHTML = `
+                <div style="position: relative; width: 100%; max-width: 650px; margin: 3% auto; background: white; border-radius: var(--radius-md); box-shadow: 0 10px 40px rgba(0,0,0,0.2); display: flex; flex-direction: column; overflow: hidden;">
+                    <span class="modal-close" onclick="this.closest('.modal-overlay').classList.remove('active')" style="position: absolute; top: 15px; right: 20px; font-size: 1.8rem; cursor: pointer; color: #64748b; z-index: 10;">&times;</span>
+                    
+                    <!-- Top Header -->
+                    <div style="background: linear-gradient(135deg, #FFF0F3 0%, #FFF8EE 100%); padding: 1.5rem; border-bottom: 1px solid var(--border);">
+                        <span class="badge badge-primary" style="margin-bottom:0.4rem; display:inline-block;">Chi Tiết Đơn Hàng</span>
+                        <h2 style="margin: 0; font-size: 1.3rem; color: var(--text-main);">Mã Đơn: #${order.id}</h2>
+                        <span style="color: var(--text-muted); font-size: 0.85rem;">Ngày đặt: ${new Date(order.createdAt).toLocaleString('vi-VN')}</span>
+                    </div>
+                    
+                    <!-- Delivery Info -->
+                    <div style="padding: 1.25rem 1.5rem; border-bottom: 1px solid #f0f0f0;">
+                        <div style="font-weight: 700; margin-bottom: 0.6rem; color: var(--text-main); font-size: 0.95rem;">
+                            📍 Địa Chỉ & Thông Tin Giao Hàng
+                        </div>
+                        <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                            <div style="font-weight: 600; color: #1e293b; font-size: 0.95rem;">
+                                ${name} <br>
+                                <span style="color: var(--text-muted); font-size: 0.85rem; font-weight: 400;">📞 ${phone}</span>
+                            </div>
+                            <div style="color: #475569; flex: 1; font-size: 0.9rem; line-height: 1.4;">
+                                ${addressText}
+                                ${notesText}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Items -->
+                    <div style="padding: 1.25rem 1.5rem; max-height: 280px; overflow-y: auto;">
+                        <div style="font-weight: 700; margin-bottom: 0.8rem; color: var(--text-main); font-size: 0.95rem;">
+                            🛍️ Sản Phẩm Đã Chọn
+                        </div>
+                        ${itemsHtml}
+                    </div>
+                    
+                    <!-- Summary -->
+                    <div style="background: #fafafa; padding: 1.25rem 1.5rem; border-top: 1px solid #f0f0f0; font-size: 0.9rem;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.4rem;">
+                            <span style="color: #64748b;">Phương thức thanh toán:</span>
+                            <span style="font-weight: 600;">${order.paymentMethod || 'COD'}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.4rem;">
+                            <span style="color: #64748b;">Trạng thái đơn:</span>
+                            <span style="font-weight: 700; color: var(--primary);">${order.status}</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-top: 0.8rem; padding-top: 0.8rem; border-top: 1px dashed #e2e8f0; font-size: 1.1rem; font-weight: 700;">
+                            <span>Tổng thanh toán:</span>
+                            <span style="color: var(--primary); font-size: 1.35rem;">${formatPrice(order.totalPrice)}</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+            modal.onclick = (e) => {
+                if (e.target === modal) {
+                    modal.classList.remove('active');
+                }
+            };
+            modal.classList.add('active');
+        }
+    </script>
+</body>
+</html>

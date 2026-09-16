@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký tài khoản - KiddieLuxe Kids</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            margin: 0; padding: 0; 
+            background: linear-gradient(135deg, #FFF0F3 0%, #FFF8EE 100%); 
+            min-height: 100vh; 
+            display: flex; flex-direction: column; 
+            font-family: var(--font-body);
+        }
+        .main-wrapper {
+            flex: 1; display: flex; align-items: center; justify-content: center; padding: 2rem 1rem;
+        }
+        .split-container { 
+            display: flex; width: 1020px; max-width: 100%; min-height: 640px; 
+            background: white; border-radius: 24px; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.06); 
+            overflow: hidden; 
+            border: 1px solid var(--border);
+        }
+        .split-left { 
+            flex: 1; 
+            background: url('images/girl_cardigan.png') center/cover no-repeat; 
+            position: relative; display: none;
+        }
+        @media (min-width: 860px) { .split-left { display: block; } }
+        .split-left::after { 
+            content: ''; position: absolute; inset: 0; 
+            background: linear-gradient(to top, rgba(26, 29, 46, 0.8), rgba(26, 29, 46, 0.2)); 
+        }
+        .split-quote { 
+            position: absolute; bottom: 35px; left: 35px; color: white; right: 35px; z-index: 2; 
+        }
+        .split-quote h2 { font-size: 1.8rem; margin-bottom: 8px; color: white; font-family: var(--font-heading); }
+        .split-quote p { font-size: 0.95rem; opacity: 0.9; line-height: 1.5; }
+
+        .split-right { 
+            flex: 1.25; padding: 2.5rem 3rem; display: flex; flex-direction: column; justify-content: center; 
+        }
+        .auth-logo { 
+            font-size: 1.8rem; font-weight: 800; color: var(--text-main); 
+            text-decoration: none; margin-bottom: 4px; text-align: center; 
+            display: flex; align-items: center; justify-content: center; gap: 0.3rem;
+        }
+        .auth-logo span { color: var(--primary); }
+        .auth-subtitle { text-align: center; color: var(--text-muted); margin-bottom: 1.5rem; font-size: 0.9rem;}
+        
+        .form-group { margin-bottom: 0.85rem; position: relative; }
+        .form-label { display: block; margin-bottom: 0.3rem; font-weight: 600; font-size: 0.85rem; color: var(--text-main); }
+        .form-input { 
+            width: 100%; padding: 0.75rem 0.95rem; border: 1.5px solid var(--border); 
+            border-radius: var(--radius-sm); font-family: inherit; font-size: 0.9rem; 
+            background: #fff; transition: all 0.3s ease;
+        }
+        .form-input:focus {
+            outline: none; border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 101, 132, 0.15);
+        }
+        .auth-links { text-align: center; margin-top: 1.2rem; font-size: 0.9rem; color: var(--text-muted); }
+        .auth-links a { font-weight: 700; color: var(--primary); text-decoration: none; }
+        .row-2 { display: flex; gap: 0.8rem; }
+        .col { flex: 1; }
+    </style>
+</head>
+<body>
+
+    <nav style="padding: 1.2rem 5%; display: flex; justify-content: space-between; align-items: center;">
+        <a href="index.html" class="logo" style="margin:0;">
+            <span class="logo-badge">KIDS</span>Kiddie<span>Luxe</span>
+        </a>
+        <a href="index.html" style="text-decoration: none; color: var(--text-muted); font-weight: 600; font-size: 0.95rem;">&larr; Về trang chủ</a>
+    </nav>
+
+    <div class="main-wrapper">
+        <div class="split-container">
+            <div class="split-left">
+                <div class="split-quote">
+                    <h2>Đặc quyền thành viên nhí.</h2>
+                    <p>Nhận ngay voucher chào mừng 10% và tích lũy điểm đổi quà cho bé yêu khi mua sắm tại KiddieLuxe.</p>
+                </div>
+            </div>
+            
+            <div class="split-right">
+                <a href="index.html" class="auth-logo">
+                    <span class="logo-badge">KIDS</span>Kiddie<span>Luxe</span>
+                </a>
+                <p class="auth-subtitle">Tạo tài khoản phụ huynh mới</p>
+                
+                <form id="registerForm">
+                    <div class="row-2">
+                        <div class="form-group col">
+                            <label class="form-label">Tên đăng nhập</label>
+                            <input type="text" name="username" id="reg-username" class="form-input" placeholder="Tên tài khoản..." required>
+                        </div>
+                        <div class="form-group col">
+                            <label class="form-label">Mật khẩu</label>
+                            <input type="password" name="password" id="reg-password" class="form-input" placeholder="Mật khẩu bảo mật..." required>
+                        </div>
+                    </div>
+                    
+                    <div class="row-2">
+                        <div class="form-group col">
+                            <label class="form-label">Họ và tên phụ huynh</label>
+                            <input type="text" name="fullName" id="reg-fullname" class="form-input" placeholder="Họ và tên..." required>
+                        </div>
+                        <div class="form-group col">
+                            <label class="form-label">Số điện thoại</label>
+                            <input type="tel" name="phone" id="reg-phone" class="form-input" placeholder="0901..." required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Địa chỉ Email</label>
+                        <input type="email" name="email" id="reg-email" class="form-input" placeholder="Email nhận thông báo đơn hàng..." required>
+                    </div>
+                    
+                    <div class="form-group" style="margin-top: 0.8rem; padding: 0.8rem; background: #FFFDFB; border-radius: 8px; border: 1px solid var(--border);">
+                        <label class="form-label" style="color: var(--primary); font-weight: 700;">📍 Địa chỉ giao hàng mặc định</label>
+                        <input type="text" name="addressLine" id="reg-address" class="form-input" placeholder="Số nhà, tên đường..." style="margin-bottom: 0.5rem;" required>
+                        <div class="row-2">
+                            <input type="text" name="ward" id="reg-ward" class="form-input col" placeholder="Phường / Xã" required>
+                            <input type="text" name="district" id="reg-district" class="form-input col" placeholder="Quận / Huyện" required>
+                        </div>
+                        <input type="text" name="city" id="reg-city" class="form-input" placeholder="Tỉnh / Thành phố" style="margin-top: 0.5rem;" required>
+                        <input type="hidden" name="confirmPassword" id="reg-confirm" value="">
+                    </div>
+
+                    <button type="submit" id="registerBtn" class="btn btn-primary" style="width: 100%; padding: 0.85rem; font-size: 1.05rem; margin-top: 0.5rem;">
+                        Tạo Tài Khoản Ngay &rarr;
+                    </button>
+                </form>
+                
+                <div class="auth-links">
+                    Đã có tài khoản phụ huynh? <a href="login.html">Đăng nhập ngay</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/chat-widget.js"></script>
+</body>
+</html>

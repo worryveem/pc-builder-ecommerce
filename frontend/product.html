@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi Tiết Sản Phẩm - KiddieLuxe Kids</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .kids-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.92rem;
+            color: var(--text-muted);
+            margin: 1.8rem auto 0.5rem auto;
+            max-width: 1200px;
+            padding: 0 1rem;
+        }
+        .kids-breadcrumb a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .kids-breadcrumb a:hover {
+            color: var(--primary);
+        }
+        .kids-breadcrumb span {
+            color: var(--text-main);
+            font-weight: 700;
+        }
+        .product-detail-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            margin: 1.5rem auto 5rem auto;
+            max-width: 1200px;
+        }
+        .product-gallery {
+            display: flex;
+            gap: 1.2rem;
+        }
+        .thumbnail-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            width: 80px;
+        }
+        .thumbnail {
+            width: 80px;
+            height: 95px;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+            cursor: pointer;
+            border: 2px solid var(--border);
+            transition: var(--transition);
+        }
+        .thumbnail:hover, .thumbnail.active {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-sm);
+        }
+        .main-image-container {
+            flex: 1;
+            position: relative;
+            background: #fafafa;
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-card);
+            aspect-ratio: 4/5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .main-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        .main-image:hover {
+            transform: scale(1.05);
+        }
+        .pd-title {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+            line-height: 1.3;
+        }
+        .pd-price {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 2.3rem;
+            color: var(--primary);
+            font-weight: 800;
+            margin: 0.8rem 0 1.5rem 0;
+        }
+        .size-guide-pill {
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 0.85rem;
+            font-weight: 700;
+            padding: 0.35rem 0.9rem;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: var(--transition);
+        }
+        .size-guide-pill:hover {
+            background: var(--primary);
+            color: white;
+        }
+        .size-btn {
+            padding: 0.6rem 1.4rem;
+            border: 2px solid var(--border);
+            background: white;
+            cursor: pointer;
+            border-radius: var(--radius-sm);
+            margin-right: 0.6rem;
+            margin-bottom: 0.6rem;
+            font-family: inherit;
+            font-weight: 700;
+            font-size: 0.95rem;
+            transition: var(--transition);
+        }
+        .size-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        .size-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(255, 101, 132, 0.3);
+        }
+        .size-table-box {
+            background: #fff8e7;
+            border: 1px solid #ffeaa7;
+            border-radius: var(--radius-sm);
+            padding: 1rem;
+            margin: 1.2rem 0;
+            font-size: 0.88rem;
+            color: #795548;
+        }
+        .size-table-box table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 0.5rem;
+        }
+        .size-table-box th, .size-table-box td {
+            padding: 0.4rem;
+            border-bottom: 1px dashed rgba(121, 85, 72, 0.2);
+            text-align: left;
+        }
+
+        @media (max-width: 900px) {
+            .product-detail-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            .product-gallery {
+                flex-direction: column-reverse;
+            }
+            .thumbnail-list {
+                flex-direction: row;
+                width: 100%;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP NOTICE BAR -->
+    <div class="top-notice-bar">
+        <span class="badge">👶 BÉ YÊU</span>
+        <span>Cam kết 100% Cotton Organic an toàn tuyệt đối cho da nhạy cảm của bé • Đổi trả tận nhà trong 7 ngày</span>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <span class="logo-icon">🧸</span>
+            Kiddie<span>Luxe</span>
+            <span class="tag-kids">Kids</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Trang Chủ</a></li>
+            <li><a href="products.html">Bộ Sưu Tập</a></li>
+            <li><a href="vouchers.html">Ưu Đãi</a></li>
+            <li><a href="wishlist.html">Yêu Thích</a></li>
+            <li><a href="about.html">Về Chúng Tôi</a></li>
+            <li><a href="track-order.html">Tra Cứu Đơn</a></li>
+        </ul>
+        <div class="nav-actions" id="auth-links"></div>
+    </nav>
+
+    <!-- BREADCRUMB -->
+    <div class="kids-breadcrumb" id="product-breadcrumb">
+        <a href="index.html">Trang Chủ</a> <span>/</span>
+        <a href="products.html">Bộ Sưu Tập</a> <span>/</span>
+        <span id="breadcrumb-product-name">Đang tải sản phẩm...</span>
+    </div>
+
+    <main class="container product-detail-container" id="product-detail-view">
+        <div style="text-align: center; width: 100%; grid-column: 1 / -1; padding: 5rem 0;">
+            <p>Đang tải chi tiết bộ trang phục bé yêu...</p>
+        </div>
+    </main>
+
+    <!-- REVIEWS & RATING SECTION -->
+    <section class="product-reviews-section">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 2px solid #FFE4E8; padding-bottom: 1rem;">
+            <h2 style="font-size: 1.8rem; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 0.6rem;">
+                <span>⭐</span> Đánh Giá & Nhận Xét Từ Phụ Huynh
+            </h2>
+        </div>
+
+        <div class="review-summary-box" id="review-summary-box">
+            <div class="review-score-big">
+                <div class="review-score-num" id="avg-score-display">5.0</div>
+                <div class="review-score-stars" id="avg-stars-display">⭐⭐⭐⭐⭐</div>
+                <div style="color: var(--text-muted); font-size: 0.9rem;" id="total-reviews-display">(0 đánh giá)</div>
+            </div>
+            <div style="flex: 1; min-width: 250px;">
+                <div style="font-weight: 700; margin-bottom: 0.5rem; font-size: 1.05rem;">Trải nghiệm từ các ba mẹ đã mua:</div>
+                <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6;">
+                    Tất cả nhận xét đều đến từ phụ huynh đã mua đồ cho bé tại KiddieLuxe Kids Fashion. Ba mẹ có thể chia sẻ độ co giãn, sự thoáng mát hoặc form dáng để giúp các gia đình khác chọn size chuẩn hơn nhé!
+                </p>
+            </div>
+        </div>
+
+        <!-- Review Form -->
+        <div class="review-form-card">
+            <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 1.2rem; color: var(--text-main);">
+                ✍️ Gửi Đánh Giá Trải Nghiệm Cho Bé
+            </h3>
+            <form id="review-form" onsubmit="submitReview(event)">
+                <div style="margin-bottom: 1.2rem;">
+                    <label style="font-weight: 700; font-size: 0.95rem; display: block; margin-bottom: 0.3rem;">Mức độ hài lòng của ba mẹ:</label>
+                    <div class="star-rating-select" id="star-selector">
+                        <span class="star-item active" data-val="1">★</span>
+                        <span class="star-item active" data-val="2">★</span>
+                        <span class="star-item active" data-val="3">★</span>
+                        <span class="star-item active" data-val="4">★</span>
+                        <span class="star-item active" data-val="5">★</span>
+                    </div>
+                    <input type="hidden" id="selected-score" value="5">
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1.2rem;">
+                    <div>
+                        <label style="font-weight: 700; font-size: 0.95rem; display: block; margin-bottom: 0.3rem;">Họ tên ba mẹ / Tên bé yêu:</label>
+                        <input type="text" id="reviewer-name" placeholder="VD: Mẹ Thỏ, Ba Bin..." required style="width: 100%; padding: 0.75rem 1rem; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 0.95rem;">
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 1.5rem;">
+                    <label style="font-weight: 700; font-size: 0.95rem; display: block; margin-bottom: 0.3rem;">Chia sẻ cảm nhận về chất vải & kiểu dáng:</label>
+                    <textarea id="reviewer-comment" rows="3" placeholder="Vải mềm mịn, bé mặc rất thích, đường may êm ái..." required style="width: 100%; padding: 0.8rem 1rem; border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 0.95rem; line-height: 1.5;"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-primary" style="padding: 0.85rem 2.2rem; font-size: 1rem; font-weight: 700;">
+                    Gửi Đánh Giá Ngay 🚀
+                </button>
+            </form>
+        </div>
+
+        <!-- Reviews List -->
+        <div id="reviews-list">
+            <div style="text-align: center; color: var(--text-muted); padding: 2rem;">Đang tải danh sách đánh giá...</div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="footer-kids">
+        <div class="footer-inner">
+            <div class="footer-col">
+                <div class="logo" style="color: white; margin-bottom: 1rem;">
+                    <span class="logo-icon">🧸</span>
+                    Kiddie<span style="color: var(--primary);">Luxe</span>
+                </div>
+                <p style="color: #b2bec3; font-size: 0.92rem; line-height: 1.7;">
+                    Thương hiệu thời trang trẻ em & đồ sơ sinh organic hàng đầu. Từng sản phẩm đều được chọn lọc từ sợi bông tinh khiết nhất, mang lại sự êm ái tuyệt đối cho bé yêu.
+                </p>
+            </div>
+            <div class="footer-col">
+                <h3>Bộ Sưu Tập</h3>
+                <ul>
+                    <li><a href="products.html">👶 Đồ Sơ Sinh (0-12M)</a></li>
+                    <li><a href="products.html">👗 Váy Đầm Bé Gái</a></li>
+                    <li><a href="products.html">👕 Quần Áo Bé Trai</a></li>
+                    <li><a href="products.html">👟 Giày Tập Đi</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Hỗ Trợ Khách Hàng</h3>
+                <ul>
+                    <li><a href="track-order.html">Tra cứu đơn hàng</a></li>
+                    <li><a href="vouchers.html">Mã ưu đãi voucher</a></li>
+                    <li><a href="about.html">Chính sách đổi trả 7 ngày</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Tư Vấn Size Nhanh</h3>
+                <p style="color: #b2bec3; font-size: 0.9rem; margin-bottom: 0.8rem;">Hotline mẹ & bé (8:00 - 21:00):</p>
+                <div style="font-size: 1.3rem; font-weight: 800; color: var(--accent);">1900 6868</div>
+                <p style="color: #b2bec3; font-size: 0.85rem; margin-top: 0.5rem;">Miễn phí tư vấn kích cỡ theo cân nặng của bé.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 KiddieLuxe Kids Fashion. Nâng niu từng khoảnh khắc tuổi thơ của bé.
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/chat-widget.js"></script>
+    <script>
+        let currentProductId = null;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            let id = urlParams.get('id');
+            const container = document.getElementById('product-detail-view');
+            const reviewsSection = document.querySelector('.product-reviews-section');
+
+            // If no ID is passed, auto-select the first product so user never sees a broken/empty page
+            if (!id) {
+                try {
+                    const resAll = await fetchAPI('/products');
+                    const allProducts = (resAll && resAll.data) ? resAll.data : (Array.isArray(resAll) ? resAll : []);
+                    if (allProducts && allProducts.length > 0) {
+                        id = allProducts[0].id;
+                        if (window.history.replaceState) {
+                            window.history.replaceState(null, '', `product.html?id=${id}`);
+                        }
+                    }
+                } catch (e) {
+                    console.error('Failed to auto-pick first product:', e);
+                }
+            }
+
+            if (!id) {
+                container.innerHTML = '<div style="text-align:center;width:100%;grid-column:1/-1;padding:5rem 0;"><h2>Vui lòng chọn sản phẩm để xem chi tiết!</h2><a href="products.html" class="btn btn-primary" style="margin-top:1.5rem;">Xem danh sách sản phẩm</a></div>';
+                if (reviewsSection) reviewsSection.style.display = 'none';
+                return;
+            }
+
+            currentProductId = id;
+
+            // Pre-fill user name in review form if logged in
+            const userStr = localStorage.getItem('user');
+            if (userStr) {
+                try {
+                    const u = JSON.parse(userStr);
+                    const nameInput = document.getElementById('reviewer-name');
+                    if (nameInput) nameInput.value = u.username || '';
+                } catch(e) {}
+            }
+
+            initStarRating();
+
+            try {
+                let product = null;
+                try {
+                    const res = await fetchAPI(`/products/${id}`);
+                    if (res && res.data) {
+                        product = res.data;
+                    } else if (res && res.id) {
+                        product = res;
+                    }
+                } catch (e) {
+                    console.warn('Direct fetch failed, falling back to all products', e);
+                }
+
+                if (!product) {
+                    try {
+                        const resAll = await fetchAPI('/products');
+                        const products = (resAll && resAll.data) ? resAll.data : (Array.isArray(resAll) ? resAll : []);
+                        product = products.find(p => p.id == id);
+                        if (!product && products.length > 0) {
+                            product = products[0];
+                        }
+                    } catch (e) {
+                        console.error('Failed to fetch fallback products:', e);
+                    }
+                }
+
+                if (!product) {
+                    container.innerHTML = `
+                        <div style="text-align: center; width: 100%; grid-column: 1 / -1; padding: 5rem 0;">
+                            <h2>Không tìm thấy sản phẩm này</h2>
+                            <p style="color: var(--text-muted); margin: 1rem 0;">Sản phẩm không tồn tại hoặc đã ngừng kinh doanh.</p>
+                            <a href="products.html" class="btn btn-primary">Khám Phá Bộ Sưu Tập Bé Yêu</a>
+                        </div>
+                    `;
+                    if (reviewsSection) reviewsSection.style.display = 'none';
+                    return;
+                }
+
+                currentProductId = product.id;
+
+                // Update breadcrumb
+                const breadcrumbName = document.getElementById('breadcrumb-product-name');
+                if (breadcrumbName) breadcrumbName.innerText = product.name;
+
+                let images = product.images || [];
+                let mainImg = "images/hero_kids.png";
+                let thumbnailsHtml = '';
+
+                if (images.length > 0) {
+                    let mainObj = images.find(i => i.isMain) || images[0];
+                    mainImg = window.getImageUrl(mainObj.imageUrl);
+                    if (images.length > 1) {
+                        images.forEach((img, idx) => {
+                            let iUrl = window.getImageUrl(img.imageUrl);
+                            thumbnailsHtml += `<img src="${iUrl}" class="thumbnail ${idx === 0 ? 'active' : ''}" onclick="changeMainImage('${iUrl}', this)" onerror="this.onerror=null;this.src='images/hero_kids.png'">`;
+                        });
+                    }
+                }
+
+                let variants = (product.productVariants && product.productVariants.length > 0)
+                    ? product.productVariants
+                    : [
+                        { id: 1, size: { name: 'FreeSize (0-12M)' } },
+                        { id: 2, size: { name: 'Size S (5-8kg)' } },
+                        { id: 3, size: { name: 'Size M (8-11kg)' } }
+                    ];
+
+                let sizesHtml = variants.map((v, i) => `
+                    <button type="button" class="size-btn ${i===0?'active':''}" onclick="selectSize(this)" data-variant="${v.id || 1}">
+                        ${v.size && v.size.name ? v.size.name : 'FreeSize'}
+                    </button>
+                `).join('');
+
+                const galleryHtml = thumbnailsHtml ? `
+                    <div class="product-gallery">
+                        <div class="thumbnail-list">
+                            ${thumbnailsHtml}
+                        </div>
+                        <div class="main-image-container">
+                            <span class="badge-organic-corner" style="top:15px; left:15px;">🌿 100% Cotton Organic</span>
+                            <img src="${mainImg}" alt="${product.name}" class="main-image" id="main-product-img" onerror="this.onerror=null;this.src='images/hero_kids.png'">
+                        </div>
+                    </div>
+                ` : `
+                    <div class="main-image-container">
+                        <span class="badge-organic-corner" style="top:15px; left:15px;">🌿 100% Cotton Organic</span>
+                        <img src="${mainImg}" alt="${product.name}" class="main-image" id="main-product-img" onerror="this.onerror=null;this.src='images/hero_kids.png'">
+                    </div>
+                `;
+
+                container.innerHTML = `
+                    ${galleryHtml}
+                    <div class="product-info-panel">
+                        <div style="font-size: 0.85rem; color: var(--primary); font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 0.4rem;">
+                            🧸 ${product.category ? product.category.name : 'Thời Trang Bé Yêu'}
+                        </div>
+                        <h1 class="pd-title">${product.name}</h1>
+                        <div style="display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.8rem;">
+                            <span style="color: var(--accent); font-size: 1.1rem;" id="pd-stars-top">⭐⭐⭐⭐⭐</span>
+                            <span style="color: var(--text-muted); font-size: 0.9rem;" id="pd-reviews-top">(Đang nạp đánh giá...)</span>
+                        </div>
+                        <div class="pd-price">${formatPrice(product.price)}</div>
+
+                        <p style="color: var(--text-muted); line-height: 1.8; font-size: 1.05rem; margin-bottom: 1.5rem;">
+                            ${product.description || 'Chất liệu cotton chải kỹ cao cấp, bề mặt vải siêu mềm mượt giúp bảo vệ làn da non nớt của bé. Thiết kế form dáng năng động, cúc bấm đáy tiện lợi và đường may phẳng không cọ xát.'}
+                        </p>
+
+                        <!-- Size selection -->
+                        <div style="margin-bottom: 1.5rem;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.8rem;">
+                                <span style="font-weight: 800; font-size: 1rem;">KÍCH CỠ CHO BÉ:</span>
+                                <button type="button" class="size-guide-pill" onclick="toggleSizeGuide()">
+                                    📏 Bảng tra cứu cân nặng & size
+                                </button>
+                            </div>
+                            <div style="display: flex; flex-wrap: wrap;">
+                                ${sizesHtml}
+                            </div>
+
+                            <div class="size-table-box" id="size-guide-box" style="display: none;">
+                                <strong>💡 Gợi ý chọn size theo cân nặng của bé:</strong>
+                                <table>
+                                    <tr><th>Size</th><th>Độ tuổi</th><th>Cân nặng</th><th>Chiều cao</th></tr>
+                                    <tr><td><strong>S</strong></td><td>0 - 6 tháng</td><td>5 - 8 kg</td><td>55 - 65 cm</td></tr>
+                                    <tr><td><strong>M</strong></td><td>6 - 12 tháng</td><td>8 - 11 kg</td><td>65 - 75 cm</td></tr>
+                                    <tr><td><strong>L</strong></td><td>1 - 2 tuổi</td><td>11 - 14 kg</td><td>75 - 88 cm</td></tr>
+                                    <tr><td><strong>XL</strong></td><td>2 - 4 tuổi</td><td>14 - 18 kg</td><td>88 - 102 cm</td></tr>
+                                    <tr><td><strong>XXL</strong></td><td>4 - 6 tuổi</td><td>18 - 23 kg</td><td>102 - 115 cm</td></tr>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Action group -->
+                        <div style="display: flex; gap: 0.8rem; align-items: center; margin-bottom: 2rem; flex-wrap: wrap;">
+                            <div style="display: flex; align-items: center; border: 1.5px solid var(--border); border-radius: var(--radius-sm); padding: 0.2rem 0.5rem; background: white;">
+                                <button type="button" style="border:none; background:none; font-size:1.3rem; padding:0.4rem 0.6rem; cursor:pointer;" onclick="adjustQty(-1)">-</button>
+                                <input type="number" id="qty" value="1" min="1" max="99" style="width: 50px; border:none; text-align:center; font-weight:800; font-size:1.05rem; outline:none;" oninput="validateQty(this)" onblur="ensureValidQty(this)">
+                                <button type="button" style="border:none; background:none; font-size:1.3rem; padding:0.4rem 0.6rem; cursor:pointer;" onclick="adjustQty(1)">+</button>
+                            </div>
+                            <button type="button" class="btn btn-primary" style="flex: 1; min-width: 180px; padding: 1rem 1.8rem; font-size: 1.05rem;" onclick="handleAddToCart(${product.id})">
+                                🛒 Thêm Vào Giỏ Hàng
+                            </button>
+                            <button type="button" class="btn btn-outline" id="pd-wishlist-btn" onclick="toggleDetailWishlist(${product.id})" style="padding: 1rem 1.3rem; font-size: 1rem; display: flex; align-items: center; gap: 0.4rem;">
+                                ❤️ <span id="pd-wishlist-label">Yêu Thích</span>
+                            </button>
+                        </div>
+
+                        <!-- Trust Guarantee Checklist -->
+                        <div style="background: #f8fafc; border-radius: var(--radius-sm); padding: 1.2rem; border: 1px solid var(--border);">
+                            <div style="display: flex; gap: 0.6rem; align-items: center; margin-bottom: 0.5rem; font-weight: 700; font-size: 0.92rem; color: #166534;">
+                                <span>🌿</span> 100% Cotton Organic đạt chứng chỉ an toàn cho trẻ sơ sinh
+                            </div>
+                            <div style="display: flex; gap: 0.6rem; align-items: center; margin-bottom: 0.5rem; font-weight: 700; font-size: 0.92rem; color: #1e40af;">
+                                <span>🔄</span> Miễn phí đổi size tận nhà trong vòng 7 ngày
+                            </div>
+                            <div style="display: flex; gap: 0.6rem; align-items: center; font-weight: 700; font-size: 0.92rem; color: #854d0e;">
+                                <span>🚚</span> Kiểm tra hàng thoải mái trước khi thanh toán tiền mặt (COD)
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                // Now that DOM elements exist, load reviews and check wishlist
+                loadProductReviews(currentProductId);
+                checkDetailWishlistStatus(product.id);
+
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = '<div style="text-align:center;width:100%;grid-column:1/-1;color:red;">Lỗi khi tải chi tiết sản phẩm. Vui lòng thử lại sau!</div>';
+            }
+        });
+
+        function changeMainImage(url, thumbEl) {
+            const mainImg = document.getElementById('main-product-img');
+            if (mainImg) mainImg.src = url;
+            document.querySelectorAll('.thumbnail').forEach(el => el.classList.remove('active'));
+            if (thumbEl) thumbEl.classList.add('active');
+        }
+
+        function selectSize(btn) {
+            document.querySelectorAll('.size-btn').forEach(el => el.classList.remove('active'));
+            btn.classList.add('active');
+        }
+
+        function toggleSizeGuide() {
+            const box = document.getElementById('size-guide-box');
+            if (box) {
+                box.style.display = box.style.display === 'none' ? 'block' : 'none';
+            }
+        }
+
+        function adjustQty(amount) {
+            const input = document.getElementById('qty');
+            if (!input) return;
+            let val = parseInt(input.value, 10);
+            if (isNaN(val) || val < 1) val = 1;
+            val = Math.max(1, val + amount);
+            input.value = val;
+        }
+
+        function validateQty(input) {
+            if (!input) return;
+            if (input.value === '') return;
+            let val = parseInt(input.value, 10);
+            if (isNaN(val) || val < 1) {
+                input.value = 1;
+                return;
+            }
+            if (val > 99) input.value = 99;
+        }
+
+        function ensureValidQty(input) {
+            if (!input) return;
+            let val = parseInt(input.value, 10);
+            if (isNaN(val) || val < 1) {
+                input.value = 1;
+            } else if (val > 99) {
+                input.value = 99;
+            }
+        }
+
+        window.handleAddToCart = async function(productId) {
+            const activeSizeBtn = document.querySelector('.size-btn.active');
+            let variantId = activeSizeBtn ? activeSizeBtn.getAttribute('data-variant') : 1;
+            if (!variantId || variantId === 'null' || variantId === 'undefined') variantId = 1;
+            const input = document.getElementById('qty');
+            let qty = parseInt(input ? input.value : 1, 10);
+            if (isNaN(qty) || qty < 1) qty = 1;
+
+            await addToCart(productId, variantId, qty);
+        };
+
+        // Wishlist Status on Product Detail
+        async function checkDetailWishlistStatus(productId) {
+            const token = localStorage.getItem('jwtToken');
+            const btn = document.getElementById('pd-wishlist-btn');
+            const label = document.getElementById('pd-wishlist-label');
+            if (!btn) return;
+
+            let isFav = false;
+            if (!token) {
+                const guestWishlist = JSON.parse(localStorage.getItem('guestWishlist') || '[]');
+                isFav = guestWishlist.includes(Number(productId));
+            } else {
+                try {
+                    const res = await fetchAPI(`/wishlist/check/${productId}`);
+                    isFav = res ? (res.data === true || res === true || res.inWishlist === true || (res.data && (res.data.inWishlist === true || res.data.isWishlisted === true))) : false;
+                } catch(e) {
+                    const guestWishlist = JSON.parse(localStorage.getItem('guestWishlist') || '[]');
+                    isFav = guestWishlist.includes(Number(productId));
+                }
+            }
+
+            if (isFav) {
+                btn.classList.add('active');
+                if (label) label.innerText = 'Đã Thích';
+            } else {
+                btn.classList.remove('active');
+                if (label) label.innerText = 'Yêu Thích';
+            }
+        }
+
+        async function toggleDetailWishlist(productId) {
+            await window.toggleWishlist(null, productId);
+            await checkDetailWishlistStatus(productId);
+        }
+
+        // Star rating selector
+        function initStarRating() {
+            const stars = document.querySelectorAll('#star-selector .star-item');
+            stars.forEach(star => {
+                star.addEventListener('click', () => {
+                    const val = parseInt(star.getAttribute('data-val'));
+                    document.getElementById('selected-score').value = val;
+                    stars.forEach(s => {
+                        const sVal = parseInt(s.getAttribute('data-val'));
+                        if (sVal <= val) {
+                            s.classList.add('active');
+                        } else {
+                            s.classList.remove('active');
+                        }
+                    });
+                });
+            });
+        }
+
+        // Load Reviews
+        async function loadProductReviews(productId) {
+            const listEl = document.getElementById('reviews-list');
+            const scoreEl = document.getElementById('avg-score-display');
+            const starsEl = document.getElementById('avg-stars-display');
+            const countEl = document.getElementById('total-reviews-display');
+
+            try {
+                const res = await fetchAPI(`/ratings/product/${productId}`);
+                const dataObj = (res && res.data) ? res.data : res;
+
+                let reviews = [];
+                let avg = 5.0;
+                let total = 0;
+
+                if (dataObj) {
+                    if (Array.isArray(dataObj)) {
+                        reviews = dataObj;
+                        total = reviews.length;
+                        if (total > 0) {
+                            const sum = reviews.reduce((acc, r) => acc + (r.star || r.score || 5), 0);
+                            avg = (sum / total).toFixed(1);
+                        }
+                    } else {
+                        reviews = Array.isArray(dataObj.ratings) ? dataObj.ratings : [];
+                        avg = (dataObj.averageStar !== undefined && dataObj.averageStar !== null)
+                            ? Number(dataObj.averageStar).toFixed(1)
+                            : (dataObj.averageScore ? Number(dataObj.averageScore).toFixed(1) : '5.0');
+                        total = (dataObj.totalRatings !== undefined && dataObj.totalRatings !== null)
+                            ? dataObj.totalRatings
+                            : reviews.length;
+                    }
+                }
+
+                if (scoreEl) scoreEl.innerText = avg;
+                if (countEl) countEl.innerText = `(${total} đánh giá từ phụ huynh)`;
+                
+                const starNum = Math.round(Number(avg));
+                const starsStr = '⭐'.repeat(Math.max(1, Math.min(5, starNum)));
+                if (starsEl) starsEl.innerText = starsStr;
+
+                const topStars = document.getElementById('pd-stars-top');
+                const topReviews = document.getElementById('pd-reviews-top');
+                if (topStars) topStars.innerText = starsStr;
+                if (topReviews) topReviews.innerText = `(${avg}/5 dựa trên ${total} đánh giá)`;
+
+                if (!reviews || reviews.length === 0) {
+                    listEl.innerHTML = `
+                        <div style="text-align: center; color: var(--text-muted); padding: 3rem; background: #fafafa; border-radius: var(--radius-sm); border: 1px dashed var(--border);">
+                            <div style="font-size: 2rem; margin-bottom: 0.5rem;">🧸</div>
+                            <strong>Chưa có đánh giá nào cho bộ đồ này.</strong>
+                            <p style="font-size: 0.9rem; margin-top: 0.3rem;">Hãy là ba mẹ đầu tiên chia sẻ cảm nhận về chất liệu và kích cỡ cho các gia đình khác nhé!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = '';
+                reviews.forEach(r => {
+                    const name = r.fullName || r.username || r.customerName || (r.user ? r.user.username : 'Phụ huynh KiddieLuxe');
+                    const initial = name.charAt(0).toUpperCase();
+                    const stars = '⭐'.repeat(r.star || r.score || 5);
+                    const dateStr = r.createdAt ? new Date(r.createdAt).toLocaleDateString('vi-VN') : 'Gần đây';
+
+                    html += `
+                        <div class="review-item-card">
+                            <div class="review-user-row">
+                                <div class="review-avatar-wrap">
+                                    <div class="review-avatar">${initial}</div>
+                                    <div>
+                                        <div style="font-weight: 700; color: var(--text-main); font-size: 0.95rem;">${name} <span style="font-size: 0.8rem; color: #166534; background: #DCFCE7; padding: 1px 6px; border-radius: 4px; margin-left: 4px;">✓ Đã mua hàng</span></div>
+                                        <div style="font-size: 0.8rem; color: var(--text-muted);">${dateStr}</div>
+                                    </div>
+                                </div>
+                                <div style="font-size: 1rem;">${stars}</div>
+                            </div>
+                            <div style="color: #475569; font-size: 0.95rem; line-height: 1.6; margin-top: 0.5rem;">
+                                ${r.comment || 'Sản phẩm chất lượng tốt, vải mềm mịn, rất vừa vặn với bé yêu!'}
+                            </div>
+                        </div>
+                    `;
+                });
+                listEl.innerHTML = html;
+
+            } catch (err) {
+                console.error('Lỗi tải đánh giá:', err);
+                listEl.innerHTML = '<div style="color: var(--text-muted); text-align: center; padding: 2rem;">Chưa có nhận xét nào cho sản phẩm.</div>';
+            }
+        }
+
+        // Submit Review
+        async function submitReview(event) {
+            event.preventDefault();
+            if (!currentProductId) return;
+
+            const score = parseInt(document.getElementById('selected-score').value, 10) || 5;
+            const customerName = document.getElementById('reviewer-name').value.trim();
+            const comment = document.getElementById('reviewer-comment').value.trim();
+
+            if (!comment) {
+                showToast('Vui lòng nhập nhận xét của ba mẹ về sản phẩm!', 'warning');
+                return;
+            }
+
+            try {
+                await fetchAPI('/ratings', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        productId: parseInt(currentProductId, 10),
+                        product_id: parseInt(currentProductId, 10),
+                        score: score,
+                        star: score,
+                        customerName: customerName,
+                        comment: comment
+                    })
+                });
+
+                showToast('Cảm ơn ba mẹ đã gửi đánh giá cho bé yêu! 🎉', 'success');
+                document.getElementById('reviewer-comment').value = '';
+                loadProductReviews(currentProductId);
+            } catch (err) {
+                console.error(err);
+                showToast('Lỗi khi gửi đánh giá. Vui lòng thử lại!', 'error');
+            }
+        }
+    </script>
+</body>
+</html>
+

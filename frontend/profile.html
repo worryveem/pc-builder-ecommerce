@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hồ sơ cá nhân - KiddieLuxe Kids</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .profile-container { 
+            max-width: 960px; 
+            margin: 3.5rem auto; 
+            padding: 0 1.5rem; 
+            display: grid; 
+            grid-template-columns: 280px 1fr; 
+            gap: 2.5rem; 
+        }
+        .sidebar-card { 
+            background: white; 
+            border-radius: var(--radius-md); 
+            padding: 2rem; 
+            border: 1px solid var(--border); 
+            height: fit-content; 
+            box-shadow: var(--shadow-sm);
+        }
+        .profile-nav { list-style: none; margin-top: 1.5rem; }
+        .profile-nav li { 
+            padding: 0.85rem 1rem; 
+            cursor: pointer; 
+            border-radius: var(--radius-sm); 
+            transition: all 0.2s ease; 
+            font-weight: 600; 
+            color: var(--text-muted);
+            margin-bottom: 0.3rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .profile-nav li:hover { 
+            background: #FFF0F3; 
+            color: var(--primary); 
+        }
+        .profile-nav li.active { 
+            background: #FFF0F3; 
+            color: var(--primary); 
+            font-weight: 700; 
+        }
+        .content-card { 
+            background: white; 
+            border-radius: var(--radius-md); 
+            padding: 2.5rem; 
+            border: 1px solid var(--border); 
+            box-shadow: var(--shadow-sm); 
+        }
+        .avatar-circle { 
+            width: 84px; 
+            height: 84px; 
+            background: linear-gradient(135deg, var(--primary) 0%, #FF8FA3 100%); 
+            color: white; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            border-radius: 50%; 
+            font-size: 2.2rem; 
+            font-weight: 800; 
+            text-transform: uppercase; 
+            box-shadow: 0 8px 16px rgba(255, 101, 132, 0.25);
+        }
+        @media (max-width: 768px) {
+            .profile-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Announcement Bar -->
+    <div class="top-announcement">
+        🧸 Miễn phí vận chuyển toàn quốc cho mọi đơn hàng từ <strong>300.000đ</strong> | 100% Cotton Organic an toàn cho bé
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <span class="logo-badge">KIDS</span>Kiddie<span>Luxe</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Trang Chủ</a></li>
+            <li><a href="products.html">Bộ Sưu Tập</a></li>
+            <li><a href="vouchers.html">Ưu Đãi</a></li>
+            <li><a href="wishlist.html">Yêu Thích</a></li>
+            <li><a href="about.html">Về Chúng Tôi</a></li>
+            <li><a href="track-order.html">Tra Cứu Đơn</a></li>
+        </ul>
+        <div class="nav-actions" id="auth-links"></div>
+    </nav>
+
+    <main class="profile-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar-card">
+            <div style="text-align: center;">
+                <div class="avatar-circle" id="user-avatar" style="margin: 0 auto;">?</div>
+                <h3 id="display-name" style="margin-top: 1rem; color: var(--text-main); font-weight: 700;">Phụ huynh</h3>
+                <p id="display-username" style="color: var(--text-muted); font-size: 0.9rem;">@username</p>
+                <div style="margin-top: 0.8rem;">
+                    <span class="badge badge-primary" style="font-size: 0.75rem;">🧸 Thành Viên Thân Thiết</span>
+                </div>
+            </div>
+            <ul class="profile-nav">
+                <li class="active" onclick="switchSection('info')">
+                    <span>👤</span> Thông tin cá nhân
+                </li>
+                <li onclick="switchSection('password')">
+                    <span>🔒</span> Đổi mật khẩu
+                </li>
+                <li>
+                    <a href="orders.html" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 0.6rem; width: 100%;">
+                        <span>📦</span> Lịch sử đơn hàng
+                    </a>
+                </li>
+                <li onclick="handleLogout()" style="color: #ef4444;">
+                    <span>🚪</span> Đăng xuất
+                </li>
+            </ul>
+        </aside>
+
+        <!-- Main Content -->
+        <div id="section-info" class="content-card">
+            <div style="border-bottom: 1px solid var(--border); padding-bottom: 1.2rem; margin-bottom: 1.8rem;">
+                <h2 style="font-size: 1.4rem; color: var(--text-main); font-weight: 700;">Cập nhật thông tin tài khoản</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.2rem;">Quản lý thông tin liên hệ và địa chỉ nhận hàng của gia đình</p>
+            </div>
+            <form id="profile-form">
+                <input type="hidden" id="user-id">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem;">
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.4rem; display: block;">Họ và tên phụ huynh (*)</label>
+                        <input type="text" id="fullname" class="form-control" placeholder="Nhập họ tên của bạn..." required>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.4rem; display: block;">Số điện thoại (*)</label>
+                        <input type="tel" id="phone" class="form-control" placeholder="0901..." required>
+                    </div>
+                    <div class="form-group">
+                        <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.4rem; display: block;">Địa chỉ Email (*)</label>
+                        <input type="email" id="email" class="form-control" placeholder="Email nhận thông báo..." required>
+                    </div>
+                    <div class="form-group" style="grid-column: span 2;">
+                        <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.4rem; display: block;">Địa chỉ nhận hàng chi tiết</label>
+                        <input type="text" id="address" class="form-control" placeholder="Số nhà, đường, phường/xã, quận/huyện, tỉnh/thành..." required>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" style="margin-top: 1.8rem; width: 100%; padding: 0.9rem; font-size: 1.05rem;">
+                    Lưu Thay Đổi Thông Tin
+                </button>
+            </form>
+        </div>
+
+        <div id="section-password" class="content-card" style="display: none;">
+            <div style="border-bottom: 1px solid var(--border); padding-bottom: 1.2rem; margin-bottom: 1.8rem;">
+                <h2 style="font-size: 1.4rem; color: var(--text-main); font-weight: 700;">Đổi mật khẩu bảo mật</h2>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.2rem;">Khuyến nghị sử dụng mật khẩu mạnh kết hợp chữ và số</p>
+            </div>
+            <form id="password-form">
+                <div class="form-group" style="margin-bottom: 1.2rem;">
+                    <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.4rem; display: block;">Mật khẩu hiện tại (*)</label>
+                    <input type="password" id="old-pass" class="form-control" placeholder="Nhập mật khẩu hiện tại..." required>
+                </div>
+                <div class="form-group" style="margin-bottom: 1.2rem;">
+                    <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.4rem; display: block;">Mật khẩu mới (*)</label>
+                    <input type="password" id="new-pass" class="form-control" placeholder="Nhập mật khẩu mới..." required>
+                </div>
+                <div class="form-group" style="margin-bottom: 1.8rem;">
+                    <label style="font-weight: 600; font-size: 0.9rem; margin-bottom: 0.4rem; display: block;">Xác nhận lại mật khẩu mới (*)</label>
+                    <input type="password" id="confirm-pass" class="form-control" placeholder="Xác nhận lại mật khẩu mới..." required>
+                </div>
+                <button type="submit" class="btn btn-primary" style="width: 100%; padding: 0.9rem; font-size: 1.05rem;">
+                    Cập Nhật Mật Khẩu Mới
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer">
+        <div class="footer-grid">
+            <div class="footer-col">
+                <a href="index.html" class="logo" style="margin-bottom: 1rem; display: inline-flex;">
+                    <span class="logo-badge">KIDS</span>Kiddie<span>Luxe</span>
+                </a>
+                <p style="color: #64748b; line-height: 1.6; margin-bottom: 1.2rem; font-size: 0.95rem;">
+                    Thương hiệu thời trang hữu cơ cao cấp dành cho trẻ em và sơ sinh hàng đầu Việt Nam. Nâng niu làn da nhạy cảm của bé.
+                </p>
+            </div>
+            <div class="footer-col">
+                <h4 class="footer-title">Bộ Sưu Tập</h4>
+                <ul class="footer-links">
+                    <li><a href="products.html?gender=BOY">Thời Trang Bé Trai</a></li>
+                    <li><a href="products.html?gender=GIRL">Váy Đầm Bé Gái</a></li>
+                    <li><a href="products.html?category=BABY">Đồ Sơ Sinh Organic</a></li>
+                    <li><a href="products.html?category=SALE">Ưu Đãi Đặc Biệt</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4 class="footer-title">Hỗ Trợ Phụ Huynh</h4>
+                <ul class="footer-links">
+                    <li><a href="track-order.html">Tra cứu đơn hàng</a></li>
+                    <li><a href="about.html">Bảng quy đổi kích cỡ</a></li>
+                    <li><a href="about.html">Chính sách đổi trả 7 ngày</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4 class="footer-title">Hotline Tư Vấn</h4>
+                <p style="color: #64748b; font-size: 0.95rem; margin-bottom: 0.5rem;">Thứ 2 - CN: 8:00 - 21:30</p>
+                <div style="font-size: 1.4rem; font-weight: 800; color: var(--primary);">1900 6868</div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 KiddieLuxe Kids Fashion. Tất cả các quyền được bảo lưu.</p>
+        </div>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/chat-widget.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const token = localStorage.getItem('jwtToken');
+            if (!token) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            document.getElementById('display-username').innerText = `@${user.username || 'user'}`;
+            document.getElementById('user-avatar').innerText = (user.username || 'U').charAt(0);
+            
+            // Fetch info from profile endpoint
+            try {
+                const res = await fetchAPI('/user/profile');
+                const u = res.data;
+                if (u) {
+                    document.getElementById('user-id').value = u.id;
+                    document.getElementById('fullname').value = u.fullName || '';
+                    document.getElementById('display-name').innerText = u.fullName || user.username;
+                    document.getElementById('email').value = u.email || '';
+                    document.getElementById('phone').value = u.phone || '';
+                    if (u.address) {
+                        document.getElementById('address').value = `${u.address.addressLine || ''}, ${u.address.ward || ''}, ${u.address.district || ''}, ${u.address.city || ''}`.replace(/^, /, '');
+                    }
+                } else {
+                    document.getElementById('display-name').innerText = user.username;
+                }
+            } catch (err) {
+                console.error("Lấy thông tin profile thất bại", err);
+                document.getElementById('display-name').innerText = user.username;
+            }
+        });
+
+        window.switchSection = function(section) {
+            document.querySelectorAll('.profile-nav li').forEach(li => li.classList.remove('active'));
+            document.getElementById('section-info').style.display = section === 'info' ? 'block' : 'none';
+            document.getElementById('section-password').style.display = section === 'password' ? 'block' : 'none';
+            event.currentTarget.classList.add('active');
+        };
+
+        document.getElementById('profile-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('user-id').value;
+            if (!id) {
+                showToast("Vui lòng đặt hàng ít nhất một lần để khởi tạo hồ sơ.", "warning");
+                return;
+            }
+            const data = {
+                fullName: document.getElementById('fullname').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                addressLine: document.getElementById('address').value
+            };
+            try {
+                await fetchAPI(`/user/profile/${id}`, { method: 'PUT', body: JSON.stringify(data) });
+                showToast("Cập nhật thông tin thành công!", "success");
+            } catch (err) {
+                showToast("Lỗi khi cập nhật.", "error");
+            }
+        };
+
+        document.getElementById('password-form').onsubmit = async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('user-id').value;
+            const currentPassword = document.getElementById('old-pass').value;
+            const newPassword = document.getElementById('new-pass').value;
+            const confirmPassword = document.getElementById('confirm-pass').value;
+
+            if (newPassword !== confirmPassword) {
+                showToast("Mật khẩu xác nhận không khớp.", "error");
+                return;
+            }
+
+            try {
+                await fetchAPI(`/user/${id}/change-password`, { 
+                    method: 'PUT', 
+                    body: JSON.stringify({ currentPassword, newPassword, confirmPassword }) 
+                });
+                showToast("Đổi mật khẩu thành công!", "success");
+                e.target.reset();
+            } catch (err) {
+                showToast("Đổi mật khẩu thất bại. Kiểm tra lại mật khẩu cũ.", "error");
+            }
+        };
+    </script>
+    <script src="js/chat-widget.js"></script>
+</body>
+</html>

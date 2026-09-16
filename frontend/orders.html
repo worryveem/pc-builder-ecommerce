@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đơn hàng của tôi - LUXE FW</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .orders-container {
+            max-width: 1000px;
+            margin: 4rem auto;
+            padding: 0 2rem;
+        }
+
+        .order-item {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .order-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #f0f0f0;
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .order-status {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 700;
+        }
+
+        .status-pending {
+            background: #fff8e1;
+            color: #ffa000;
+        }
+
+        .status-confirmed {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .status-shipping {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .status-completed {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .status-cancelled {
+            background: #ffebee;
+            color: #d32f2f;
+        }
+
+        .product-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .product-entry {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .product-entry img {
+            width: 60px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: var(--radius-sm);
+        }
+
+        .order-footer {
+            margin-top: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid #f0f0f0;
+            padding-top: 1rem;
+        }
+
+        /* Review Modal Styles */
+        .star-rating {
+            display: flex;
+            flex-direction: row-reverse;
+            justify-content: flex-end;
+            gap: 0.5rem;
+        }
+
+        .star-rating input {
+            display: none;
+        }
+
+        .star-rating label {
+            font-size: 2rem;
+            color: #ddd;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .star-rating input:checked~label,
+        .star-rating label:hover,
+        .star-rating label:hover~label {
+            color: #f1c40f;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- TOP NOTICE BAR -->
+    <div class="top-notice-bar">
+        <span class="badge">👶 BÉ YÊU</span>
+        <span>Cam kết 100% Cotton Organic an toàn tuyệt đối cho da nhạy cảm của bé • Đổi trả tận nhà trong 7 ngày</span>
+    </div>
+
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <span class="logo-icon">🧸</span>
+            Kiddie<span>Luxe</span>
+            <span class="tag-kids">Kids</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Trang Chủ</a></li>
+            <li><a href="products.html">Bộ Sưu Tập</a></li>
+            <li><a href="vouchers.html">Ưu Đãi</a></li>
+            <li><a href="wishlist.html">Yêu Thích</a></li>
+            <li><a href="about.html">Về Chúng Tôi</a></li>
+            <li><a href="track-order.html">Tra Cứu Đơn</a></li>
+        </ul>
+        <div class="nav-actions" id="auth-links"></div>
+    </nav>
+
+    <header style="background: linear-gradient(135deg, #fff5f7 0%, #fff8e7 100%); padding: 3rem 5%; text-align: center; border-bottom: 1px solid var(--border);">
+        <div class="container">
+            <h1 style="font-size: 2.4rem; color: var(--text-main); margin-bottom: 0.4rem;">📦 Đơn Hàng Cho Bé Của Bạn</h1>
+            <p style="color: var(--text-muted); font-size: 1.05rem;">Theo dõi trạng thái giao hàng và lịch sử mua sắm đồ cho bé yêu</p>
+        </div>
+    </header>
+
+    <main class="orders-container">
+        <div
+            style="margin-bottom: 2rem; display: flex; gap: 1rem; overflow-x: auto; padding-bottom: 0.5rem; -webkit-overflow-scrolling: touch;">
+            <button class="btn btn-outline active" onclick="loadMyOrders('ALL')">Tất cả</button>
+            <button class="btn btn-outline" onclick="loadMyOrders('PENDING')">Chờ xác nhận</button>
+            <button class="btn btn-outline" onclick="loadMyOrders('CONFIRMED')">Đã xác nhận</button>
+            <button class="btn btn-outline" onclick="loadMyOrders('SHIPPING')">Đang giao</button>
+            <button class="btn btn-outline" onclick="loadMyOrders('COMPLETED')">Hoàn thành</button>
+            <button class="btn btn-outline" onclick="loadMyOrders('CANCELLED')">Đã hủy</button>
+        </div>
+
+        <div id="orders-list">
+            <!-- JS will populate -->
+        </div>
+    </main>
+
+    <footer style="background: var(--primary); color: white; padding: 3rem 5%; text-align: center; margin-top: 5rem;">
+        <h2 style="color: white; margin-bottom: 1rem;">LUXE<span>FW</span></h2>
+        <p style="color: #b2bec3;">Nơi thời trang bắt đầu. Tất cả các quyền được bảo lưu &copy; 2026</p>
+    </footer>
+
+    <script src="js/api.js"></script>
+    <script src="js/chat-widget.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!localStorage.getItem('jwtToken')) {
+                window.location.href = 'login.html';
+                return;
+            }
+            loadMyOrders('ALL');
+        });
+
+        async function loadMyOrders(status) {
+            const list = document.getElementById('orders-list');
+            list.innerHTML = '<div style="text-align: center; padding: 3rem;">Đang tải danh sách đơn hàng...</div>';
+
+            // Active button state
+            const statusMap = {
+                'ALL': 'Tất cả',
+                'PENDING': 'Chờ xác nhận',
+                'CONFIRMED': 'Đã xác nhận',
+                'SHIPPING': 'Đang giao',
+                'COMPLETED': 'Hoàn thành',
+                'CANCELLED': 'Đã hủy'
+            };
+            document.querySelectorAll('.btn-outline').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.innerText.includes(statusMap[status] || 'Tất cả')) {
+                    btn.classList.add('active');
+                }
+            });
+
+            try {
+                // Determine endpoint - backend has /api/order/user and /api/order/user/status
+                const endpoint = (status === 'ALL') ? '/order/user' : `/order/user/status?status=${status}`;
+                const orders = await fetchAPI(endpoint);
+
+                if (!orders || orders.length === 0) {
+                    list.innerHTML = `
+                    <div style="text-align: center; padding: 5rem 0; background: white; border-radius: 12px; border: 1px dashed var(--border);">
+                        <h2 style="color: var(--text-muted); margin-bottom: 1rem;">Trống</h2>
+                        <p>Bạn không có đơn hàng nào ở trạng thái này.</p>
+                        <a href="products.html" class="btn btn-primary" style="margin-top: 1.5rem;">Sắm ngay</a>
+                    </div>
+                `;
+                    return;
+                }
+
+                list.innerHTML = '';
+                // Since /order/user returns List<OrderDTO>
+                orders.forEach(order => {
+                    const statusClass = `status-${(order.status || 'pending').toLowerCase()}`;
+                    const itemsPreview = (order.orderItems && order.orderItems.length > 0) ? order.orderItems.map(item => {
+                        const prod = (item.variant && item.variant.productResponse) ? item.variant.productResponse : {};
+                        const pName = prod.name || 'Trang phục bé yêu';
+                        const safeName = pName.replace(/'/g, "\\'").replace(/"/g, '&quot;');
+                        const sizeName = (item.variant && item.variant.size) ? item.variant.size.name : 'FreeSize';
+                        const imgUrl = window.getImageUrl((prod.images && prod.images.length > 0) ? prod.images[0].imageUrl : null);
+                        return `
+                    <div class="product-entry" style="justify-content: space-between; border-bottom: 1px dashed #f0f0f0; padding-bottom: 0.8rem; margin-bottom: 0.8rem;">
+                        <div style="display: flex; gap: 1rem; align-items: center;">
+                            <img src="${imgUrl}" alt="${pName}" style="width: 58px; height: 68px; border-radius: 8px; object-fit: cover; border: 1px solid var(--border);" />
+                            <div>
+                                <span style="display: block; font-weight: 700; color: var(--text-main); font-size: 0.98rem;">${pName}</span>
+                                <span style="color: var(--text-muted); font-size: 0.85rem;">Size: <strong style="color: var(--primary);">${sizeName}</strong> | Số lượng: <strong>x${item.quantity}</strong> | Đơn giá: ${formatPrice(item.price)}</span>
+                            </div>
+                        </div>
+                        ${order.status === 'COMPLETED' ? `<button class="btn btn-outline" style="padding: 0.4rem 1rem; font-size: 0.85rem; border-color: var(--accent); color: var(--accent);" onclick="openReviewModal(${prod.id || 0}, '${safeName}')">⭐ Đánh giá</button>` : ''}
+                    </div>
+                    `;
+                    }).join('') : '<div style="color: var(--text-muted); font-size: 0.9rem; padding: 0.5rem 0;">Đơn hàng bao gồm các sản phẩm đồ bé.</div>';
+
+                    list.innerHTML += `
+                    <div class="order-item">
+                        <div class="order-header">
+                            <div>
+                                <span style="font-weight: 700; font-size: 1.1rem;">Đơn hàng #${order.id}</span>
+                                <span style="color: var(--text-muted); font-size: 0.9rem; margin-left: 1rem;">${new Date(order.createdAt).toLocaleDateString('vi-VN')}</span>
+                            </div>
+                            <span class="order-status ${statusClass}">${order.status}</span>
+                        </div>
+                        <div class="product-list">
+                            ${itemsPreview}
+                        </div>
+                        <div class="order-footer">
+                            <div>
+                                <span style="color: var(--text-muted); font-size: 0.9rem;">Tổng tiền:</span>
+                                <span style="font-weight: 700; font-size: 1.3rem; color: var(--accent); margin-left: 0.5rem;">${formatPrice(order.totalPrice)}</span>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                ${order.status === 'PENDING' ? `<button class="btn btn-outline" style="color: #d32f2f; border-color: #d32f2f;" onclick="cancelOrder(${order.id})">Hủy đơn</button>` : ''}
+                                <button class="btn btn-primary" onclick="viewDetail(${order.id})">Chi tiết</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                });
+
+            } catch (err) {
+                console.error(err);
+                list.innerHTML = '<div style="text-align: center; padding: 3rem; color: red;">Lỗi tải đơn hàng. Vui lòng thử lại sau.</div>';
+            }
+        }
+
+        async function cancelOrder(id) {
+            if (!confirm('Bạn có chắc muốn hủy đơn hàng này?')) return;
+            try {
+                // Backend: /api/order/user/{id}/cancel (PUT)
+                await fetchAPI(`/order/user/${id}/cancel`, { method: 'PUT' });
+                showToast('Đã hủy đơn hàng thành công', 'success');
+                loadMyOrders('ALL');
+            } catch (err) {
+                showToast('Không thể hủy đơn hàng', 'error');
+            }
+        }
+
+        async function viewDetail(id) {
+            try {
+                // Backend: /api/order/user/{id} (GET)
+                const detail = await fetchAPI(`/order/user/${id}`);
+                showOrderDetail(detail);
+            } catch (err) {
+                showToast('Lỗi tải chi tiết đơn hàng', 'error');
+            }
+        }
+
+        function showOrderDetail(order) {
+            let modal = document.getElementById('order-detail-modal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'order-detail-modal';
+                modal.className = 'modal-overlay';
+                document.body.appendChild(modal);
+            }
+
+            const itemsHtml = order.orderItems.map(item => `
+            <div style="display: flex; gap: 1rem; margin-bottom: 1rem; border-bottom: 1px solid #f0f0f0; padding-bottom: 1rem;">
+                <img src="${window.getImageUrl(item.variant.productResponse.images[0].imageUrl)}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 2px; border: 1px solid #ebebeb;">
+                <div style="flex: 1; display: flex; flex-direction: column; justify-content: space-between;">
+                    <div style="display: flex; justify-content: space-between;">
+                        <div style="font-weight: 500; font-size: 1rem; color: #222; max-width: 80%; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${item.variant.productResponse.name}</div>
+                        <div style="font-size: 0.95rem; color: #ee4d2d;">${formatPrice(item.price)}</div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                        <span style="color: #888; font-size: 0.85rem;">Phân loại hàng: ${item.variant.size.name}</span>
+                        <div style="display: flex; align-items: center; gap: 1rem;">
+                            <span style="color: #222; font-size: 0.9rem;">x${item.quantity}</span>
+                            ${(order.status === 'COMPLETED') ? `<button class="btn btn-outline" style="padding: 0.3rem 0.8rem; font-size: 0.8rem; border-color: #f1c40f; color: #f39c12;" onclick="openReviewModal(${item.variant.productResponse.id}, '${item.variant.productResponse.name.replace(/'/g, "\\'").replace(/"/g, '&quot;')}')">Đánh giá</button>` : ''}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+            // Extract User/Guest Data
+            const name = order.user ? (order.user.fullName || 'Người dùng') : 'Khách vãng lai';
+            const phone = order.user ? (order.user.phone || (order.phone || 'Không có sđt')) : (order.phone || 'Không có sđt');
+            let addressText = order.email || 'Không có email';
+            if (order.user && order.user.address && order.user.address.addressLine) {
+                addressText = `${order.user.address.addressLine}, ${order.user.address.ward || ''}, ${order.user.address.district || ''}, ${order.user.address.city || ''}`;
+            } else if (!order.user) {
+                addressText = order.notes ? `Ghi chú giao hàng: ${order.notes}` : `(Địa chỉ khách vãng lai) Email: ${order.email || ''}`;
+            }
+
+            modal.innerHTML = `
+            <div style="position: relative; width: 100%; max-width: 700px; margin: 5% auto; background: #f5f5f5; border-radius: 4px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); display: flex; flex-direction: column;">
+                <span class="modal-close" onclick="this.parentElement.parentElement.classList.remove('active')" style="position: absolute; top: 15px; right: 20px; font-size: 1.5rem; cursor: pointer; color: #555; z-index: 10;">&times;</span>
+
+                <!-- Top Header -->
+                <div style="background: white; padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px dashed #e8e8e8; border-top-left-radius: 4px; border-top-right-radius: 4px;">
+                    <div>
+                        <h2 style="margin: 0; font-size: 1.2rem; display: inline-block;">Đơn Hàng: #${order.id} </h2>
+                        <span style="color: #777; font-size: 0.85rem; margin-left: 1rem;">| Ngày đặt: ${new Date(order.createdAt).toLocaleString('vi-VN')}</span>
+                    </div>
+                    <div style="color: #ee4d2d; font-weight: 500; text-transform: uppercase;">
+                        ${order.status}
+                    </div>
+                </div>
+
+                <!-- Delivery Info -->
+                <div style="background: white; padding: 1.5rem; margin-bottom: 0.75rem; position: relative;">
+                    <!-- Shopee signature striped border -->
+                    <div style="position: absolute; top: 0; left: 0; right: 0; height: 3px; background-image: repeating-linear-gradient(45deg,#6fa6d6,#6fa6d6 33px,transparent 0,transparent 41px,#f18d9b 0,#f18d9b 74px,transparent 0,transparent 82px);"></div>
+
+                    <div style="font-weight: 500; margin-bottom: 1rem; color: #333; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;">
+                        <svg viewBox="0 0 16 16" style="width: 16px; fill: #ee4d2d;"><path d="M8 0C5.2 0 3 2.2 3 5c0 3.5 5 11 5 11s5-7.5 5-11c0-2.8-2.2-5-5-5zm0 7.5C6.9 7.5 6 6.6 6 5.5S6.9 3.5 8 3.5 10 4.4 10 5.5 9.1 7.5 8 7.5z"/></svg>
+                        Địa Chỉ Nhận Hàng
+                    </div>
+                    <div style="display: flex; gap: 2rem; align-items:flex-start;">
+                        <div style="min-width: 180px; font-weight: 600; color: #222; font-size: 0.95rem;">
+                            ${name} <br>
+                            <span style="color: #777; font-size: 0.85rem; font-weight: 400;">(+84) ${phone.startsWith('0') ? phone.slice(1) : phone}</span>
+                        </div>
+                        <div style="color: #555; flex: 1; font-size: 0.9rem; line-height: 1.4;">
+                            ${addressText}
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Items -->
+                <div style="background: white; padding: 1.5rem; margin-bottom: 0.75rem;">
+                    <div style="font-weight: 500; margin-bottom: 0.5rem; color: #222; font-size: 1rem; border-bottom: 1px solid #f0f0f0; padding-bottom: 0.5rem;">
+                        Danh Sách Sản Phẩm
+                    </div>
+                    <div style="max-height: 350px; overflow-y: auto; padding-right: 0.5rem;">
+                        ${itemsHtml}
+                    </div>
+                </div>
+
+                <!-- Summary block -->
+                <div style="background: #fafafa; padding: 1.5rem; display: flex; flex-direction: column; gap: 0.6rem; font-size: 0.9rem; border-bottom-left-radius: 4px; border-bottom-right-radius: 4px; border-top: 1px dashed #e8e8e8;">
+                    <div style="display: flex; justify-content: flex-end; gap: 2rem; align-items: center;">
+                        <span style="color: #666; width: 150px; text-align: right;">Mã voucher:</span>
+                        <span style="width: 150px; text-align: right; color: #222;">${order.voucherCode || 'Không áp dụng'}</span>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 2rem; align-items: center;">
+                        <span style="color: #666; width: 150px; text-align: right;">Phương thức:</span>
+                        <span style="width: 150px; text-align: right; color: #222;">${order.paymentMethod}</span>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 2rem; align-items: center;">
+                        <span style="color: #666; width: 150px; text-align: right;">Tổng tiền hàng:</span>
+                        <span style="width: 150px; text-align: right; color: #222;">${formatPrice(order.subtotal || order.totalPrice)}</span>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 2rem; align-items: center;">
+                        <span style="color: #666; width: 150px; text-align: right;">Phí vận chuyển:</span>
+                        <span style="width: 150px; text-align: right; color: #222;">${formatPrice(order.shippingFee || 0)}</span>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 2rem; align-items: center;">
+                        <span style="color: #666; width: 150px; text-align: right;">Giảm giá từ Shop:</span>
+                        <span style="width: 150px; text-align: right; color: #ee4d2d;">- ${formatPrice(order.discountAmount || 0)}</span>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 2rem; margin-top: 0.5rem; align-items: center;">
+                        <span style="color: #555; width: 150px; text-align: right;">Thành tiền:</span>
+                        <span style="width: 150px; text-align: right; color: #ee4d2d; font-size: 1.6rem; font-weight: 500;">${formatPrice(order.totalPrice)}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+            modal.classList.add('active');
+        }
+
+        // Review Logic
+        window.openReviewModal = function (productId, productName) {
+            let modal = document.getElementById('review-modal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'review-modal';
+                modal.className = 'modal-overlay';
+                document.body.appendChild(modal);
+            }
+
+            modal.innerHTML = `
+            <div style="width: 400px; background: white; border-radius: 8px; padding: 2rem; position: relative;">
+                <span class="modal-close" onclick="this.parentElement.parentElement.classList.remove('active')">&times;</span>
+                <h3 style="margin-bottom: 1rem;">Đánh giá sản phẩm</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 1.5rem;">${productName}</p>
+
+                <form onsubmit="submitReview(event, ${productId})" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div>
+                        <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Số sao</label>
+                        <div class="star-rating">
+                            <input type="radio" id="star5" name="rating" value="5" checked /><label for="star5" title="5 sao">★</label>
+                            <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 sao">★</label>
+                            <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 sao">★</label>
+                            <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 sao">★</label>
+                            <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 sao">★</label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label style="display: block; font-weight: 500; margin-bottom: 0.5rem;">Bình luận</label>
+                        <textarea id="review-comment" rows="4" style="width: 100%; border: 1px solid var(--border); border-radius: 4px; padding: 0.5rem; outline: none; font-family: inherit;" required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="margin-top: 1rem;">Gửi đánh giá</button>
+                </form>
+            </div>
+        `;
+            modal.classList.add('active');
+        }
+
+        window.submitReview = async function (e, productId) {
+            e.preventDefault();
+            const starInput = document.querySelector('input[name="rating"]:checked');
+            const score = starInput ? parseInt(starInput.value, 10) : 5;
+            const comment = document.getElementById('review-comment').value;
+
+            try {
+                // Post to /ratings
+                await fetchAPI('/ratings', {
+                    method: 'POST',
+                    body: JSON.stringify({ productId: parseInt(productId, 10), score, comment })
+                });
+                showToast("Cảm ơn bạn đã gửi đánh giá cho bé!", "success");
+                const modal = document.getElementById('review-modal');
+                if (modal) modal.classList.remove('active');
+            } catch (err) {
+                showToast("Lỗi khi gửi đánh giá.", "error");
+            }
+        }
+    </script>
+    <script src="js/chat-widget.js"></script>
+</body>
+
+</html>

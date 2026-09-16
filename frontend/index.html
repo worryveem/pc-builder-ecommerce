@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KiddieLuxe Kids - Thời Trang Trẻ Em & Đồ Sơ Sinh Organic Cao Cấp</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .category-scroll-wrapper {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .cat-chip {
+            background: white;
+            border: 2px solid var(--border);
+            border-radius: var(--radius-md);
+            padding: 1.5rem 1rem;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-main);
+            transition: var(--transition);
+            box-shadow: var(--shadow-card);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.6rem;
+        }
+        .cat-chip:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-sm);
+        }
+        .cat-chip .cat-emoji {
+            font-size: 2.4rem;
+            background: var(--primary-light);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s;
+        }
+        .cat-chip:hover .cat-emoji {
+            transform: scale(1.15) rotate(6deg);
+        }
+        .reviews-section {
+            background: linear-gradient(135deg, #fff5f7 0%, #fffbf0 100%);
+            padding: 5rem 0;
+            border-radius: var(--radius-lg);
+            margin: 4rem 0;
+        }
+        .review-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2.5rem;
+        }
+        .review-card {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius-md);
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .review-user {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        .review-avatar {
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP ANNOUNCEMENT BAR -->
+    <div class="top-notice-bar">
+        <span class="badge">🌿 ORGANIC KIDS</span>
+        <span>Ưu đãi chào đón thành viên nhí: Giảm thêm 10% đơn đầu tiên với mã <strong>LUXE10</strong> • Freeship từ 300k!</span>
+    </div>
+
+    <!-- MAIN NAVBAR -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <span class="logo-icon">🧸</span>
+            Kiddie<span>Luxe</span>
+            <span class="tag-kids">Kids</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html" class="active">Trang Chủ</a></li>
+            <li><a href="products.html">Bộ Sưu Tập</a></li>
+            <li><a href="vouchers.html">Ưu Đãi</a></li>
+            <li><a href="wishlist.html">Yêu Thích</a></li>
+            <li><a href="about.html">Về Chúng Tôi</a></li>
+            <li><a href="track-order.html">Tra Cứu Đơn</a></li>
+        </ul>
+        <div class="nav-actions" id="auth-links"></div>
+    </nav>
+
+    <!-- HERO SECTION (KIDS FASHION) -->
+    <header class="hero-kids">
+        <div class="hero-kids-inner">
+            <div class="hero-kids-content">
+                <div class="hero-badge">
+                    <span>✨</span> BỘ SƯU TẬP MỚI 2026 CHO BÉ YÊU
+                </div>
+                <h1 class="hero-kids-title">
+                    Thời Trang Bé Yêu <br>
+                    <span class="highlight">Êm Mềm Từng Sợi Vải</span> 🍼
+                </h1>
+                <p class="hero-kids-desc">
+                    100% Cotton Organic dịu lành, kháng khuẩn và thấm hút mồ hôi tối đa. Giúp bé tự do khám phá thế giới trong sự nâng niu tuyệt đối.
+                </p>
+                <div class="hero-kids-actions">
+                    <a href="products.html" class="btn btn-primary" style="padding: 0.9rem 2.2rem; font-size: 1.05rem;">
+                        🛍️ Khám Phá Bộ Sưu Tập
+                    </a>
+                    <a href="products.html?filter=sale" class="btn btn-outline" style="padding: 0.9rem 2rem; font-size: 1.05rem;">
+                        🎁 Săn Ưu Đãi Hôm Nay
+                    </a>
+                </div>
+                <div class="hero-trust-row">
+                    <div class="hero-trust-item">
+                        <span class="icon">🌿</span>
+                        <span>100% Cotton Organic</span>
+                    </div>
+                    <div class="hero-trust-item">
+                        <span class="icon">🛡️</span>
+                        <span>An toàn cho da sơ sinh</span>
+                    </div>
+                    <div class="hero-trust-item">
+                        <span class="icon">⭐</span>
+                        <span>4.9/5 Phụ huynh tin dùng</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-kids-visual">
+                <div class="floating-badge badge-top">
+                    <span>👶</span>
+                    <div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">Dòng sản phẩm</div>
+                        <div style="color: var(--primary);">Đồ Sơ Sinh Newborn</div>
+                    </div>
+                </div>
+                <img src="images/hero_kids.png" alt="Thời trang trẻ em KiddieLuxe" class="main-hero-img">
+                <div class="floating-badge badge-bottom">
+                    <span>🎀</span>
+                    <div>
+                        <div style="font-size: 0.8rem; color: var(--text-muted);">Ưu đãi tuần này</div>
+                        <div style="color: var(--accent);">Freeship toàn quốc</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- TRUST BAR -->
+        <section class="trust-bar">
+            <div class="trust-card">
+                <div class="trust-icon-wrap">🌿</div>
+                <div>
+                    <div class="trust-card-title">Chất Vải Organic</div>
+                    <div class="trust-card-desc">Cotton tự nhiên mềm mát, không kích ứng da bé</div>
+                </div>
+            </div>
+            <div class="trust-card">
+                <div class="trust-icon-wrap">🚚</div>
+                <div>
+                    <div class="trust-card-title">Giao Hàng Siêu Tốc</div>
+                    <div class="trust-card-desc">Miễn phí ship toàn quốc cho đơn từ 300.000đ</div>
+                </div>
+            </div>
+            <div class="trust-card">
+                <div class="trust-icon-wrap">🔄</div>
+                <div>
+                    <div class="trust-card-title">Đổi Size 7 Ngày</div>
+                    <div class="trust-card-desc">Hỗ trợ đổi size tận nhà nếu bé mặc chưa vừa</div>
+                </div>
+            </div>
+            <div class="trust-card">
+                <div class="trust-icon-wrap">🎁</div>
+                <div>
+                    <div class="trust-card-title">Hộp Quà Sang Xịn</div>
+                    <div class="trust-card-desc">Tặng kèm nơ lụa & thiệp mừng thôi nôi, đầy tháng</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CATEGORIES EXPLORER -->
+        <section style="margin-bottom: 4.5rem;">
+            <div class="section-header">
+                <span class="section-tag">👶 Mua Sắm Dễ Dàng</span>
+                <h2 class="section-title">Danh Mục Cho Bé Yêu</h2>
+                <p class="section-subtitle">Lựa chọn trang phục theo từng lứa tuổi và phong cách riêng biệt của bé</p>
+            </div>
+            <div class="category-scroll-wrapper" id="index-categories-grid">
+                <!-- Fallback / Static Chips while fetching -->
+                <a href="products.html" class="cat-chip">
+                    <div class="cat-emoji">👶</div>
+                    <div style="font-weight: 700; font-size: 1.05rem;">Đồ Sơ Sinh</div>
+                    <div style="font-size: 0.82rem; color: var(--text-muted);">Body chip, set newborn</div>
+                </a>
+                <a href="products.html" class="cat-chip">
+                    <div class="cat-emoji">👗</div>
+                    <div style="font-weight: 700; font-size: 1.05rem;">Váy Đầm Bé Gái</div>
+                    <div style="font-size: 0.82rem; color: var(--text-muted);">Công chúa, hoa nhí</div>
+                </a>
+                <a href="products.html" class="cat-chip">
+                    <div class="cat-emoji">👕</div>
+                    <div style="font-weight: 700; font-size: 1.05rem;">Đồ Bộ Bé Trai</div>
+                    <div style="font-size: 0.82rem; color: var(--text-muted);">Sơ mi, polo, jean</div>
+                </a>
+                <a href="products.html" class="cat-chip">
+                    <div class="cat-emoji">👟</div>
+                    <div style="font-weight: 700; font-size: 1.05rem;">Giày & Phụ Kiện</div>
+                    <div style="font-size: 0.82rem; color: var(--text-muted);">Giày tập đi, mũ, bao tay</div>
+                </a>
+                <a href="products.html" class="cat-chip">
+                    <div class="cat-emoji">🧸</div>
+                    <div style="font-weight: 700; font-size: 1.05rem;">Đồ Ngủ Petit</div>
+                    <div style="font-size: 0.82rem; color: var(--text-muted);">Mềm mát, ngủ ngon giấc</div>
+                </a>
+            </div>
+        </section>
+
+        <!-- NEW ARRIVALS -->
+        <section style="margin-bottom: 4.5rem;" id="new-arrivals">
+            <div class="section-header">
+                <span class="section-tag">✨ Bộ Sưu Tập Mới</span>
+                <h2 class="section-title">Hàng Mới Cập Bến Tuần Này</h2>
+                <p class="section-subtitle">Những mẫu thiết kế vừa ra mắt với họa tiết đáng yêu và phom dáng chuẩn cho bé</p>
+            </div>
+            <div class="grid-products" id="new-products">
+                <p style="text-align: center; width: 100%;">Đang nạp sản phẩm cho bé...</p>
+            </div>
+            <div style="text-align: center;">
+                <a href="products.html" class="btn btn-outline" style="padding: 0.8rem 2.5rem; font-size: 1rem;">
+                    Xem Tất Cả Hàng Mới &rarr;
+                </a>
+            </div>
+        </section>
+
+        <!-- HOT PROMO BANNER -->
+        <section class="kids-banner-card banner-new">
+            <h2>Ưu Đãi Đặc Biệt Cho Bé 🌟</h2>
+            <p>Tặng kèm set 3 tất thú bông lục lạc cho mọi đơn hàng từ 500.000đ trong tuần này!</p>
+            <a href="products.html" class="btn btn-accent" style="padding: 0.9rem 2.5rem; font-size: 1.05rem;">
+                Nhận Quà Ngay 🎁
+            </a>
+        </section>
+
+        <!-- BEST SELLERS -->
+        <section style="margin-bottom: 4.5rem;" id="hot-products">
+            <div class="section-header">
+                <span class="section-tag" style="background: var(--accent-light); color: #d97706;">🔥 Yêu Thích Nhất</span>
+                <h2 class="section-title">Mặt Hàng Bán Chạy Nhất</h2>
+                <p class="section-subtitle">Được hàng nghìn mẹ bỉm sữa tin chọn và đánh giá 5 sao về độ bền và mềm dịu</p>
+            </div>
+            <div class="grid-products" id="hot-products-grid">
+                <p style="text-align: center; width: 100%;">Đang tải sản phẩm bán chạy...</p>
+            </div>
+        </section>
+
+        <!-- GIRLS BANNER & COLLECTION -->
+        <section style="margin-bottom: 4.5rem;">
+            <div class="kids-banner-card banner-girls">
+                <h2>Các Cô Nàng Điệu Đà 🎀</h2>
+                <p>Đầm công chúa voan xòe bồng bềnh, set váy hoa nhí phong cách vintage dịu dàng cho bé gái dự tiệc và dạo phố.</p>
+                <a href="products.html?category=11" class="btn btn-primary" style="padding: 0.9rem 2.5rem;">
+                    Xem Đồ Bé Gái
+                </a>
+            </div>
+            <div class="grid-products" id="girls-products"></div>
+        </section>
+
+        <!-- BOYS BANNER & COLLECTION -->
+        <section style="margin-bottom: 4.5rem;">
+            <div class="kids-banner-card banner-boys">
+                <h2>Bé Trai Năng Động & Cá Tính 😎</h2>
+                <p>Áo sơ mi oxford thanh lịch, áo polo cá sấu khỏe khoắn và quần jean denim wash mềm êm ái cho bé trai thỏa sức chạy nhảy.</p>
+                <a href="products.html?category=2" class="btn btn-primary" style="background: linear-gradient(135deg, #4e89ff 0%, #38ef7d 100%); padding: 0.9rem 2.5rem;">
+                    Xem Đồ Bé Trai
+                </a>
+            </div>
+            <div class="grid-products" id="boys-products"></div>
+        </section>
+
+        <!-- REVIEWS FROM PARENTS -->
+        <section class="reviews-section">
+            <div class="section-header">
+                <span class="section-tag">💬 Feedback Chân Thực</span>
+                <h2 class="section-title">Ba Mẹ Nói Gì Về KiddieLuxe?</h2>
+                <p class="section-subtitle">Hơn 50.000 phụ huynh khắp cả nước đã tin tưởng đồng hành cùng tuổi thơ của bé</p>
+            </div>
+            <div class="container review-cards-grid">
+                <div class="review-card">
+                    <div style="color: var(--accent); font-size: 1.1rem;">⭐⭐⭐⭐⭐</div>
+                    <p style="font-size: 0.95rem; color: var(--text-main); font-style: italic;">
+                        "Chất vải cotton organic sờ vào mềm mịn mướt tay lắm luôn! Bé nhà mình da nhạy cảm mặc không hề bị nổi đỏ. Đóng hộp quà rất cẩn thận, mở ra thơm phức."
+                    </p>
+                    <div class="review-user">
+                        <div class="review-avatar">M</div>
+                        <div>
+                            <div style="font-weight: 700; font-size: 0.95rem;">Mẹ Thảo My (Hà Nội)</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">Đã mua Set Newborn & Body Chip</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-card">
+                    <div style="color: var(--accent); font-size: 1.1rem;">⭐⭐⭐⭐⭐</div>
+                    <p style="font-size: 0.95rem; color: var(--text-main); font-style: italic;">
+                        "Mua váy công chúa cho bé đi dự tiệc sinh nhật 3 tuổi mà ai cũng khen. Tùng xòe nhiều tầng nhưng bên trong lót lụa mềm mát không bị cọ xát vào đùi bé. Sẽ ủng hộ dài dài!"
+                    </p>
+                    <div class="review-user">
+                        <div class="review-avatar" style="background: var(--accent-light); color: var(--accent);">H</div>
+                        <div>
+                            <div style="font-weight: 700; font-size: 0.95rem;">Chị Hoàng Oanh (TP.HCM)</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">Đã mua Váy Công Chúa Voan Xòe</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-card">
+                    <div style="color: var(--accent); font-size: 1.1rem;">⭐⭐⭐⭐⭐</div>
+                    <p style="font-size: 0.95rem; color: var(--text-main); font-style: italic;">
+                        "Đặt hàng hôm trước hôm sau đã nhận được rồi, shipper thân thiện cho kiểm tra đồ thoải mái. Size quần áo chuẩn phom, có bảng tư vấn cân nặng rất chuẩn xác."
+                    </p>
+                    <div class="review-user">
+                        <div class="review-avatar" style="background: var(--accent-blue-light); color: var(--accent-blue);">T</div>
+                        <div>
+                            <div style="font-weight: 700; font-size: 0.95rem;">Bố Tuấn Anh (Đà Nẵng)</div>
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">Đã mua Sơ Mi & Quần Jean Bé Trai</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer-kids">
+        <div class="footer-inner">
+            <div class="footer-col">
+                <div class="logo" style="color: white; margin-bottom: 1rem;">
+                    <span class="logo-icon">🧸</span>
+                    Kiddie<span style="color: var(--primary);">Luxe</span>
+                </div>
+                <p style="color: #b2bec3; font-size: 0.92rem; line-height: 1.7;">
+                    Thương hiệu thời trang trẻ em & đồ sơ sinh organic hàng đầu. Từng sản phẩm đều được chọn lọc từ sợi bông tinh khiết nhất, mang lại sự êm ái tuyệt đối cho bé yêu.
+                </p>
+            </div>
+            <div class="footer-col">
+                <h3>Bộ Sưu Tập</h3>
+                <ul>
+                    <li><a href="products.html">👶 Đồ Sơ Sinh (0-12M)</a></li>
+                    <li><a href="products.html">👗 Váy Đầm Bé Gái</a></li>
+                    <li><a href="products.html">👕 Quần Áo Bé Trai</a></li>
+                    <li><a href="products.html">👟 Giày Tập Đi</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Hỗ Trợ Khách Hàng</h3>
+                <ul>
+                    <li><a href="track-order.html">Tra cứu đơn hàng</a></li>
+                    <li><a href="about.html">Chính sách đổi trả 7 ngày</a></li>
+                    <li><a href="about.html">Hướng dẫn chọn size cho bé</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Tư Vấn Size Nhanh</h3>
+                <p style="color: #b2bec3; font-size: 0.9rem; margin-bottom: 0.8rem;">Hotline mẹ & bé (8:00 - 21:00):</p>
+                <div style="font-size: 1.3rem; font-weight: 800; color: var(--accent);">1900 6868</div>
+                <p style="color: #b2bec3; font-size: 0.85rem; margin-top: 0.5rem;">Miễn phí tư vấn kích cỡ theo cân nặng của bé.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 KiddieLuxe Kids Fashion. Nâng niu từng khoảnh khắc tuổi thơ của bé.
+        </div>
+    </footer>
+
+    <!-- Chat Widget Button -->
+    <button class="chat-widget-btn" onclick="toggleChat()" title="Tư vấn kích cỡ cho bé">💬</button>
+    <div class="chat-widget-box" id="chat-box">
+        <div class="chat-header">
+            <span>🧸 Tư Vấn Size KiddieLuxe</span>
+            <span style="cursor: pointer; font-size: 1.4rem;" onclick="toggleChat()">&times;</span>
+        </div>
+        <div class="chat-body" id="chat-body">
+            <div class="chat-msg">
+                Xin chào ba mẹ! Bạn cần tư vấn mẫu đồ hay kích cỡ size cho bé yêu mấy tuổi/mấy kg ạ?
+            </div>
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="chat-input" placeholder="Nhập câu hỏi (VD: Bé 18 tháng 11kg mặc size gì?)..." onkeypress="if(event.key==='Enter') sendChat()">
+            <button onclick="sendChat()">➤</button>
+        </div>
+    </div>
+
+    <!-- Quick View / Add To Cart Modal -->
+    <div class="modal-overlay" id="quick-view-modal">
+        <div class="modal-content" style="max-width: 850px; height: auto; max-height: 90vh;">
+            <span class="modal-close" onclick="closeQuickView()">&times;</span>
+            <div class="modal-left" style="flex: 1; min-height: 380px;">
+                <img id="modal-product-img" src="" alt="" class="modal-img-main" style="object-fit: cover;">
+            </div>
+            <div class="modal-right" style="flex: 1.2; padding: 2.5rem;">
+                <div class="badge-organic-corner" style="position: static; display: inline-flex; margin-bottom: 0.8rem;">🌿 100% Cotton Organic</div>
+                <h2 id="modal-product-name" style="font-size: 1.6rem; font-weight: 800; line-height: 1.3; margin-bottom: 0.5rem;">Tên sản phẩm</h2>
+                <div id="modal-product-price" style="font-size: 1.6rem; font-weight: 800; color: var(--primary); margin-bottom: 1rem;">0 đ</div>
+                <p id="modal-product-desc" style="font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.5rem;">Mô tả sản phẩm cho bé...</p>
+
+                <div style="font-weight: 700; font-size: 0.95rem; margin-bottom: 0.5rem;">Chọn Kích Cỡ Size:</div>
+                <div id="modal-size-grid" style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.5rem;"></div>
+
+                <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem;">
+                    <span style="font-weight: 700; font-size: 0.95rem;">Số lượng:</span>
+                    <input type="number" id="modal-qty" value="1" min="1" max="99" style="width: 70px; padding: 0.5rem; border: 1.5px solid var(--border); border-radius: var(--radius-sm); text-align: center; font-size: 1.05rem; font-weight: 700;">
+                </div>
+
+                <div style="display: flex; gap: 1rem;">
+                    <button id="modal-add-cart-btn" class="btn btn-primary" style="flex: 1; padding: 1rem;">
+                        🛒 Thêm Vào Giỏ Hàng
+                    </button>
+                    <a id="modal-detail-link" href="#" class="btn btn-outline" style="padding: 1rem 1.5rem;">
+                        Chi Tiết
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/chat-widget.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                const res = await fetchAPI('/products');
+                const products = res.data || res || [];
+
+                if (products && products.length > 0) {
+                    // New arrivals: take first 8
+                    renderProducts(products.slice(0, 8), document.getElementById('new-products'));
+
+                    // Hot products: sort or take next 8
+                    const hotList = products.slice(8, 16).length > 0 ? products.slice(8, 16) : products.slice(0, 8);
+                    renderProducts(hotList, document.getElementById('hot-products-grid'));
+
+                    // Girls products
+                    const girlsList = products.filter(p => {
+                        const n = (p.name || '').toLowerCase();
+                        return n.includes('gái') || n.includes('váy') || n.includes('đầm') || n.includes('công chúa') || n.includes('hoa nhí') || n.includes('ren');
+                    });
+                    renderProducts(girlsList.slice(0, 4), document.getElementById('girls-products'));
+
+                    // Boys products
+                    const boysList = products.filter(p => {
+                        const n = (p.name || '').toLowerCase();
+                        return n.includes('trai') || n.includes('sơ mi') || n.includes('polo') || n.includes('cardigan') || n.includes('jean') || n.includes('kaki') || n.includes('hoodie');
+                    });
+                    renderProducts(boysList.slice(0, 4), document.getElementById('boys-products'));
+                } else {
+                    document.querySelectorAll('.grid-products').forEach(el => el.innerHTML = '<p style="text-align:center;width:100%;">Đang cập nhật sản phẩm...</p>');
+                }
+            } catch (err) {
+                console.error("Lỗi tải sản phẩm index:", err);
+                document.querySelectorAll('.grid-products').forEach(el => el.innerHTML = '<p style="text-align:center;width:100%;color:red;">Không thể kết nối máy chủ dữ liệu.</p>');
+            }
+
+            loadIndexCategories();
+        });
+
+        async function loadIndexCategories() {
+            const container = document.getElementById('index-categories-grid');
+            if (!container) return;
+            try {
+                const res = await fetchAPI('/categories');
+                const cats = res.data || [];
+                const icons = ['👶', '👗', '👕', '👟', '🧸', '🍼', '🧢', '🎀'];
+                if (cats.length > 0) {
+                    container.innerHTML = cats.slice(0, 8).map((cat, idx) => `
+                        <a href="products.html?category=${cat.id}" class="cat-chip">
+                            <div class="cat-emoji">${icons[idx % icons.length]}</div>
+                            <div style="font-weight: 700; font-size: 1.05rem;">${cat.name}</div>
+                            <div style="font-size: 0.82rem; color: var(--text-muted);">${cat.description || 'Thời trang an toàn cho bé'}</div>
+                        </a>
+                    `).join('');
+                }
+            } catch(e) {
+                console.error("Lỗi tải danh mục:", e);
+            }
+        }
+    </script>
+</body>
+</html>

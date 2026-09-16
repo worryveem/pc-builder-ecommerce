@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bộ Sưu Tập Quần Áo Trẻ Em - KiddieLuxe Kids</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .page-header-kids {
+            background: linear-gradient(135deg, #fff5f7 0%, #fff8e7 50%, #f0f7ff 100%);
+            padding: 3rem 5%;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 2.5rem;
+        }
+        .page-header-kids h1 {
+            font-size: 2.5rem;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+        .page-header-kids p {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .catalog-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 2.5rem;
+            margin-bottom: 4rem;
+        }
+
+        .filter-panel {
+            background: white;
+            border-radius: var(--radius-md);
+            padding: 1.8rem;
+            box-shadow: var(--shadow-card);
+            border: 1px solid var(--border);
+            height: fit-content;
+            position: sticky;
+            top: 90px;
+        }
+
+        .filter-title {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: var(--text-main);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border-bottom: 2px dashed var(--border);
+            padding-bottom: 0.5rem;
+        }
+
+        .filter-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-list label {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .filter-list label:hover {
+            color: var(--primary);
+        }
+
+        .search-sort-bar {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .search-box {
+            display: flex;
+            flex: 1;
+            min-width: 280px;
+            background: white;
+            border: 1.5px solid var(--border);
+            border-radius: var(--radius-full);
+            padding: 0.25rem 0.5rem;
+            box-shadow: var(--shadow-card);
+            transition: border-color 0.3s;
+        }
+
+        .search-box:focus-within {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(255, 101, 132, 0.12);
+        }
+
+        .search-box input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 0.65rem 1rem;
+            font-family: inherit;
+            font-size: 0.95rem;
+            background: transparent;
+        }
+
+        .search-box button {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.4rem;
+            border-radius: var(--radius-full);
+            cursor: pointer;
+            font-weight: 700;
+            font-family: inherit;
+            transition: background 0.2s;
+        }
+
+        .search-box button:hover {
+            background: var(--primary-hover);
+        }
+
+        @media (max-width: 900px) {
+            .catalog-layout {
+                grid-template-columns: 1fr;
+            }
+            .filter-panel {
+                position: static;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- TOP NOTICE BAR -->
+    <div class="top-notice-bar">
+        <span class="badge">👶 BÉ YÊU</span>
+        <span>Cam kết 100% Cotton Organic an toàn tuyệt đối cho da nhạy cảm của bé • Đổi trả tận nhà trong 7 ngày</span>
+    </div>
+
+    <!-- NAVBAR -->
+    <nav class="navbar">
+        <a href="index.html" class="logo">
+            <span class="logo-icon">🧸</span>
+            Kiddie<span>Luxe</span>
+            <span class="tag-kids">Kids</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html">Trang Chủ</a></li>
+            <li><a href="products.html" class="active">Bộ Sưu Tập</a></li>
+            <li><a href="vouchers.html">Ưu Đãi</a></li>
+            <li><a href="wishlist.html">Yêu Thích</a></li>
+            <li><a href="about.html">Về Chúng Tôi</a></li>
+            <li><a href="track-order.html">Tra Cứu Đơn</a></li>
+        </ul>
+        <div class="nav-actions" id="auth-links"></div>
+    </nav>
+
+    <!-- HEADER -->
+    <header class="page-header-kids">
+        <div class="container">
+            <h1>👕 Bộ Sưu Tập Thời Trang Bé Yêu</h1>
+            <p>Khám phá trang phục sơ sinh, váy đầm công chúa và set đồ bảnh bao chất liệu organic êm ái cho bé từ 0 - 12 tuổi.</p>
+        </div>
+    </header>
+
+    <main class="container catalog-layout">
+        <!-- Filter Sidebar -->
+        <aside class="filter-panel">
+            <div class="filter-group">
+                <h3 class="filter-title">
+                    <span>🏷️</span> Danh Mục Cho Bé
+                </h3>
+                <ul class="filter-list" id="category-filter-list">
+                    <li><label><input type="radio" name="category" value="all" checked onchange="filterByCategory('all')"> Tất cả danh mục</label></li>
+                    <!-- Populated dynamically -->
+                </ul>
+            </div>
+
+            <div class="filter-group" style="margin-top: 2rem;">
+                <h3 class="filter-title">
+                    <span>💰</span> Mức Giá (Gợi ý)
+                </h3>
+                <ul class="filter-list">
+                    <li><label><input type="radio" name="price" value="all" checked onchange="applyFilters()"> Tất cả mức giá</label></li>
+                    <li><label><input type="radio" name="price" value="under100" onchange="applyFilters()"> Tiết kiệm: Dưới 100k</label></li>
+                    <li><label><input type="radio" name="price" value="100to200" onchange="applyFilters()"> Phổ biến: 100k - 200k</label></li>
+                    <li><label><input type="radio" name="price" value="over200" onchange="applyFilters()"> Cao cấp: Trên 200k</label></li>
+                </ul>
+            </div>
+
+            <div class="filter-group" style="margin-top: 1.5rem;">
+                <h3 class="filter-title">
+                    <span>🔍</span> Tự Nhập Khoảng Giá
+                </h3>
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 0.8rem;">
+                    <input type="number" id="min-price" placeholder="Từ đ" style="width: 50%; padding: 0.5rem; border: 1.5px solid var(--border); border-radius: var(--radius-sm); outline: none;">
+                    <input type="number" id="max-price" placeholder="Đến đ" style="width: 50%; padding: 0.5rem; border: 1.5px solid var(--border); border-radius: var(--radius-sm); outline: none;">
+                </div>
+                <button type="button" class="btn btn-soft-primary" style="width: 100%; border-radius: var(--radius-sm); padding: 0.6rem;" onclick="applyFilters()">
+                    Áp dụng giá
+                </button>
+            </div>
+
+            <button type="button" class="btn btn-outline" style="width: 100%; margin-top: 1.5rem; border-radius: var(--radius-sm); padding: 0.6rem;" onclick="resetFilters()">
+                🔄 Xóa tất cả bộ lọc
+            </button>
+        </aside>
+
+        <!-- Main Product Area -->
+        <section>
+            <div class="search-sort-bar">
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Tìm tên đồ cho bé (VD: Body chip, Váy công chúa, Sơ mi...)" onkeypress="if(event.key==='Enter') handleSearch()">
+                    <button type="button" onclick="handleSearch()">Tìm Kiếm</button>
+                </div>
+                <div>
+                    <select id="sort-select" style="padding: 0.65rem 1.2rem; border-radius: var(--radius-full); border: 1.5px solid var(--border); background: white; font-family: inherit; font-size: 0.95rem; font-weight: 600; outline: none; box-shadow: var(--shadow-card);" onchange="handleSort(this.value)">
+                        <option value="newest">✨ Mới nhất</option>
+                        <option value="price-asc">💵 Giá: Thấp đến Cao</option>
+                        <option value="price-desc">💎 Giá: Cao đến Thấp</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="grid-products" id="products-grid">
+                <p style="text-align: center; width: 100%; grid-column: 1 / -1; padding: 4rem;">
+                    Đang nạp các mẫu quần áo đẹp nhất cho bé...
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="footer-kids">
+        <div class="footer-inner">
+            <div class="footer-col">
+                <div class="logo" style="color: white; margin-bottom: 1rem;">
+                    <span class="logo-icon">🧸</span>
+                    Kiddie<span style="color: var(--primary);">Luxe</span>
+                </div>
+                <p style="color: #b2bec3; font-size: 0.92rem; line-height: 1.7;">
+                    Thương hiệu thời trang trẻ em & đồ sơ sinh organic hàng đầu. Từng sản phẩm đều được chọn lọc từ sợi bông tinh khiết nhất, mang lại sự êm ái tuyệt đối cho bé yêu.
+                </p>
+            </div>
+            <div class="footer-col">
+                <h3>Bộ Sưu Tập</h3>
+                <ul>
+                    <li><a href="products.html">👶 Đồ Sơ Sinh (0-12M)</a></li>
+                    <li><a href="products.html">👗 Váy Đầm Bé Gái</a></li>
+                    <li><a href="products.html">👕 Quần Áo Bé Trai</a></li>
+                    <li><a href="products.html">👟 Giày Tập Đi</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Hỗ Trợ Khách Hàng</h3>
+                <ul>
+                    <li><a href="track-order.html">Tra cứu đơn hàng</a></li>
+                    <li><a href="vouchers.html">Mã ưu đãi voucher</a></li>
+                    <li><a href="about.html">Chính sách đổi trả 7 ngày</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h3>Tư Vấn Size Nhanh</h3>
+                <p style="color: #b2bec3; font-size: 0.9rem; margin-bottom: 0.8rem;">Hotline mẹ & bé (8:00 - 21:00):</p>
+                <div style="font-size: 1.3rem; font-weight: 800; color: var(--accent);">1900 6868</div>
+                <p style="color: #b2bec3; font-size: 0.85rem; margin-top: 0.5rem;">Miễn phí tư vấn kích cỡ theo cân nặng của bé.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2026 KiddieLuxe Kids Fashion. Nâng niu từng khoảnh khắc tuổi thơ của bé.
+        </div>
+    </footer>
+
+    <!-- Quick View Modal Container -->
+    <div class="modal-overlay" id="quick-view-modal"></div>
+
+    <script src="js/api.js"></script>
+    <script src="js/products.js"></script>
+    <script src="js/chat-widget.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            loadProducts('products-grid');
+            loadCategoriesFilter();
+
+            const urlParams = new URLSearchParams(window.location.search);
+            const catParam = urlParams.get('category');
+            if (catParam) {
+                setTimeout(() => {
+                    filterByCategory(catParam);
+                }, 400);
+            }
+        });
+
+        window.handleSort = async function(sortType) {
+            const grid = document.getElementById('products-grid');
+            if (!grid) return;
+
+            try {
+                const res = await fetchAPI('/products');
+                let products = res.data || [];
+                if (sortType === 'price-asc') {
+                    products.sort((a, b) => (a.price || 0) - (b.price || 0));
+                } else if (sortType === 'price-desc') {
+                    products.sort((a, b) => (b.price || 0) - (a.price || 0));
+                } else {
+                    products.sort((a, b) => (b.id || 0) - (a.id || 0));
+                }
+                renderProducts(products, grid);
+            } catch(e) {
+                console.error("Lỗi sắp xếp:", e);
+            }
+        };
+
+        async function loadCategoriesFilter() {
+            const list = document.getElementById('category-filter-list');
+            if (!list) return;
+            try {
+                const res = await fetchAPI('/categories');
+                const cats = res.data || [];
+                const icons = ['👶', '👗', '👕', '👟', '🧸', '🍼', '🧢', '🎀'];
+                cats.forEach((cat, idx) => {
+                    const li = document.createElement('li');
+                    li.innerHTML = `
+                        <label>
+                            <input type="radio" name="category" value="${cat.id}" onchange="filterByCategory('${cat.id}')">
+                            <span>${icons[idx % icons.length]} ${cat.name}</span>
+                        </label>
+                    `;
+                    list.appendChild(li);
+                });
+            } catch (e) {
+                console.error("Lỗi nạp danh mục filter:", e);
+            }
+        }
+    </script>
+</body>
+</html>

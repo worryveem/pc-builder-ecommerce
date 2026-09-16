@@ -8,6 +8,7 @@ import { BuilderSummary } from '../components/builder/BuilderSummary';
 import { BuilderProductSelector } from '../components/builder/BuilderProductSelector';
 import { SaveConfigurationModal } from '../components/builder/SaveConfigurationModal';
 import { ShareConfigurationModal } from '../components/builder/ShareConfigurationModal';
+import { AddToCartSuccessModal } from '../components/builder/AddToCartSuccessModal';
 
 export const BuilderPage = () => {
   const { id } = useParams();
@@ -32,11 +33,14 @@ export const BuilderPage = () => {
   const [loadingCategories, setLoadingCategories] = useState(true);
   const [validating, setValidating] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [addingToCart, setAddingToCart] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [activeCategory, setActiveCategory] = useState(null);
 
   const [isSaveModalOpen, setIsSaveModalOpen] = useState(false);
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
+  const [isAddToCartSuccessOpen, setIsAddToCartSuccessOpen] = useState(false);
+  const [isDirty, setIsDirty] = useState(false);
 
   // 1. Validate configuration whenever components change
   const triggerValidation = useCallback(async (currentSelected) => {
@@ -108,6 +112,7 @@ export const BuilderPage = () => {
 
         setSelectedComponents(newSelected);
         triggerValidation(newSelected);
+        setIsDirty(true); // Imported configuration is considered unsaved until user saves it
         return;
       }
 
@@ -135,6 +140,7 @@ export const BuilderPage = () => {
 
             setSelectedComponents(newSelected);
             triggerValidation(newSelected);
+            setIsDirty(false); // Clean saved configuration
           }
         } catch (err) {
           console.error('Failed to load configuration by id:', err);
@@ -159,6 +165,7 @@ export const BuilderPage = () => {
         }
       };
       triggerValidation(updated);
+      setIsDirty(true);
       return updated;
     });
   };
@@ -169,6 +176,7 @@ export const BuilderPage = () => {
       const updated = { ...prev };
       delete updated[categorySlug];
       triggerValidation(updated);
+      setIsDirty(true);
       return updated;
     });
   };
@@ -178,15 +186,18 @@ export const BuilderPage = () => {
     if (newQuantity < 1) return;
 
     setSelectedComponents(prev => {
-      if (!prev[categorySlug]) return prev;
+      const current = prev[categorySlug];
+      if (!current) return prev;
+
       const updated = {
         ...prev,
         [categorySlug]: {
-          ...prev[categorySlug],
+          ...current,
           quantity: newQuantity
         }
       };
       triggerValidation(updated);
+      setIsDirty(true);
       return updated;
     });
   };
@@ -198,6 +209,7 @@ export const BuilderPage = () => {
     setConfigurationId(null);
     setShareToken(null);
     setConfigurationName('Untitled PC Build');
+    setIsDirty(false);
     triggerValidation({});
   };
 
@@ -238,6 +250,7 @@ export const BuilderPage = () => {
         setConfigurationId(res.data.id);
         setConfigurationName(res.data.name);
         setShareToken(res.data.shareToken);
+        setIsDirty(false); // Saved successfully
 
         setIsSaveModalOpen(false);
         setIsShareModalOpen(true); // Open share modal to show success & copy link
@@ -248,6 +261,50 @@ export const BuilderPage = () => {
       setErrorMsg(msg);
     } finally {
       setSaving(false);
+    }
+  };
+
+  // 10. Add to Cart handler
+  const handleAddToCart = async () => {
+    if (!isAuthenticated) {
+      if (window.confirm('Bạn cần đăng nhập tài khoản để thêm cấu hình vào giỏ hàng. Chuyển đến trang Đăng nhập ngay?')) {
+        navigate('/login', { state: { from: location } });
+      }
+      return;
+    }
+
+    if (!configurationId) {
+      setErrorMsg('Vui lòng lưu cấu hình trước khi thêm vào giỏ hàng.');
+      return;
+    }
+
+    // A. Validate compatibility (Hard check: cannot add if there are ERRORs)
+    if (compatibility?.errors && compatibility.errors.length > 0) {
+      setErrorMsg('Không thể thêm cấu hình vào giỏ hàng. Cấu hình hiện tại có linh kiện không tương thích phần cứng.');
+      window.scrollTo({ top: 100, behavior: 'smooth' });
+      return;
+    }
+
+    // B. Check if configuration has unsaved changes
+    if (isDirty) {
+      if (window.confirm('Cấu hình đã có thay đổi linh kiện chưa được lưu. Bạn có muốn cập nhật cấu hình trước khi thêm vào giỏ hàng không?')) {
+        setIsSaveModalOpen(true);
+        return;
+      }
+    }
+
+    // C. Call backend add-to-cart API
+    try {
+      setAddingToCart(true);
+      setErrorMsg('');
+      await builderApi.addConfigurationToCart(configurationId);
+      setIsAddToCartSuccessOpen(true);
+    } catch (err) {
+      console.error('Failed to add configuration to cart:', err);
+      const msg = err.response?.data?.message || 'Không thể thêm cấu hình vào giỏ hàng. Vui lòng kiểm tra lại số lượng tồn kho hoặc thử lại sau.';
+      setErrorMsg(msg);
+    } finally {
+      setAddingToCart(false);
     }
   };
 
@@ -337,9 +394,11 @@ export const BuilderPage = () => {
               onReset={handleResetBuild}
               onOpenSave={handleOpenSaveModal}
               onOpenShare={() => setIsShareModalOpen(true)}
+              onAddToCart={handleAddToCart}
               configurationId={configurationId}
               shareToken={shareToken}
               saving={saving}
+              addingToCart={addingToCart}
             />
           </div>
         </aside>
@@ -373,6 +432,15 @@ export const BuilderPage = () => {
         configurationName={configurationName}
         shareToken={shareToken}
         onClose={() => setIsShareModalOpen(false)}
+      />
+
+      {/* Add to Cart Success Modal */}
+      <AddToCartSuccessModal
+        isOpen={isAddToCartSuccessOpen}
+        configurationName={configurationName}
+        itemCount={Object.values(selectedComponents).filter(i => i && i.product).reduce((s, i) => s + (i.quantity || 1), 0)}
+        totalPrice={Object.values(selectedComponents).filter(i => i && i.product).reduce((s, i) => s + (i.product.price || 0) * (i.quantity || 1), 0)}
+        onClose={() => setIsAddToCartSuccessOpen(false)}
       />
     </div>
   );

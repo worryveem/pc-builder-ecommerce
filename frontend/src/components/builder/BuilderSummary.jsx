@@ -5,9 +5,11 @@ export const BuilderSummary = ({
   onReset,
   onOpenSave,
   onOpenShare,
+  onAddToCart,
   configurationId,
   shareToken,
-  saving
+  saving,
+  addingToCart
 }) => {
   const items = Object.values(selectedComponents || {}).filter(item => item && item.product);
 
@@ -40,12 +42,28 @@ export const BuilderSummary = ({
       </div>
 
       <div className="summary-actions">
+        {/* Add to Cart Button (Only when configuration has ID) */}
+        {configurationId ? (
+          <button
+            type="button"
+            className="btn btn-success btn-block mb-2 font-bold"
+            onClick={onAddToCart}
+            disabled={items.length === 0 || addingToCart || saving}
+          >
+            {addingToCart ? 'Đang thêm vào giỏ...' : '🛒 Thêm toàn bộ PC vào giỏ'}
+          </button>
+        ) : items.length > 0 ? (
+          <div className="builder-save-first-hint mb-2">
+            💡 Vui lòng lưu cấu hình trước khi thêm vào giỏ.
+          </div>
+        ) : null}
+
         {/* Save / Update Button */}
         <button
           type="button"
           className="btn btn-primary btn-block mb-2"
           onClick={onOpenSave}
-          disabled={items.length === 0 || saving}
+          disabled={items.length === 0 || saving || addingToCart}
         >
           {saving
             ? 'Đang lưu...'
@@ -60,6 +78,7 @@ export const BuilderSummary = ({
             type="button"
             className="btn btn-outline btn-block mb-2"
             onClick={onOpenShare}
+            disabled={saving || addingToCart}
           >
             🔗 Chia sẻ cấu hình
           </button>
@@ -70,7 +89,7 @@ export const BuilderSummary = ({
           type="button"
           className="btn btn-outline-danger btn-block btn-sm"
           onClick={onReset}
-          disabled={items.length === 0 || saving}
+          disabled={items.length === 0 || saving || addingToCart}
         >
           🗑️ Làm mới cấu hình
         </button>

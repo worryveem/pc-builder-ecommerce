@@ -65,5 +65,13 @@ export const builderApi = {
   updateConfiguration: async (id, { name, items }) => {
     const response = await axiosInstance.put(`/builder/configurations/${id}`, { name, items });
     return response.data;
+  },
+
+  /**
+   * Add entire saved PC configuration to user's cart (requires auth and ownership)
+   */
+  addConfigurationToCart: async (id) => {
+    const response = await axiosInstance.post(`/builder/configurations/${id}/add-to-cart`);
+    return response.data;
   }
 };

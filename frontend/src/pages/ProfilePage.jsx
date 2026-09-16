@@ -168,7 +168,7 @@ export default function ProfilePage() {
             )}
             {discountInfo && (
               <div className="user-discount-badge">
-                🎉 Chiết khấu thành viên: <strong>{discountInfo.discountRate || discountInfo.discount || 0}%</strong>
+                Chiết khấu thành viên: <strong>{discountInfo.discountRate || discountInfo.discount || 0}%</strong>
               </div>
             )}
           </div>
@@ -178,33 +178,33 @@ export default function ProfilePage() {
               className={`profile-menu-item ${activeTab === 'info' ? 'active' : ''}`}
               onClick={() => setActiveTab('info')}
             >
-              👤 Thông tin cá nhân
+              Thông tin cá nhân
             </button>
             <button
               className={`profile-menu-item ${activeTab === 'address' ? 'active' : ''}`}
               onClick={() => setActiveTab('address')}
             >
-              📍 Địa chỉ giao hàng
+              Địa chỉ giao hàng
             </button>
             <button
               className={`profile-menu-item ${activeTab === 'password' ? 'active' : ''}`}
               onClick={() => setActiveTab('password')}
             >
-              🔒 Đổi mật khẩu
+              Đổi mật khẩu
             </button>
           </div>
 
           <div className="profile-quick-links">
             <h4>Lối tắt nhanh</h4>
             <Link to="/orders" className="quick-link-btn">
-              📦 Đơn hàng của tôi
+              Đơn hàng của tôi
             </Link>
             <Link to="/wishlist" className="quick-link-btn">
-              ❤️ Sản phẩm yêu thích
+              Sản phẩm yêu thích
             </Link>
             {isAdmin && (
               <Link to="/admin" className="quick-link-btn admin-link">
-                ⚡ Trang Quản Trị (Admin)
+                Trang Quản Trị (Admin)
               </Link>
             )}
           </div>

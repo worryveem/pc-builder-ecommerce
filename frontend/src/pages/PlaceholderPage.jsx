@@ -7,8 +7,8 @@ export const PlaceholderPage = ({ title }) => {
 
   return (
     <div className="container placeholder-page">
-      <div className="placeholder-card">
-        <span className="placeholder-icon">🚧</span>
+      <div className="placeholder-card elevation-md">
+        <span className="placeholder-badge">COMING SOON</span>
         <h1>{pageTitle}</h1>
         <p className="subtitle">
           Khu vực chức năng này đang được phát triển và sẽ được hoàn thiện trong các phase tiếp theo.

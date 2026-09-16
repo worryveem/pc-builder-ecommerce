@@ -61,7 +61,7 @@ export const RegisterPage = () => {
 
       const result = await register(payload);
       if (result.success) {
-        setSuccessMsg('Đăng ký thành công! Đang chuyển hướng đến trang đăng nhập...');
+        setSuccessMsg('Đăng ký tài khoản thành công! Đang chuyển hướng đến trang đăng nhập...');
         setTimeout(() => {
           navigate('/login');
         }, 1500);
@@ -76,17 +76,19 @@ export const RegisterPage = () => {
   };
 
   return (
-    <div className="auth-page">
-      <div className="auth-card register-card">
-        <div className="auth-header">
-          <h2>Tạo tài khoản mới</h2>
-          <p>Tham gia cộng đồng PC Builder & Mua sắm linh kiện hàng đầu</p>
+    <div className="auth-page-container">
+      <div className="auth-elevated-card register-card-wide elevation-lg">
+        <div className="auth-card-header">
+          <h1 className="auth-card-title">Tạo Tài Khoản Mới</h1>
+          <p className="auth-card-subtitle">
+            Tham gia cộng đồng TECHPC STORE để lưu cấu hình PC và nhận ưu đãi độc quyền
+          </p>
         </div>
 
         {errorMsg && <div className="alert alert-danger">{errorMsg}</div>}
         {successMsg && <div className="alert alert-success">{successMsg}</div>}
 
-        <form onSubmit={handleSubmit} className="auth-form">
+        <form onSubmit={handleSubmit}>
           <div className="form-row">
             <div className="form-group col">
               <label htmlFor="username">Tên đăng nhập *</label>
@@ -95,6 +97,7 @@ export const RegisterPage = () => {
                 name="username"
                 type="text"
                 className="form-control"
+                placeholder="Ví dụ: hoangpc"
                 value={formData.username}
                 onChange={handleChange}
                 disabled={submitting}
@@ -102,12 +105,13 @@ export const RegisterPage = () => {
               />
             </div>
             <div className="form-group col">
-              <label htmlFor="email">Email *</label>
+              <label htmlFor="email">Email liên hệ *</label>
               <input
                 id="email"
                 name="email"
                 type="email"
                 className="form-control"
+                placeholder="email@example.com"
                 value={formData.email}
                 onChange={handleChange}
                 disabled={submitting}
@@ -124,6 +128,7 @@ export const RegisterPage = () => {
                 name="password"
                 type="password"
                 className="form-control"
+                placeholder="Ít nhất 6 ký tự"
                 value={formData.password}
                 onChange={handleChange}
                 disabled={submitting}
@@ -137,6 +142,7 @@ export const RegisterPage = () => {
                 name="confirmPassword"
                 type="password"
                 className="form-control"
+                placeholder="Nhập lại mật khẩu"
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 disabled={submitting}
@@ -153,6 +159,7 @@ export const RegisterPage = () => {
                 name="fullName"
                 type="text"
                 className="form-control"
+                placeholder="Ví dụ: Nguyễn Văn A"
                 value={formData.fullName}
                 onChange={handleChange}
                 disabled={submitting}
@@ -165,6 +172,7 @@ export const RegisterPage = () => {
                 name="phone"
                 type="tel"
                 className="form-control"
+                placeholder="Ví dụ: 0912345678"
                 value={formData.phone}
                 onChange={handleChange}
                 disabled={submitting}
@@ -173,30 +181,35 @@ export const RegisterPage = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="addressLine">Địa chỉ chi tiết</label>
+            <label htmlFor="addressLine">Địa chỉ nhận hàng</label>
             <input
               id="addressLine"
               name="addressLine"
               type="text"
               className="form-control"
-              placeholder="Số nhà, tên đường..."
+              placeholder="Số nhà, tên đường, quận/huyện..."
               value={formData.addressLine}
               onChange={handleChange}
               disabled={submitting}
             />
           </div>
 
-          <button type="submit" className="btn btn-primary btn-block btn-lg" disabled={submitting}>
-            {submitting ? 'Đang tạo tài khoản...' : 'Đăng ký ngay'}
+          <button
+            type="submit"
+            className="btn btn-primary btn-block btn-lg"
+            style={{ marginTop: '0.75rem' }}
+            disabled={submitting}
+          >
+            {submitting ? 'Đang tạo tài khoản...' : 'Đăng Ký Tài Khoản'}
           </button>
         </form>
 
-        <div className="auth-footer">
-          <p>
-            Đã có tài khoản? <Link to="/login">Đăng nhập</Link>
-          </p>
+        <div className="auth-switch-link">
+          Đã có tài khoản? <Link to="/login">Đăng nhập ngay</Link>
         </div>
       </div>
     </div>
   );
 };
+
+export default RegisterPage;

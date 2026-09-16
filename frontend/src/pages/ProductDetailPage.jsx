@@ -26,7 +26,7 @@ export const ProductDetailPage = () => {
   const [submittingReview, setSubmittingReview] = useState(false);
   const [reviewMsg, setReviewMsg] = useState({ type: '', text: '' });
 
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   const fetchProductData = async () => {
@@ -135,6 +135,22 @@ export const ProductDetailPage = () => {
     }
   };
 
+  const handleBuyNow = async () => {
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: { pathname: `/products/${id}` } } });
+      return;
+    }
+
+    try {
+      setAddingToCart(true);
+      await cartApi.addToCart(product.id, quantity);
+      navigate('/checkout');
+    } catch (err) {
+      setActionMsg({ type: 'error', text: 'Không thể tiến hành đặt hàng ngay lúc này.' });
+      setAddingToCart(false);
+    }
+  };
+
   const handleSubmitReview = async (e) => {
     e.preventDefault();
     if (!isAuthenticated) {
@@ -180,10 +196,12 @@ export const ProductDetailPage = () => {
 
   if (error || !product) {
     return (
-      <div className="container error-container">
-        <h2>Thông báo</h2>
+      <div className="container empty-state-container" style={{ marginTop: '3rem' }}>
+        <h2>Thông báo sản phẩm</h2>
         <p>{error || 'Không tìm thấy sản phẩm'}</p>
-        <Link to="/products" className="btn btn-primary">Quay lại danh sách sản phẩm</Link>
+        <Link to="/products" className="btn btn-primary">
+          Quay lại danh sách sản phẩm
+        </Link>
       </div>
     );
   }
@@ -193,293 +211,425 @@ export const ProductDetailPage = () => {
 
   return (
     <div className="container product-detail-page">
-      <div className="breadcrumb">
-        <Link to="/">Trang chủ</Link> / <Link to="/products">Sản phẩm</Link> / <span>{product.name}</span>
+      {/* Breadcrumb Navigation */}
+      <div className="breadcrumb-nav">
+        <Link to="/">Trang chủ</Link>
+        <span className="breadcrumb-sep">/</span>
+        <Link to="/products">Sản phẩm</Link>
+        {product.category && (
+          <>
+            <span className="breadcrumb-sep">/</span>
+            <Link to={`/products?category=${product.category.id}`}>
+              {product.category.name}
+            </Link>
+          </>
+        )}
+        <span className="breadcrumb-sep">/</span>
+        <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>{product.name}</span>
       </div>
 
-      <div className="product-detail-layout">
-        {/* Gallery */}
-        <div className="product-gallery">
-          <div className="main-image-wrap">
-            {selectedImg ? (
-              <img src={selectedImg} alt={product.name} className="product-detail-img" />
-            ) : (
-              <div className="product-img-placeholder large">
-                <span>💻</span>
-              </div>
-            )}
-            <button
-              className={`btn-wishlist-detail ${isWishlisted ? 'wishlisted' : ''}`}
-              title={isWishlisted ? 'Xóa khỏi yêu thích' : 'Lưu vào yêu thích'}
-              onClick={handleToggleWishlist}
-            >
-              {isWishlisted ? '❤️ Yêu thích' : '🤍 Lưu'}
-            </button>
-          </div>
-
-          {images.length > 1 && (
-            <div className="gallery-thumbnails">
-              {images.map((img, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  className={`thumb-btn ${selectedImg === img.imageUrl ? 'active' : ''}`}
-                  onClick={() => setSelectedImg(img.imageUrl)}
-                >
-                  <img src={img.imageUrl} alt={`Thumbnail ${idx + 1}`} />
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* Info & Buying */}
-        <div className="product-main-info">
-          <div className="detail-top-tags">
-            <span className="product-brand-badge">{product.brand || 'Chính hãng'}</span>
-            {ratingSummary.totalRatings > 0 && (
-              <span className="rating-pill">
-                ⭐ {ratingSummary.averageRating.toFixed(1)} ({ratingSummary.totalRatings} đánh giá)
-              </span>
-            )}
-          </div>
-
-          <h1 className="product-detail-title">{product.name}</h1>
-          <p className="product-model-code">Mã model: {product.modelCode || 'N/A'}</p>
-
-          <div className="price-box">
-            <span className="current-price">{formatPrice(product.price)}</span>
-            <span className={`stock-badge ${product.stockQuantity > 0 ? 'in-stock' : 'out-of-stock'}`}>
-              {product.stockQuantity > 0 ? `Còn hàng (${product.stockQuantity} sản phẩm)` : 'Hết hàng'}
-            </span>
-          </div>
-
-          {product.warrantyMonths && (
-            <p className="warranty-info">🛡️ Bảo hành chính hãng: {product.warrantyMonths} tháng</p>
-          )}
-
-          {actionMsg.text && (
-            <div className={`alert ${actionMsg.type === 'success' ? 'alert-success' : 'alert-danger'}`}>
-              {actionMsg.text}
-            </div>
-          )}
-
-          <div className="purchase-controls">
-            <div className="quantity-selector">
-              <label>Số lượng:</label>
-              <div className="qty-buttons">
-                <button
-                  type="button"
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  disabled={quantity <= 1 || addingToCart}
-                >
-                  -
-                </button>
-                <input
-                  type="number"
-                  min="1"
-                  max={product.stockQuantity || 99}
-                  value={quantity}
-                  onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
-                  disabled={addingToCart}
+      {/* Main Detail Card */}
+      <div className="product-detail-card">
+        <div className="product-detail-grid">
+          {/* Gallery Left Column */}
+          <div className="product-gallery-col">
+            <div className="main-preview-frame">
+              {selectedImg ? (
+                <img
+                  src={selectedImg}
+                  alt={product.name}
+                  className="main-preview-img"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = '/placeholder.svg';
+                  }}
                 />
+              ) : (
+                <div className="product-img-placeholder">
+                  <span>TECHPC</span>
+                </div>
+              )}
+            </div>
+
+            {images.length > 1 && (
+              <div className="gallery-thumbs-row">
+                {images.map((img, idx) => (
+                  <button
+                    key={idx}
+                    type="button"
+                    className={`gallery-thumb-btn ${selectedImg === img.imageUrl ? 'active' : ''}`}
+                    onClick={() => setSelectedImg(img.imageUrl)}
+                  >
+                    <img
+                      src={img.imageUrl}
+                      alt={`Ảnh ${idx + 1}`}
+                      onError={(e) => {
+                        e.currentTarget.onerror = null;
+                        e.currentTarget.src = '/placeholder.svg';
+                      }}
+                    />
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Product Info Right Column */}
+          <div className="product-details-col">
+            <div className="detail-header-meta">
+              <span className="brand-pill">{product.brand || 'Chính hãng'}</span>
+              <span className="model-code-text">Model: {product.modelCode || 'N/A'}</span>
+            </div>
+
+            <h1 className="detail-product-title">{product.name}</h1>
+
+            <div className="detail-rating-row">
+              <div className="star-rating-pill">
+                <span>★ {ratingSummary.averageRating.toFixed(1)}</span>
+              </div>
+              <span className="review-count-link">
+                ({ratingSummary.totalRatings} lượt đánh giá)
+              </span>
+              <span style={{ color: 'var(--text-light)' }}>|</span>
+              <span style={{ color: 'var(--text-muted)' }}>
+                Tình trạng: <strong>{product.stockQuantity > 0 ? `Còn hàng (${product.stockQuantity})` : 'Hết hàng'}</strong>
+              </span>
+            </div>
+
+            {/* Price Box */}
+            <div className="detail-price-box">
+              <span className="detail-price-main">{formatPrice(product.price)}</span>
+              <span style={{ fontSize: '0.85rem', color: 'var(--text-muted)' }}>
+                (Đã bao gồm VAT)
+              </span>
+            </div>
+
+            {/* Warranty Info */}
+            <div className="detail-warranty-badge">
+              <span>Bảo hành:</span>
+              <strong>{product.warrantyMonths || 36} tháng chính hãng</strong>
+            </div>
+
+            {/* Action Feedback Message */}
+            {actionMsg.text && (
+              <div className={`alert ${actionMsg.type === 'success' ? 'alert-success' : 'alert-danger'}`}>
+                {actionMsg.text}
+              </div>
+            )}
+
+            {/* Purchase Controls */}
+            <div className="detail-purchase-section">
+              <div className="detail-qty-row">
+                <span className="detail-qty-label">Số lượng:</span>
+                <div className="qty-buttons">
+                  <button
+                    type="button"
+                    disabled={quantity <= 1}
+                    onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                  >
+                    -
+                  </button>
+                  <input
+                    type="text"
+                    readOnly
+                    value={quantity}
+                  />
+                  <button
+                    type="button"
+                    disabled={quantity >= (product.stockQuantity || 99)}
+                    onClick={() => setQuantity(quantity + 1)}
+                  >
+                    +
+                  </button>
+                </div>
+
                 <button
                   type="button"
-                  onClick={() => setQuantity(quantity + 1)}
-                  disabled={quantity >= (product.stockQuantity || 99) || addingToCart}
+                  className={`btn btn-sm ${isWishlisted ? 'btn-danger' : 'btn-outline'}`}
+                  style={{ marginLeft: 'auto', display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
+                  onClick={handleToggleWishlist}
+                  title={isWishlisted ? 'Bỏ lưu yêu thích' : 'Lưu vào yêu thích'}
                 >
-                  +
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill={isWishlisted ? 'currentColor' : 'none'} stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z" />
+                  </svg>
+                  <span>{isWishlisted ? 'Đã yêu thích' : 'Yêu thích'}</span>
+                </button>
+              </div>
+
+              <div className="detail-cta-row">
+                <button
+                  type="button"
+                  className="btn btn-add-cart-detail"
+                  disabled={addingToCart || product.stockQuantity <= 0}
+                  onClick={handleAddToCart}
+                >
+                  {addingToCart ? 'Đang thêm...' : 'Thêm Vào Giỏ Hàng'}
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-buy-now-detail"
+                  disabled={addingToCart || product.stockQuantity <= 0}
+                  onClick={handleBuyNow}
+                >
+                  Mua Ngay
                 </button>
               </div>
             </div>
 
-            <button
-              onClick={handleAddToCart}
-              className="btn btn-primary btn-lg"
-              disabled={product.stockQuantity <= 0 || addingToCart}
-            >
-              {addingToCart ? 'Đang thêm...' : '🛒 Thêm vào giỏ hàng'}
-            </button>
-          </div>
-
-          {product.description && (
-            <div className="product-description">
-              <h3>Mô tả sản phẩm</h3>
-              <p>{product.description}</p>
+            {/* Store Commitments */}
+            <div className="store-commitments-box">
+              <div className="commitment-item">
+                <strong>Cam kết chính hãng 100%</strong>
+                <span>Hóa đơn VAT, xuất xứ nguồn gốc minh bạch</span>
+              </div>
+              <div className="commitment-item">
+                <strong>Đổi mới trong 30 ngày</strong>
+                <span>Nếu phát sinh lỗi phần cứng từ nhà sản xuất</span>
+              </div>
+              <div className="commitment-item">
+                <strong>Giao hàng hỏa tốc 2H</strong>
+                <span>Miễn phí nội thành cho đơn hàng từ 5 triệu</span>
+              </div>
+              <div className="commitment-item">
+                <strong>Hỗ trợ kỹ thuật 24/7</strong>
+                <span>Lắp ráp, cài đặt và tối ưu hiệu năng trọn đời</span>
+              </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
 
-      {/* Hardware Specs Table */}
+      {/* Specifications Table Section */}
       {spec && (
-        <div className="product-specs-section">
-          <h2>Thông số kỹ thuật phần cứng</h2>
-          <table className="specs-table">
+        <div className="specs-section-container">
+          <h2 className="specs-section-title">Thông Số Kỹ Thuật Chi Tiết</h2>
+          <table className="specs-modern-table">
             <tbody>
               {spec.socket && (
-                <tr><td>Socket hỗ trợ</td><td><strong>{spec.socket}</strong></td></tr>
-              )}
-              {spec.supportedSockets && (
-                <tr><td>Các socket tương thích</td><td>{spec.supportedSockets}</td></tr>
+                <tr>
+                  <td className="specs-label-col">Socket vi xử lý</td>
+                  <td className="specs-val-col">{spec.socket}</td>
+                </tr>
               )}
               {spec.chipset && (
-                <tr><td>Chipset</td><td>{spec.chipset}</td></tr>
+                <tr>
+                  <td className="specs-label-col">Chipset Bo mạch chủ</td>
+                  <td className="specs-val-col">{spec.chipset}</td>
+                </tr>
               )}
               {spec.ramType && (
-                <tr><td>Chuẩn RAM</td><td><strong>{spec.ramType}</strong></td></tr>
-              )}
-              {spec.ramSlots && (
-                <tr><td>Số khe cắm RAM</td><td>{spec.ramSlots} khe</td></tr>
-              )}
-              {spec.maxRamCapacity && (
-                <tr><td>Dung lượng RAM tối đa</td><td>{spec.maxRamCapacity} GB</td></tr>
-              )}
-              {spec.capacityGb && (
-                <tr><td>Dung lượng mỗi thanh</td><td>{spec.capacityGb} GB</td></tr>
-              )}
-              {spec.modulesCount && (
-                <tr><td>Số thanh trong 1 kit</td><td>{spec.modulesCount}</td></tr>
+                <tr>
+                  <td className="specs-label-col">Chuẩn bộ nhớ (RAM Type)</td>
+                  <td className="specs-val-col">{spec.ramType}</td>
+                </tr>
               )}
               {spec.speedMhz && (
-                <tr><td>Tốc độ xung nhịp</td><td>{spec.speedMhz} MHz</td></tr>
+                <tr>
+                  <td className="specs-label-col">Tốc độ bus</td>
+                  <td className="specs-val-col">{spec.speedMhz} MHz</td>
+                </tr>
+              )}
+              {spec.capacityGb && (
+                <tr>
+                  <td className="specs-label-col">Dung lượng</td>
+                  <td className="specs-val-col">
+                    {spec.capacityGb} GB {spec.modulesCount > 1 ? `(Kit ${spec.modulesCount} thanh)` : ''}
+                  </td>
+                </tr>
               )}
               {spec.formFactor && (
-                <tr><td>Kích thước / Form Factor</td><td><strong>{spec.formFactor}</strong></td></tr>
+                <tr>
+                  <td className="specs-label-col">Kích thước (Form Factor)</td>
+                  <td className="specs-val-col">{spec.formFactor}</td>
+                </tr>
               )}
-              {spec.supportedFormFactors && (
-                <tr><td>Các form factor hỗ trợ</td><td>{spec.supportedFormFactors}</td></tr>
-              )}
-              {spec.tdpW && (
-                <tr><td>Mức tiêu thụ điện (TDP)</td><td>{spec.tdpW} W</td></tr>
-              )}
-              {spec.powerConsumptionW && (
-                <tr><td>Điện năng tiêu thụ (GPU)</td><td>{spec.powerConsumptionW} W</td></tr>
-              )}
-              {spec.recommendedPsuW && (
-                <tr><td>Nguồn khuyến nghị (GPU)</td><td><strong>{spec.recommendedPsuW} W</strong></td></tr>
-              )}
-              {spec.psuWattage && (
-                <tr><td>Công suất nguồn (PSU)</td><td><strong>{spec.psuWattage} W</strong></td></tr>
-              )}
-              {spec.gpuLengthMm && (
-                <tr><td>Chiều dài card (GPU)</td><td>{spec.gpuLengthMm} mm</td></tr>
-              )}
-              {spec.maxGpuLengthMm && (
-                <tr><td>Chiều dài GPU tối đa (Case)</td><td>{spec.maxGpuLengthMm} mm</td></tr>
+              {spec.supportedSockets && (
+                <tr>
+                  <td className="specs-label-col">Các socket hỗ trợ</td>
+                  <td className="specs-val-col">{spec.supportedSockets}</td>
+                </tr>
               )}
               {spec.coolerHeightMm && (
-                <tr><td>Chiều cao tản nhiệt</td><td>{spec.coolerHeightMm} mm</td></tr>
+                <tr>
+                  <td className="specs-label-col">Chiều cao tản nhiệt</td>
+                  <td className="specs-val-col">{spec.coolerHeightMm} mm</td>
+                </tr>
+              )}
+              {spec.gpuLengthMm && (
+                <tr>
+                  <td className="specs-label-col">Chiều dài card (GPU Length)</td>
+                  <td className="specs-val-col">{spec.gpuLengthMm} mm</td>
+                </tr>
+              )}
+              {spec.maxGpuLengthMm && (
+                <tr>
+                  <td className="specs-label-col">VGA hỗ trợ tối đa</td>
+                  <td className="specs-val-col">{spec.maxGpuLengthMm} mm</td>
+                </tr>
               )}
               {spec.maxCoolerHeightMm && (
-                <tr><td>Chiều cao tản nhiệt tối đa (Case)</td><td>{spec.maxCoolerHeightMm} mm</td></tr>
+                <tr>
+                  <td className="specs-label-col">Tản CPU hỗ trợ tối đa</td>
+                  <td className="specs-val-col">{spec.maxCoolerHeightMm} mm</td>
+                </tr>
+              )}
+              {spec.tdpW && (
+                <tr>
+                  <td className="specs-label-col">Công suất thiết kế (TDP)</td>
+                  <td className="specs-val-col">{spec.tdpW} W</td>
+                </tr>
+              )}
+              {spec.powerConsumptionW && (
+                <tr>
+                  <td className="specs-label-col">Công suất tiêu thụ</td>
+                  <td className="specs-val-col">{spec.powerConsumptionW} W</td>
+                </tr>
+              )}
+              {spec.recommendedPsuW && (
+                <tr>
+                  <td className="specs-label-col">Nguồn đề xuất</td>
+                  <td className="specs-val-col">{spec.recommendedPsuW} W</td>
+                </tr>
+              )}
+              {spec.psuWattage && (
+                <tr>
+                  <td className="specs-label-col">Công suất thực nguồn (PSU)</td>
+                  <td className="specs-val-col">{spec.psuWattage} W</td>
+                </tr>
+              )}
+              {spec.screenSize && (
+                <tr>
+                  <td className="specs-label-col">Kích thước màn hình</td>
+                  <td className="specs-val-col">{spec.screenSize} inch</td>
+                </tr>
+              )}
+              {spec.resolution && (
+                <tr>
+                  <td className="specs-label-col">Độ phân giải</td>
+                  <td className="specs-val-col">{spec.resolution}</td>
+                </tr>
+              )}
+              {spec.refreshRate && (
+                <tr>
+                  <td className="specs-label-col">Tần số quét</td>
+                  <td className="specs-val-col">{spec.refreshRate} Hz</td>
+                </tr>
               )}
             </tbody>
           </table>
         </div>
       )}
 
-      {/* Ratings and Reviews Section */}
-      <div className="product-reviews-section">
-        <div className="reviews-header">
-          <h2>Đánh giá & Nhận xét của khách hàng</h2>
-          <div className="summary-banner">
-            <div className="big-rating">
-              <strong>{ratingSummary.averageRating.toFixed(1)}</strong>
-              <div className="stars-gold">
-                {'★'.repeat(Math.round(ratingSummary.averageRating))}
-                {'☆'.repeat(5 - Math.round(ratingSummary.averageRating))}
-              </div>
-              <span>{ratingSummary.totalRatings} lượt đánh giá</span>
+      {/* Description Section */}
+      <div className="specs-section-container">
+        <h2 className="specs-section-title">Mô Tả Sản Phẩm</h2>
+        <div style={{ fontSize: '1rem', lineHeight: '1.7', color: 'var(--text-body)' }}>
+          <p>{product.description || 'Sản phẩm linh kiện máy tính chính hãng với hiệu năng ổn định và độ bền cao.'}</p>
+        </div>
+      </div>
+
+      {/* Customer Reviews Section */}
+      <div className="specs-section-container">
+        <h2 className="specs-section-title">Đánh Giá Từ Khách Hàng</h2>
+
+        {/* Rating Summary Banner */}
+        <div className="summary-banner" style={{ display: 'flex', alignItems: 'center', gap: '2rem', flexWrap: 'wrap' }}>
+          <div>
+            <div style={{ fontSize: '2.8rem', fontWeight: 800, color: 'var(--text-main)', lineHeight: 1 }}>
+              {ratingSummary.averageRating.toFixed(1)} / 5
             </div>
+            <div style={{ color: '#d97706', fontSize: '1.25rem', marginTop: '0.25rem' }}>
+              {'★'.repeat(Math.round(ratingSummary.averageRating))}
+              {'☆'.repeat(5 - Math.round(ratingSummary.averageRating))}
+            </div>
+          </div>
+          <div style={{ fontSize: '0.95rem', color: 'var(--text-muted)' }}>
+            Dựa trên <strong>{ratingSummary.totalRatings}</strong> lượt đánh giá từ khách hàng đã mua sản phẩm
           </div>
         </div>
 
-        {/* Review Form */}
-        <div className="write-review-card">
-          <h3>Gửi đánh giá của bạn</h3>
+        {/* Submit Review Form */}
+        <div style={{ marginTop: '2rem', marginBottom: '2.5rem', padding: '1.75rem', background: '#f8fafc', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)' }}>
+          <h3 style={{ fontSize: '1.15rem', fontWeight: 700, marginBottom: '1rem' }}>
+            Viết đánh giá của bạn
+          </h3>
+
           {reviewMsg.text && (
             <div className={`alert ${reviewMsg.type === 'success' ? 'alert-success' : 'alert-danger'}`}>
               {reviewMsg.text}
             </div>
           )}
 
-          {isAuthenticated ? (
-            <form onSubmit={handleSubmitReview} className="review-form">
-              <div className="form-group">
-                <label>Chọn số sao đánh giá:</label>
-                <div className="star-rating-selector">
-                  {[1, 2, 3, 4, 5].map((star) => (
-                    <button
-                      key={star}
-                      type="button"
-                      className={`star-btn ${userRating >= star ? 'selected' : ''}`}
-                      onClick={() => setUserRating(star)}
-                    >
-                      ★
-                    </button>
-                  ))}
-                  <span className="star-desc">
-                    {userRating === 5 && 'Tuyệt vời'}
-                    {userRating === 4 && 'Hài lòng'}
-                    {userRating === 3 && 'Bình thường'}
-                    {userRating === 2 && 'Không hài lòng'}
-                    {userRating === 1 && 'Rất tệ'}
-                  </span>
-                </div>
+          <form onSubmit={handleSubmitReview}>
+            <div style={{ marginBottom: '1rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+              <span style={{ fontWeight: 600, fontSize: '0.9rem' }}>Chất lượng sản phẩm:</span>
+              <div style={{ display: 'flex', gap: '0.35rem' }}>
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <button
+                    key={star}
+                    type="button"
+                    style={{
+                      background: 'none',
+                      border: 'none',
+                      fontSize: '1.5rem',
+                      cursor: 'pointer',
+                      color: star <= userRating ? '#d97706' : '#cbd5e1'
+                    }}
+                    onClick={() => setUserRating(star)}
+                  >
+                    ★
+                  </button>
+                ))}
               </div>
-
-              <div className="form-group">
-                <label>Bình luận nhận xét:</label>
-                <textarea
-                  rows="3"
-                  className="form-control"
-                  placeholder="Chia sẻ trải nghiệm thực tế về sản phẩm..."
-                  value={userComment}
-                  onChange={(e) => setUserComment(e.target.value)}
-                  required
-                ></textarea>
-              </div>
-
-              <button
-                type="submit"
-                className="btn btn-primary"
-                disabled={submittingReview}
-              >
-                {submittingReview ? 'Đang gửi...' : 'Gửi đánh giá'}
-              </button>
-            </form>
-          ) : (
-            <div className="login-to-review-hint">
-              <p>Vui lòng <Link to="/login" state={{ from: { pathname: `/products/${id}` } }}>đăng nhập</Link> để gửi đánh giá sản phẩm.</p>
             </div>
-          )}
+
+            <div className="form-group">
+              <textarea
+                className="form-control"
+                rows="3"
+                placeholder="Chia sẻ trải nghiệm sử dụng sản phẩm này với cộng đồng..."
+                value={userComment}
+                onChange={(e) => setUserComment(e.target.value)}
+                required
+              ></textarea>
+            </div>
+
+            <button
+              type="submit"
+              className="btn btn-primary"
+              disabled={submittingReview}
+            >
+              {submittingReview ? 'Đang gửi...' : 'Gửi Đánh Giá'}
+            </button>
+          </form>
         </div>
 
         {/* Reviews List */}
-        <div className="reviews-list">
-          {ratingsLoading ? (
-            <p>Đang tải đánh giá...</p>
-          ) : ratings.length === 0 ? (
-            <p className="no-reviews-msg">Chưa có đánh giá nào cho sản phẩm này. Hãy là người đầu tiên đánh giá!</p>
-          ) : (
-            ratings.map((rev) => (
-              <div key={rev.id} className="review-item">
-                <div className="review-meta">
-                  <span className="reviewer-name">{rev.userName || rev.username || 'Khách hàng'}</span>
-                  <div className="reviewer-stars">
-                    {'★'.repeat(rev.rating || 5)}
-                    {'☆'.repeat(5 - (rev.rating || 5))}
-                  </div>
+        {ratingsLoading ? (
+          <p style={{ color: 'var(--text-muted)' }}>Đang nạp đánh giá...</p>
+        ) : ratings.length === 0 ? (
+          <p style={{ color: 'var(--text-muted)', fontStyle: 'italic' }}>
+            Chưa có đánh giá nào cho sản phẩm này. Hãy là người đầu tiên chia sẻ cảm nhận!
+          </p>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {ratings.map((r, i) => (
+              <div key={i} className="review-item">
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '0.35rem' }}>
+                  <span className="reviewer-name">{r.userName || r.userFullName || 'Khách hàng'}</span>
+                  <span style={{ color: '#d97706', fontSize: '0.95rem' }}>
+                    {'★'.repeat(r.rating || r.star || 5)}
+                  </span>
                   <span className="review-date">
-                    {rev.createdAt ? new Date(rev.createdAt).toLocaleDateString('vi-VN') : ''}
+                    {r.createdAt ? new Date(r.createdAt).toLocaleDateString('vi-VN') : 'Đã mua hàng'}
                   </span>
                 </div>
-                {rev.comment && <p className="review-content">{rev.comment}</p>}
+                <div className="review-content">{r.comment}</div>
               </div>
-            ))
-          )}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

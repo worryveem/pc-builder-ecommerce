@@ -222,7 +222,7 @@ export default function AdminOrdersPage() {
                       <div className="order-item-main-info">
                         <span className="item-title">{item.productName}</span>
                         {item.configurationId && (
-                          <span className="badge-custom-pc-sm">🛠️ PC Build #{item.configurationId}</span>
+                          <span className="badge-custom-pc-sm">PC Build #{item.configurationId}</span>
                         )}
                         <span className="item-sub">Số lượng: {item.quantity}</span>
                       </div>

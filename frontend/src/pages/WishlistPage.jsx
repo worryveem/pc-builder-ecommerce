@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { wishlistApi } from '../api/wishlistApi';
 import { cartApi } from '../api/cartApi';
 import { useAuth } from '../context/AuthContext';
+import { ProductCard } from '../components/common/ProductCard';
 
 export const WishlistPage = () => {
   const { isAuthenticated } = useAuth();
@@ -42,8 +43,8 @@ export const WishlistPage = () => {
     try {
       await wishlistApi.removeFromWishlist(productId);
       setWishlist(prev => prev.filter(item => {
-        const prod = item.product || item;
-        return prod.id !== productId;
+        const id = item.productId || (item.product && item.product.id) || item.id;
+        return id !== productId;
       }));
       setActionMsg('Đã xóa sản phẩm khỏi danh sách yêu thích.');
       setTimeout(() => setActionMsg(''), 3000);
@@ -53,10 +54,11 @@ export const WishlistPage = () => {
     }
   };
 
-  const handleAddToCart = async (productId) => {
+  const handleAddToCart = async (productOrId) => {
+    const productId = typeof productOrId === 'object' ? (productOrId.id || productOrId.productId) : productOrId;
     try {
       await cartApi.addToCart(productId, 1);
-      setActionMsg('✓ Đã thêm sản phẩm vào giỏ hàng!');
+      setActionMsg('Đã thêm sản phẩm vào giỏ hàng thành công.');
       setTimeout(() => setActionMsg(''), 3000);
     } catch (err) {
       console.error('Failed to add to cart:', err);
@@ -71,11 +73,13 @@ export const WishlistPage = () => {
 
   if (!isAuthenticated) {
     return (
-      <div className="container empty-state-container">
-        <span className="empty-icon">🔒</span>
-        <h2>Vui lòng đăng nhập</h2>
-        <p>Đăng nhập tài khoản để xem và quản lý các sản phẩm yêu thích của bạn.</p>
-        <Link to="/login" state={{ from: { pathname: '/wishlist' } }} className="btn btn-primary btn-lg">
+      <div className="container empty-state-container" style={{ padding: '60px 20px', textAlign: 'center' }}>
+        <span className="badge badge-brand" style={{ fontSize: '13px', padding: '6px 14px', marginBottom: '16px' }}>YÊU CẦU ĐĂNG NHẬP</span>
+        <h2 style={{ fontSize: '24px', fontWeight: 800, color: 'var(--color-slate-900)', marginBottom: '8px' }}>Vui lòng đăng nhập</h2>
+        <p style={{ color: 'var(--color-slate-500)', maxWidth: '440px', margin: '0 auto 24px' }}>
+          Đăng nhập tài khoản để xem và quản lý các linh kiện và sản phẩm công nghệ bạn đã lưu lại.
+        </p>
+        <Link to="/login" state={{ from: { pathname: '/wishlist' } }} className="btn btn-primary" style={{ padding: '12px 28px', fontWeight: 600 }}>
           Đăng nhập ngay
         </Link>
       </div>
@@ -84,85 +88,65 @@ export const WishlistPage = () => {
 
   if (loading) {
     return (
-      <div className="container loading-container">
+      <div className="container loading-container" style={{ padding: '80px 20px', textAlign: 'center' }}>
         <div className="spinner"></div>
-        <p>Đang tải danh sách yêu thích...</p>
+        <p style={{ marginTop: '16px', color: 'var(--color-slate-500)' }}>Đang tải danh sách yêu thích...</p>
       </div>
     );
   }
 
   return (
-    <div className="container wishlist-page">
-      <div className="page-header">
-        <h1>Danh Sách Yêu Thích</h1>
-        <p>Lưu lại các linh kiện máy tính và sản phẩm công nghệ bạn quan tâm</p>
+    <div className="container wishlist-page" style={{ padding: '32px 16px 64px' }}>
+      <div className="page-header" style={{ marginBottom: '28px' }}>
+        <h1 style={{ fontSize: '26px', fontWeight: 800, color: 'var(--color-slate-900)', marginBottom: '6px' }}>Danh Sách Yêu Thích</h1>
+        <p style={{ color: 'var(--color-slate-500)', fontSize: '14px' }}>Lưu trữ các linh kiện máy tính và sản phẩm công nghệ bạn quan tâm</p>
       </div>
 
-      {actionMsg && <div className="alert alert-info">{actionMsg}</div>}
-      {error && <div className="alert alert-danger">{error}</div>}
+      {actionMsg && <div className="alert alert-info" style={{ marginBottom: '20px' }}>{actionMsg}</div>}
+      {error && <div className="alert alert-danger" style={{ marginBottom: '20px' }}>{error}</div>}
 
       {wishlist.length === 0 ? (
-        <div className="empty-state-container">
-          <span className="empty-icon">❤️</span>
-          <h2>Danh sách yêu thích đang trống</h2>
-          <p>Hãy khám phá các linh kiện máy tính và nhấn nút "Thêm vào yêu thích" để lưu lại.</p>
-          <div className="empty-actions mt-3">
-            <Link to="/products" className="btn btn-primary">
+        <div className="empty-state-container" style={{ padding: '60px 20px', textAlign: 'center', background: 'var(--color-surface)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-card)', border: '1px solid var(--color-border)' }}>
+          <span className="badge badge-brand" style={{ fontSize: '12px', padding: '6px 12px', marginBottom: '14px' }}>DANH SÁCH TRỐNG</span>
+          <h2 style={{ fontSize: '22px', fontWeight: 800, color: 'var(--color-slate-900)', marginBottom: '8px' }}>Chưa có sản phẩm yêu thích nào</h2>
+          <p style={{ color: 'var(--color-slate-500)', maxWidth: '460px', margin: '0 auto 24px', fontSize: '14px' }}>
+            Khám phá danh mục linh kiện máy tính, PC Gaming và nhấn biểu tượng lưu để theo dõi giá và mua sắm sau.
+          </p>
+          <div className="empty-actions" style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+            <Link to="/products" className="btn btn-primary" style={{ padding: '10px 22px' }}>
               Khám phá sản phẩm
             </Link>
-            <Link to="/builder" className="btn btn-outline ml-2">
-              Tự Ráp PC
+            <Link to="/builder" className="btn btn-outline" style={{ padding: '10px 22px' }}>
+              Tự Build PC
             </Link>
           </div>
         </div>
       ) : (
-        <div className="wishlist-grid">
+        <div className="product-grid">
           {wishlist.map((item) => {
-            const product = item.product || item;
-            const imgUrl = product.images && product.images.length > 0 ? product.images[0].imageUrl : null;
-            const inStock = product.stockQuantity != null ? product.stockQuantity > 0 : true;
+            const prodId = item.productId || (item.product && item.product.id) || item.id;
+            const normalizedProduct = {
+              id: prodId,
+              name: item.productName || (item.product && item.product.name) || item.name || 'Linh kiện máy tính',
+              price: item.price != null ? item.price : (item.product && item.product.price),
+              brand: item.categoryName || (item.product && item.product.brand) || item.brand || 'Chính hãng',
+              images: item.imageUrl
+                ? [{ imageUrl: item.imageUrl }]
+                : (item.product?.images?.length > 0 ? item.product.images : (item.images || [])),
+              specification: item.product?.specification || item.specification,
+              stockQuantity: item.stockQuantity != null ? item.stockQuantity : (item.product?.stockQuantity != null ? item.product.stockQuantity : 10),
+            };
 
             return (
-              <div key={product.id} className="wishlist-card">
-                <div className="wishlist-card-thumb">
-                  {imgUrl ? (
-                    <img src={imgUrl} alt={product.name} />
-                  ) : (
-                    <span>💻</span>
-                  )}
-                </div>
-
-                <div className="wishlist-card-body">
-                  <span className="product-brand">{product.brand || 'Chính hãng'}</span>
-                  <h3 className="wishlist-product-title">
-                    <Link to={`/products/${product.id}`}>{product.name}</Link>
-                  </h3>
-                  <div className="price-row">
-                    <span className="price font-bold">{formatPrice(product.price)}</span>
-                    <span className={`stock-badge ${inStock ? 'in-stock' : 'out-of-stock'}`}>
-                      {inStock ? 'Còn hàng' : 'Hết hàng'}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="wishlist-card-actions">
-                  <button
-                    type="button"
-                    className="btn btn-primary btn-sm btn-block"
-                    onClick={() => handleAddToCart(product.id)}
-                    disabled={!inStock}
-                  >
-                    🛒 Thêm vào giỏ
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-outline-danger btn-sm btn-block mt-2"
-                    onClick={() => handleRemove(product.id)}
-                  >
-                    ✕ Xóa khỏi yêu thích
-                  </button>
-                </div>
-              </div>
+              <ProductCard
+                key={prodId}
+                product={normalizedProduct}
+                isWishlisted={true}
+                onToggleWishlist={(e, id) => handleRemove(id || prodId)}
+                onAddToCart={handleAddToCart}
+                onRemove={handleRemove}
+                actionLabel="Xem chi tiết"
+              />
             );
           })}
         </div>

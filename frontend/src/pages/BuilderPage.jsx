@@ -317,46 +317,98 @@ export const BuilderPage = () => {
     );
   }
 
+  const coreItemsCount = categories.coreComponents.filter(c => selectedComponents[c.slug]?.product).length;
+  const totalBuilderPrice = Object.values(selectedComponents)
+    .filter(i => i && i.product)
+    .reduce((s, i) => s + (i.product.price || 0) * (i.quantity || 1), 0);
+
+  const formatVND = (price) => {
+    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
+  };
+
   return (
     <div className="container builder-page">
       {/* Page Header */}
       <div className="page-header builder-header">
         <div className="builder-header-top">
-          <div className="builder-title-badge">⚡ Real-time Compatibility Engine</div>
+          <div className="builder-title-badge">HARDWARE COMPATIBILITY ENGINE</div>
           {configurationId && (
             <span className="badge badge-builder">
-              ✓ Đã lưu (#{configurationId})
+              ĐÃ LƯU CẤU HÌNH (#{configurationId})
             </span>
           )}
         </div>
         <h1>PC Builder</h1>
         <p className="builder-subtitle">
-          Tự xây dựng cấu hình PC phù hợp với nhu cầu của bạn.
+          Tự do tùy chọn cấu hình linh kiện máy tính phù hợp với nhu cầu và ngân sách của bạn.
           {configurationName && configurationName !== 'Untitled PC Build' && (
             <span className="current-build-name"> — <em>{configurationName}</em></span>
           )}
         </p>
 
-        {/* Small UI Progress Indicator */}
-        <div className="builder-progress-steps">
-          <div className={`progress-step ${Object.keys(selectedComponents).length > 0 ? 'step-completed' : 'step-active'}`}>
-            <span className="step-num">1</span>
-            <span className="step-label">Chọn linh kiện</span>
+        {/* 8-Component Hardware Step Indicator */}
+        <div className="builder-core-stepper-wrap elevation-sm">
+          <div className="stepper-summary-info">
+            <div className="stepper-summary-left">
+              <span className="stepper-title">Tiến độ cấu hình:</span>
+              <span className="stepper-counter">{coreItemsCount} / 8 linh kiện cốt lõi</span>
+            </div>
+            <div className="stepper-quick-jump">
+              <select
+                className="form-control stepper-jump-select"
+                value=""
+                onChange={(e) => {
+                  const targetCat = (categories.coreComponents || []).find(c => c.slug === e.target.value) || 
+                                    (categories.optionalSetupGear || []).find(c => c.slug === e.target.value);
+                  if (targetCat) setActiveCategory(targetCat);
+                }}
+                aria-label="Chọn nhanh linh kiện"
+              >
+                <option value="" disabled>Chọn nhanh linh kiện...</option>
+                <optgroup label="Linh kiện cốt lõi (8 bước)">
+                  {(categories.coreComponents || []).map((cat, idx) => (
+                    <option key={cat.slug} value={cat.slug}>
+                      {idx + 1}. {cat.name} {selectedComponents[cat.slug]?.product ? '✓' : '(Chưa chọn)'}
+                    </option>
+                  ))}
+                </optgroup>
+                {(categories.optionalSetupGear || []).length > 0 && (
+                  <optgroup label="Thiết bị ngoại vi & Setup">
+                    {categories.optionalSetupGear.map((cat) => (
+                      <option key={cat.slug} value={cat.slug}>
+                        + {cat.name} {selectedComponents[cat.slug]?.product ? '✓' : '(Chưa chọn)'}
+                      </option>
+                    ))}
+                  </optgroup>
+                )}
+              </select>
+            </div>
           </div>
-          <div className="step-connector"></div>
-          <div className={`progress-step ${compatibility?.isCompatible && Object.keys(selectedComponents).length > 0 ? 'step-completed' : 'step-idle'}`}>
-            <span className="step-num">2</span>
-            <span className="step-label">Kiểm tra tương thích</span>
+
+          {/* Real-time Progress Bar */}
+          <div className="stepper-progress-track">
+            <div
+              className="stepper-progress-fill"
+              style={{ width: `${Math.round((coreItemsCount / 8) * 100)}%` }}
+            ></div>
           </div>
-          <div className="step-connector"></div>
-          <div className={`progress-step ${configurationId ? 'step-completed' : 'step-idle'}`}>
-            <span className="step-num">3</span>
-            <span className="step-label">Lưu cấu hình</span>
-          </div>
-          <div className="step-connector"></div>
-          <div className={`progress-step ${configurationId ? 'step-active' : 'step-idle'}`}>
-            <span className="step-num">4</span>
-            <span className="step-label">Thêm vào giỏ</span>
+
+          <div className="builder-core-steps">
+            {(categories.coreComponents || []).map((cat, idx) => {
+              const isSelected = !!selectedComponents[cat.slug]?.product;
+              return (
+                <div
+                  key={cat.id || cat.slug}
+                  className={`core-step-pill ${isSelected ? 'pill-completed' : 'pill-empty'}`}
+                  title={`${cat.name}: ${isSelected ? selectedComponents[cat.slug].product.name : 'Chưa chọn'}`}
+                  onClick={() => setActiveCategory(cat)}
+                >
+                  <span className="pill-idx">{idx + 1}</span>
+                  <span className="pill-name">{cat.builderComponentType || cat.name}</span>
+                  <span className="pill-status">{isSelected ? '✓' : '+'}</span>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
@@ -434,6 +486,35 @@ export const BuilderPage = () => {
             />
           </div>
         </aside>
+      </div>
+
+      {/* Mobile Sticky Floating Bar */}
+      <div className="builder-mobile-floating-bar elevation-modal">
+        <div className="mobile-bar-info">
+          <div className="mobile-bar-qty">{coreItemsCount}/8 linh kiện</div>
+          <div className="mobile-bar-price">{formatVND(totalBuilderPrice)}</div>
+        </div>
+        <div className="mobile-bar-actions">
+          {configurationId ? (
+            <button
+              type="button"
+              className="btn btn-sm btn-success"
+              onClick={handleAddToCart}
+              disabled={coreItemsCount === 0 || addingToCart || !compatibility?.isCompatible}
+            >
+              {addingToCart ? 'Đang thêm...' : 'Vào giỏ'}
+            </button>
+          ) : (
+            <button
+              type="button"
+              className="btn btn-sm btn-primary"
+              onClick={handleOpenSaveModal}
+              disabled={coreItemsCount === 0 || saving}
+            >
+              Lưu cấu hình
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Product Selector Modal */}

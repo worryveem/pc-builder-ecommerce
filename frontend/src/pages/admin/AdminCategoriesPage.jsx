@@ -306,7 +306,7 @@ export default function AdminCategoriesPage() {
                       ))}
                     </select>
                     <small className="help-text text-warning">
-                      ⚠️ Loại linh kiện này sẽ được hệ thống CompatibilityEngine sử dụng để kiểm tra tương thích!
+                      Lưu ý: Loại linh kiện này sẽ được hệ thống CompatibilityEngine sử dụng để kiểm tra tương thích!
                     </small>
                   </div>
                 )}

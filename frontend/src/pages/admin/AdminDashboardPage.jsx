@@ -50,8 +50,8 @@ export default function AdminDashboardPage() {
 
       {/* Metrics Cards */}
       <div className="stats-grid">
-        <div className="stat-card revenue-card">
-          <div className="stat-icon">💰</div>
+        <div className="stat-card revenue-card elevation-sm">
+          <div className="stat-icon-badge">VND</div>
           <div className="stat-details">
             <span className="stat-label">Tổng doanh thu</span>
             <strong className="stat-value">
@@ -60,8 +60,8 @@ export default function AdminDashboardPage() {
           </div>
         </div>
 
-        <div className="stat-card orders-card">
-          <div className="stat-icon">📦</div>
+        <div className="stat-card orders-card elevation-sm">
+          <div className="stat-icon-badge">ORD</div>
           <div className="stat-details">
             <span className="stat-label">Tổng đơn hàng</span>
             <strong className="stat-value">{stats?.totalOrders || 0}</strong>
@@ -73,8 +73,8 @@ export default function AdminDashboardPage() {
           )}
         </div>
 
-        <div className="stat-card products-card">
-          <div className="stat-icon">🖥️</div>
+        <div className="stat-card products-card elevation-sm">
+          <div className="stat-icon-badge">PRD</div>
           <div className="stat-details">
             <span className="stat-label">Tổng sản phẩm</span>
             <strong className="stat-value">{stats?.totalProducts || 0}</strong>
@@ -86,8 +86,8 @@ export default function AdminDashboardPage() {
           )}
         </div>
 
-        <div className="stat-card users-card">
-          <div className="stat-icon">👥</div>
+        <div className="stat-card users-card elevation-sm">
+          <div className="stat-icon-badge">USR</div>
           <div className="stat-details">
             <span className="stat-label">Khách hàng</span>
             <strong className="stat-value">{stats?.totalUsers || 0}</strong>

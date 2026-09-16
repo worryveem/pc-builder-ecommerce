@@ -60,11 +60,10 @@ export const CheckoutPage = () => {
               }
             }
           } catch (pErr) {
-            console.error('Failed to load profile for prefill:', pErr);
+            // Optional
           }
         }
       } catch (err) {
-        console.error('Failed to initialize checkout:', err);
         setErrorMsg('Không thể tải dữ liệu giỏ hàng để thanh toán.');
       } finally {
         setLoading(false);
@@ -90,10 +89,10 @@ export const CheckoutPage = () => {
       const res = await voucherApi.applyVoucher(voucherCode.trim(), subtotal);
       if (res?.data && res.data.valid) {
         setAppliedVoucher(res.data);
-        setVoucherMsg(`✓ Áp dụng thành công! Giảm ${new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(res.data.discountAmount)}`);
+        setVoucherMsg(`Áp dụng thành công: Giảm ${Number(res.data.discountAmount).toLocaleString('vi-VN')} đ`);
       } else {
         setAppliedVoucher(null);
-        setVoucherMsg(res?.message || 'Mã giảm giá không hợp lệ hoặc không đủ điều kiện.');
+        setVoucherMsg(res?.message || 'Mã giảm giá không hợp lệ hoặc không đủ điều kiện áp dụng.');
       }
     } catch (err) {
       setAppliedVoucher(null);
@@ -130,7 +129,7 @@ export const CheckoutPage = () => {
       shippingFee: shippingFee,
       totalPrice: finalTotal,
       voucherCode: appliedVoucher ? voucherCode.trim() : null,
-      orderItems: items.map(item => ({
+      orderItems: items.map((item) => ({
         product: { id: item.product.id },
         quantity: item.quantity || 1,
         configurationId: item.configurationId || null
@@ -148,7 +147,6 @@ export const CheckoutPage = () => {
         setErrorMsg('Đặt hàng không thành công. Vui lòng kiểm tra lại thông tin.');
       }
     } catch (err) {
-      console.error('Place order failed:', err);
       setErrorMsg(err.response?.data?.message || 'Có lỗi xảy ra khi tạo đơn hàng. Vui lòng thử lại.');
     } finally {
       setSubmitting(false);
@@ -157,7 +155,7 @@ export const CheckoutPage = () => {
 
   const formatPrice = (price) => {
     if (!price && price !== 0) return '0 ₫';
-    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
+    return Number(price).toLocaleString('vi-VN') + ' đ';
   };
 
   if (loading) {
@@ -171,37 +169,42 @@ export const CheckoutPage = () => {
 
   if (orderSuccess) {
     return (
-      <div className="container checkout-success-container">
-        <div className="success-icon-badge">✓</div>
-        <h2>Đặt Hàng Thành Công!</h2>
-        <p className="success-desc">
-          Cảm ơn bạn đã đặt hàng tại PC Builder Shop. Đơn hàng của bạn đang được hệ thống tiếp nhận và xử lý.
+      <div className="container empty-state-container elevation-lg" style={{ marginTop: '3.5rem', maxWidth: '650px' }}>
+        <div style={{ width: '56px', height: '56px', borderRadius: '50%', background: 'var(--success-light)', border: '2px solid var(--success-border)', color: 'var(--success)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.85rem', fontWeight: 800, margin: '0 auto 1.25rem auto', letterSpacing: '0.05em' }}>
+          PASS
+        </div>
+        <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: 'var(--text-main)', marginBottom: '0.5rem' }}>
+          Đặt Hàng Thành Công!
+        </h2>
+        <p style={{ color: 'var(--text-muted)', marginBottom: '1.75rem', lineHeight: '1.6' }}>
+          Cảm ơn bạn đã tin tưởng lựa chọn TECHPC STORE. Đơn hàng của bạn đã được ghi nhận vào hệ thống và sẽ được xử lý sớm nhất.
         </p>
-        <div className="success-meta-card">
-          <div className="meta-row">
-            <span>Người nhận:</span>
+
+        <div style={{ background: '#f8fafc', padding: '1.5rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)', textAlign: 'left', marginBottom: '2rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', fontSize: '0.925rem' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <span style={{ color: 'var(--text-muted)' }}>Khách hàng:</span>
             <strong>{fullName} ({phone})</strong>
           </div>
-          <div className="meta-row">
-            <span>Địa chỉ giao hàng:</span>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <span style={{ color: 'var(--text-muted)' }}>Địa chỉ nhận:</span>
             <strong>{addressLine}, {district}, {city}</strong>
           </div>
-          <div className="meta-row">
-            <span>Phương thức thanh toán:</span>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <span style={{ color: 'var(--text-muted)' }}>Hình thức:</span>
             <strong>{paymentMethod === 'COD' ? 'Thanh toán khi nhận hàng (COD)' : 'Chuyển khoản ngân hàng'}</strong>
           </div>
-          <div className="meta-row total-row">
+          <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: '0.75rem', borderTop: '1px solid var(--border)', fontSize: '1.1rem' }}>
             <span>Tổng thanh toán:</span>
-            <strong className="text-primary text-xl">{formatPrice(finalTotal)}</strong>
+            <strong style={{ color: 'var(--price-red)' }}>{formatPrice(finalTotal)}</strong>
           </div>
         </div>
 
-        <div className="mt-4 success-actions">
-          <Link to="/orders" className="btn btn-primary btn-lg">
-            📋 Xem lịch sử đơn hàng
+        <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+          <Link to="/orders" className="btn btn-primary">
+            Xem Lịch Sử Đơn Hàng
           </Link>
-          <Link to="/products" className="btn btn-outline btn-lg ml-3">
-            Tiếp tục mua hàng
+          <Link to="/products" className="btn btn-outline">
+            Tiếp Tục Mua Sắm
           </Link>
         </div>
       </div>
@@ -210,35 +213,55 @@ export const CheckoutPage = () => {
 
   if (items.length === 0) {
     return (
-      <div className="container empty-state-container">
-        <span className="empty-icon">🛒</span>
-        <h2>Giỏ hàng của bạn đang trống</h2>
-        <p>Vui lòng thêm sản phẩm hoặc hoàn thành cấu hình PC trước khi tiến hành thanh toán.</p>
-        <div className="mt-3">
-          <Link to="/products" className="btn btn-primary">Khám phá sản phẩm</Link>
-          <Link to="/builder" className="btn btn-outline ml-2">Tự Build PC</Link>
-        </div>
+      <div className="container empty-state-container" style={{ marginTop: '3.5rem' }}>
+        <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '0.5rem' }}>
+          Giỏ hàng của bạn đang trống
+        </h2>
+        <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
+          Vui lòng thêm linh kiện hoặc chọn cấu hình PC trước khi thanh toán.
+        </p>
+        <Link to="/products" className="btn btn-primary">
+          Khám phá linh kiện ngay
+        </Link>
       </div>
     );
   }
 
   return (
-    <div className="container checkout-page">
-      <div className="page-header">
-        <h1>Thanh Toán Đơn Hàng</h1>
-        <p>Hoàn tất thông tin giao hàng và chọn phương thức thanh toán</p>
+    <div className="container checkout-page-wrap">
+      {/* Breadcrumb */}
+      <div className="breadcrumb-nav">
+        <Link to="/">Trang chủ</Link>
+        <span className="breadcrumb-sep">/</span>
+        <Link to="/cart">Giỏ hàng</Link>
+        <span className="breadcrumb-sep">/</span>
+        <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>Thanh toán</span>
       </div>
 
-      {errorMsg && <div className="alert alert-danger mb-4">{errorMsg}</div>}
+      <div style={{ marginBottom: '2rem' }}>
+        <h1 style={{ fontSize: '1.85rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em', marginBottom: '0.35rem' }}>
+          Xác Nhận & Thanh Toán Đơn Hàng
+        </h1>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.925rem' }}>
+          Hoàn tất thông tin giao hàng và lựa chọn hình thức thanh toán an toàn
+        </p>
+      </div>
 
-      <form onSubmit={handleSubmitOrder} className="checkout-layout">
-        {/* Left column: Shipping form and Payment Method */}
-        <div className="checkout-main-form">
-          <div className="checkout-section-card">
-            <h3 className="section-title">1. Thông Tin Người Nhận</h3>
-            <div className="form-grid-2">
-              <div className="form-group">
-                <label>Họ và tên <span className="text-danger">*</span></label>
+      {errorMsg && <div className="alert alert-danger">{errorMsg}</div>}
+
+      <form onSubmit={handleSubmitOrder} className="checkout-grid-layout">
+        {/* Left Column: Delivery Form & Payment Options */}
+        <div>
+          {/* Step 1: Contact & Address */}
+          <div className="checkout-form-card elevation-sm">
+            <h3 className="checkout-step-title">
+              <span className="checkout-step-num">1</span>
+              <span>Thông Tin Nhận Hàng</span>
+            </h3>
+
+            <div className="form-row">
+              <div className="form-group col">
+                <label>Họ và tên người nhận *</label>
                 <input
                   type="text"
                   className="form-control"
@@ -248,12 +271,12 @@ export const CheckoutPage = () => {
                   required
                 />
               </div>
-              <div className="form-group">
-                <label>Số điện thoại <span className="text-danger">*</span></label>
+              <div className="form-group col">
+                <label>Số điện thoại liên hệ *</label>
                 <input
                   type="tel"
                   className="form-control"
-                  placeholder="Ví dụ: 0912345678"
+                  placeholder="Ví dụ: 0987654321"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
                   required
@@ -262,7 +285,7 @@ export const CheckoutPage = () => {
             </div>
 
             <div className="form-group">
-              <label>Email (Nhận thông báo đơn hàng)</label>
+              <label>Email nhận thông báo đơn hàng</label>
               <input
                 type="email"
                 className="form-control"
@@ -272,44 +295,33 @@ export const CheckoutPage = () => {
               />
             </div>
 
-            <div className="form-group">
-              <label>Địa chỉ nhận hàng (Số nhà, tên đường) <span className="text-danger">*</span></label>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Ví dụ: 123 Đường Cầu Giấy, Tòa nhà FPT"
-                value={addressLine}
-                onChange={(e) => setAddressLine(e.target.value)}
-                required
-              />
-            </div>
-
-            <div className="form-grid-3">
-              <div className="form-group">
-                <label>Tỉnh / Thành phố</label>
+            <div className="form-row">
+              <div className="form-group col">
+                <label>Tỉnh / Thành phố *</label>
                 <input
                   type="text"
                   className="form-control"
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
+                  required
                 />
               </div>
-              <div className="form-group">
+              <div className="form-group col">
                 <label>Quận / Huyện</label>
                 <input
                   type="text"
                   className="form-control"
-                  placeholder="Quận / Huyện"
+                  placeholder="Ví dụ: Hai Bà Trưng"
                   value={district}
                   onChange={(e) => setDistrict(e.target.value)}
                 />
               </div>
-              <div className="form-group">
+              <div className="form-group col">
                 <label>Phường / Xã</label>
                 <input
                   type="text"
                   className="form-control"
-                  placeholder="Phường / Xã"
+                  placeholder="Ví dụ: Bách Khoa"
                   value={ward}
                   onChange={(e) => setWard(e.target.value)}
                 />
@@ -317,148 +329,153 @@ export const CheckoutPage = () => {
             </div>
 
             <div className="form-group">
-              <label>Ghi chú cho shipper / đơn hàng</label>
+              <label>Địa chỉ số nhà, tên đường *</label>
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Số nhà, tên ngõ, tên đường..."
+                value={addressLine}
+                onChange={(e) => setAddressLine(e.target.value)}
+                required
+              />
+            </div>
+
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label>Ghi chú cho đơn hàng</label>
               <textarea
                 className="form-control"
                 rows="2"
-                placeholder="Ví dụ: Giao vào giờ hành chính, gọi trước khi đến..."
+                placeholder="Ví dụ: Giao giờ hành chính, gọi trước khi đến..."
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-              />
+              ></textarea>
             </div>
           </div>
 
-          <div className="checkout-section-card mt-4">
-            <h3 className="section-title">2. Phương Thức Thanh Toán</h3>
-            <div className="payment-options">
-              <label className={`payment-option-card ${paymentMethod === 'COD' ? 'selected' : ''}`}>
+          {/* Step 2: Payment Method */}
+          <div className="checkout-form-card">
+            <h3 className="checkout-step-title">
+              <span className="checkout-step-num">2</span>
+              <span>Hình Thức Thanh Toán</span>
+            </h3>
+
+            <div className="payment-methods-grid">
+              <label className={`payment-method-label ${paymentMethod === 'COD' ? 'active' : ''}`}>
                 <input
                   type="radio"
                   name="paymentMethod"
                   value="COD"
                   checked={paymentMethod === 'COD'}
-                  onChange={() => setPaymentMethod('COD')}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
                 />
-                <div className="option-info">
-                  <strong>Thanh toán khi nhận hàng (COD)</strong>
-                  <p>Kiểm tra sản phẩm và thanh toán tiền mặt trực tiếp cho nhân viên giao hàng.</p>
+                <div>
+                  <div style={{ fontWeight: 700, color: 'var(--text-main)', fontSize: '0.95rem' }}>
+                    Thanh toán khi nhận hàng (COD)
+                  </div>
+                  <div style={{ fontSize: '0.825rem', color: 'var(--text-muted)' }}>
+                    Kiểm tra linh kiện và thanh toán tiền mặt trực tiếp cho nhân viên giao hàng
+                  </div>
                 </div>
               </label>
 
-              <label className={`payment-option-card ${paymentMethod === 'BANK_TRANSFER' ? 'selected' : ''}`}>
+              <label className={`payment-method-label ${paymentMethod === 'BANK_TRANSFER' ? 'active' : ''}`}>
                 <input
                   type="radio"
                   name="paymentMethod"
                   value="BANK_TRANSFER"
                   checked={paymentMethod === 'BANK_TRANSFER'}
-                  onChange={() => setPaymentMethod('BANK_TRANSFER')}
+                  onChange={(e) => setPaymentMethod(e.target.value)}
                 />
-                <div className="option-info">
-                  <strong>Chuyển khoản Ngân hàng / Quét mã VietQR</strong>
-                  <p>Hỗ trợ tất cả ngân hàng Việt Nam, xác nhận đơn hàng tự động và nhanh chóng.</p>
+                <div>
+                  <div style={{ fontWeight: 700, color: 'var(--text-main)', fontSize: '0.95rem' }}>
+                    Chuyển khoản ngân hàng qua mã QR
+                  </div>
+                  <div style={{ fontSize: '0.825rem', color: 'var(--text-muted)' }}>
+                    Chuyển khoản nhanh qua tài khoản ngân hàng của TechPC Store
+                  </div>
                 </div>
               </label>
             </div>
           </div>
         </div>
 
-        {/* Right column: Order Summary & Voucher */}
-        <aside className="checkout-sidebar">
-          <div className="checkout-summary-card">
-            <h3 className="summary-title">Tóm Tắt Đơn Hàng ({items.length} món)</h3>
+        {/* Right Column: Sticky Order Summary & Voucher */}
+        <aside className="order-summary-card elevation-md">
+          <h3 className="summary-title">Đơn Hàng Của Bạn</h3>
 
-            {/* Product items mini-list */}
-            <div className="checkout-items-preview">
-              {items.map((item) => {
-                const p = item.product;
-                const img = p?.images && p.images.length > 0 ? p.images[0].imageUrl : null;
-                return (
-                  <div key={item.id} className="checkout-item-mini">
-                    <div className="mini-thumb">
-                      {img ? <img src={img} alt={p?.name} /> : <span>💻</span>}
-                    </div>
-                    <div className="mini-info">
-                      <span className="mini-name">{p?.name}</span>
-                      {item.configurationId && (
-                        <span className="badge badge-builder text-xs">Cấu hình #{item.configurationId}</span>
-                      )}
-                      <span className="mini-qty-price">
-                        {item.quantity} × {formatPrice(p?.price)}
-                      </span>
-                    </div>
-                    <div className="mini-total">
-                      {formatPrice((p?.price || 0) * (item.quantity || 1))}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {/* Voucher Section */}
-            <div className="checkout-voucher-section mt-3">
-              <label className="text-sm font-semibold">Mã giảm giá (Voucher)</label>
-              <div className="voucher-input-group">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Nhập mã voucher..."
-                  value={voucherCode}
-                  onChange={(e) => setVoucherCode(e.target.value.toUpperCase())}
-                  disabled={applyingVoucher}
-                />
-                <button
-                  type="button"
-                  className="btn btn-outline"
-                  onClick={handleApplyVoucher}
-                  disabled={applyingVoucher || !voucherCode.trim()}
-                >
-                  {applyingVoucher ? 'Kiểm tra...' : 'Áp dụng'}
-                </button>
-              </div>
-              {voucherMsg && (
-                <div className={`text-xs mt-1 ${appliedVoucher ? 'text-success font-semibold' : 'text-danger'}`}>
-                  {voucherMsg}
+          {/* Mini Items List */}
+          <div style={{ maxHeight: '240px', overflowY: 'auto', marginBottom: '1.25rem', display: 'flex', flexDirection: 'column', gap: '0.75rem', paddingRight: '0.25rem' }}>
+            {items.map((item) => (
+              <div key={item.id} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.85rem' }}>
+                <div style={{ maxWidth: '200px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                  <span style={{ fontWeight: 600 }}>{item.product?.name}</span>
+                  <span style={{ color: 'var(--text-muted)', marginLeft: '0.35rem' }}>x{item.quantity}</span>
                 </div>
-              )}
-            </div>
-
-            <div className="summary-divider my-3"></div>
-
-            {/* Totals */}
-            <div className="checkout-price-breakdown">
-              <div className="summary-row">
-                <span>Tạm tính:</span>
-                <span>{formatPrice(subtotal)}</span>
+                <strong>{formatPrice((item.product?.price || 0) * item.quantity)}</strong>
               </div>
-              {discountAmount > 0 && (
-                <div className="summary-row text-success">
-                  <span>Giảm giá voucher:</span>
-                  <span>- {formatPrice(discountAmount)}</span>
-                </div>
-              )}
-              <div className="summary-row">
-                <span>Phí vận chuyển:</span>
-                <span className="text-success">Miễn phí</span>
-              </div>
-              <div className="summary-divider"></div>
-              <div className="summary-row total-row">
-                <span>Tổng thanh toán:</span>
-                <span className="total-amount">{formatPrice(finalTotal)}</span>
-              </div>
-            </div>
-
-            <button
-              type="submit"
-              className="btn btn-primary btn-block btn-lg mt-4 font-bold"
-              disabled={submitting}
-            >
-              {submitting ? 'Đang tạo đơn hàng...' : 'Xác Nhận Đặt Hàng'}
-            </button>
-
-            <p className="checkout-secure-note text-center text-xs text-muted mt-3">
-              🔒 Đơn hàng được bảo vệ và kiểm tra kỹ lưỡng trước khi vận chuyển.
-            </p>
+            ))}
           </div>
+
+          {/* Voucher Section */}
+          <div style={{ background: '#f8fafc', padding: '1rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border)', marginBottom: '1.25rem' }}>
+            <div style={{ fontSize: '0.85rem', fontWeight: 700, marginBottom: '0.5rem', color: 'var(--text-main)' }}>
+              Mã Giảm Giá / Voucher
+            </div>
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <input
+                type="text"
+                className="form-control"
+                style={{ padding: '0.45rem 0.75rem', fontSize: '0.85rem' }}
+                placeholder="Ví dụ: TECH500, BUILDER5"
+                value={voucherCode}
+                onChange={(e) => setVoucherCode(e.target.value.toUpperCase())}
+              />
+              <button
+                type="button"
+                className="btn btn-sm btn-outline-primary"
+                disabled={applyingVoucher}
+                onClick={handleApplyVoucher}
+              >
+                {applyingVoucher ? '...' : 'Áp dụng'}
+              </button>
+            </div>
+            {voucherMsg && (
+              <div style={{ fontSize: '0.8rem', marginTop: '0.45rem', color: appliedVoucher ? 'var(--success)' : 'var(--price-red)' }}>
+                {voucherMsg}
+              </div>
+            )}
+          </div>
+
+          {/* Breakdown */}
+          <div className="summary-data-row">
+            <span>Tạm tính ({items.length} món):</span>
+            <span>{formatPrice(subtotal)}</span>
+          </div>
+
+          {discountAmount > 0 && (
+            <div className="summary-data-row" style={{ color: 'var(--success)' }}>
+              <span>Giảm giá Voucher:</span>
+              <span>-{formatPrice(discountAmount)}</span>
+            </div>
+          )}
+
+          <div className="summary-data-row">
+            <span>Vận chuyển:</span>
+            <span style={{ color: 'var(--success)', fontWeight: 600 }}>Miễn phí</span>
+          </div>
+
+          <div className="summary-data-row total-bold-row">
+            <span>Tổng thanh toán:</span>
+            <span className="summary-total-price">{formatPrice(finalTotal)}</span>
+          </div>
+
+          <button
+            type="submit"
+            className="btn btn-primary btn-block btn-lg"
+            disabled={submitting}
+          >
+            {submitting ? 'Đang Xử Lý...' : 'Xác Nhận Đặt Hàng'}
+          </button>
         </aside>
       </form>
     </div>

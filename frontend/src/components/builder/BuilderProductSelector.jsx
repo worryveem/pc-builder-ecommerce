@@ -77,7 +77,7 @@ export const BuilderProductSelector = ({
 
   return (
     <div className="selector-modal-backdrop" onClick={onClose}>
-      <div className="selector-modal-container" onClick={e => e.stopPropagation()}>
+      <div className="selector-modal-container elevation-modal" onClick={e => e.stopPropagation()}>
         {/* Header */}
         <div className="selector-modal-header">
           <div>
@@ -155,7 +155,7 @@ export const BuilderProductSelector = ({
             <div className="alert alert-danger">{error}</div>
           ) : filteredProducts.length === 0 ? (
             <div className="selector-empty">
-              <span className="empty-icon">🔍</span>
+              <div className="empty-state-badge">TÌM KIẾM</div>
               <h4>Không tìm thấy sản phẩm phù hợp</h4>
               <p>
                 Thử thay đổi từ khóa tìm kiếm hoặc điều chỉnh lại bộ lọc thương hiệu/giá.

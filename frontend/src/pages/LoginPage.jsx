@@ -38,23 +38,23 @@ export const LoginPage = () => {
   };
 
   return (
-    <div className="auth-page">
-      <div className="auth-card">
-        <div className="auth-header">
-          <h2>Đăng nhập tài khoản</h2>
-          <p>Chào mừng bạn trở lại với TECHPC STORE</p>
+    <div className="auth-page-container">
+      <div className="auth-elevated-card elevation-lg">
+        <div className="auth-card-header">
+          <h1 className="auth-card-title">Đăng Nhập Tài Khoản</h1>
+          <p className="auth-card-subtitle">Chào mừng bạn trở lại với hệ thống TECHPC STORE</p>
         </div>
 
         {errorMsg && <div className="alert alert-danger">{errorMsg}</div>}
 
-        <form onSubmit={handleSubmit} className="auth-form">
+        <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="username">Tên đăng nhập</label>
+            <label htmlFor="username">Tên đăng nhập hoặc Email</label>
             <input
               id="username"
               type="text"
               className="form-control"
-              placeholder="Nhập username của bạn"
+              placeholder="Nhập tên đăng nhập của bạn"
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               disabled={submitting}
@@ -76,17 +76,22 @@ export const LoginPage = () => {
             />
           </div>
 
-          <button type="submit" className="btn btn-primary btn-block btn-lg" disabled={submitting}>
-            {submitting ? 'Đang đăng nhập...' : 'Đăng nhập'}
+          <button
+            type="submit"
+            className="btn btn-primary btn-block btn-lg"
+            style={{ marginTop: '0.75rem' }}
+            disabled={submitting}
+          >
+            {submitting ? 'Đang xác thực...' : 'Đăng Nhập Ngay'}
           </button>
         </form>
 
-        <div className="auth-footer">
-          <p>
-            Chưa có tài khoản? <Link to="/register">Đăng ký ngay</Link>
-          </p>
+        <div className="auth-switch-link">
+          Chưa có tài khoản? <Link to="/register">Đăng ký tài khoản mới</Link>
         </div>
       </div>
     </div>
   );
 };
+
+export default LoginPage;

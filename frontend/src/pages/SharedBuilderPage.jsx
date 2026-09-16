@@ -88,7 +88,7 @@ export const SharedBuilderPage = () => {
   if (error || !configuration) {
     return (
       <div className="container error-container">
-        <span className="empty-icon">🔍</span>
+        <span className="empty-state-badge">TÌM KIẾM</span>
         <h2>Không tìm thấy cấu hình</h2>
         <p>{error || 'Đường link chia sẻ không tồn tại hoặc đã hết hạn.'}</p>
         <div className="mt-4">
@@ -108,7 +108,7 @@ export const SharedBuilderPage = () => {
 
   return (
     <div className="container shared-builder-page">
-      <div className="shared-header-card">
+      <div className="shared-header-card elevation-sm">
         <div className="shared-header-meta">
           <span className="badge badge-builder">PC Configuration Shared</span>
           <h1 className="shared-config-title">{configuration.name || 'Cấu hình PC'}</h1>
@@ -124,14 +124,14 @@ export const SharedBuilderPage = () => {
             className="btn btn-outline"
             onClick={handleCopyLink}
           >
-            {copied ? '✓ Đã sao chép link' : '🔗 Sao chép link'}
+            {copied ? 'Đã sao chép link' : 'Sao chép liên kết'}
           </button>
           <button
             type="button"
             className="btn btn-primary btn-lg"
             onClick={handleUseThisConfiguration}
           >
-            ⚡ Dùng cấu hình này
+            Sử dụng cấu hình này
           </button>
         </div>
       </div>
@@ -139,7 +139,7 @@ export const SharedBuilderPage = () => {
       <div className="builder-main-layout mt-4">
         {/* Left column: List of items */}
         <div className="shared-items-container">
-          <div className="slot-section">
+          <div className="slot-section elevation-sm">
             <div className="slot-section-title">
               <h2>Danh Sách Linh Kiện Trong Cấu Hình ({items.length} món)</h2>
             </div>
@@ -155,9 +155,16 @@ export const SharedBuilderPage = () => {
                   <div key={item.id || idx} className="shared-item-row">
                     <div className="shared-item-thumb">
                       {imgUrl ? (
-                        <img src={imgUrl} alt={p?.name} />
+                        <img
+                          src={imgUrl}
+                          alt={p?.name}
+                          onError={(e) => {
+                            e.currentTarget.onerror = null;
+                            e.currentTarget.src = '/placeholder.svg';
+                          }}
+                        />
                       ) : (
-                        <span>💻</span>
+                        <span className="slot-thumb-empty">PC</span>
                       )}
                     </div>
 
@@ -170,8 +177,9 @@ export const SharedBuilderPage = () => {
                         <div className="slot-specs">
                           {spec.socket && <span>Socket: {spec.socket}</span>}
                           {spec.ramType && <span>RAM: {spec.ramType}</span>}
-                          {spec.formFactor && <span>Form: {spec.formFactor}</span>}
-                          {spec.psuWattage && <span>Công suất: {spec.psuWattage}W</span>}
+                          {spec.capacityGb && <span>{spec.capacityGb}GB</span>}
+                          {spec.formFactor && <span>{spec.formFactor}</span>}
+                          {spec.psuWattage && <span>{spec.psuWattage}W</span>}
                         </div>
                       )}
                     </div>
@@ -181,10 +189,7 @@ export const SharedBuilderPage = () => {
                     </div>
 
                     <div className="shared-item-price">
-                      <span className="price-total">{formatPrice(itemTotal)}</span>
-                      {item.quantity > 1 && (
-                        <span className="price-unit">({formatPrice(p?.price)} / cái)</span>
-                      )}
+                      <span className="price-val">{formatPrice(itemTotal)}</span>
                     </div>
                   </div>
                 );
@@ -193,33 +198,33 @@ export const SharedBuilderPage = () => {
           </div>
         </div>
 
-        {/* Right column: Compatibility Panel & Summary */}
+        {/* Right column: Summary */}
         <aside className="builder-sidebar-column">
           <div className="builder-sticky-sidebar">
-            <CompatibilityPanel
-              compatibility={compatibility}
-              selectedComponents={items.reduce((acc, item) => {
-                if (item.product?.category?.builderComponentType) {
-                  acc[item.product.category.builderComponentType] = item;
-                }
-                return acc;
-              }, {})}
-              validating={false}
-            />
+            <div className="builder-summary-card elevation-md">
+              <h3 className="summary-title">Tóm Tắt Cấu Hình</h3>
 
-            <div className="builder-summary-card">
-              <h3 className="summary-title">Tổng Giá Cấu Hình</h3>
-              <div className="summary-total-row">
-                <span className="total-label">Tổng chi phí dự tính:</span>
-                <span className="total-price-val">{formatPrice(totalPrice)}</span>
+              <div className="summary-stats">
+                <div className="summary-stat-row">
+                  <span>Số lượng linh kiện:</span>
+                  <strong>{items.length} mục</strong>
+                </div>
+
+                <div className="summary-divider"></div>
+
+                <div className="summary-total-row">
+                  <span className="total-label">Tổng chi phí dự tính:</span>
+                  <span className="total-price-val">{formatPrice(totalPrice)}</span>
+                </div>
               </div>
-              <div className="mt-4">
+
+              <div className="summary-actions mt-4">
                 <button
                   type="button"
                   className="btn btn-primary btn-block btn-lg"
                   onClick={handleUseThisConfiguration}
                 >
-                  ⚡ Dùng cấu hình này
+                  Sử dụng cấu hình này
                 </button>
               </div>
             </div>

@@ -33,7 +33,7 @@ export const ShareConfigurationModal = ({
 
   return (
     <div className="selector-modal-backdrop" onClick={onClose}>
-      <div className="save-modal-container share-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="save-modal-container share-modal elevation-modal" onClick={(e) => e.stopPropagation()}>
         <div className="save-modal-header">
           <h3 className="modal-title">Chia Sẻ Cấu Hình PC</h3>
           <button type="button" className="btn-close" onClick={onClose}>✕</button>
@@ -41,7 +41,7 @@ export const ShareConfigurationModal = ({
 
         <div className="save-modal-body">
           <div className="alert alert-success">
-            <strong>✓ Cấu hình đã sẵn sàng chia sẻ</strong>
+            <strong>Cấu hình đã sẵn sàng chia sẻ</strong>
             <p className="mt-1">
               Bất kỳ ai có đường link này đều có thể xem cấu hình và nạp vào máy tính của họ để tùy chỉnh tiếp.
             </p>
@@ -67,7 +67,7 @@ export const ShareConfigurationModal = ({
                 className={`btn ${copied ? 'btn-success' : 'btn-primary'}`}
                 onClick={handleCopyLink}
               >
-                {copied ? '✓ Đã sao chép' : 'Sao chép link'}
+                {copied ? 'Đã sao chép' : 'Sao chép link'}
               </button>
             </div>
           </div>

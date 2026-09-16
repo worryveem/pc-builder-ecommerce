@@ -37,22 +37,22 @@ export default function AdminLayout() {
 
         <nav className="admin-nav">
           <NavLink to="/admin" end className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
-            📊 Tổng quan (Dashboard)
+            Tổng quan (Dashboard)
           </NavLink>
           <NavLink to="/admin/products" className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
-            🖥️ Quản lý sản phẩm
+            Quản lý sản phẩm
           </NavLink>
           <NavLink to="/admin/categories" className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
-            📂 Quản lý danh mục
+            Quản lý danh mục
           </NavLink>
           <NavLink to="/admin/orders" className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
-            📦 Quản lý đơn hàng
+            Quản lý đơn hàng
           </NavLink>
           <NavLink to="/admin/vouchers" className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
-            🏷️ Quản lý voucher
+            Quản lý voucher
           </NavLink>
           <NavLink to="/admin/users" className={({ isActive }) => `admin-nav-item ${isActive ? 'active' : ''}`}>
-            👥 Quản lý người dùng
+            Quản lý người dùng
           </NavLink>
         </nav>
 

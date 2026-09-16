@@ -39,7 +39,7 @@ export const SaveConfigurationModal = ({
 
   return (
     <div className="selector-modal-backdrop" onClick={onClose}>
-      <div className="save-modal-container" onClick={(e) => e.stopPropagation()}>
+      <div className="save-modal-container elevation-modal" onClick={(e) => e.stopPropagation()}>
         <div className="save-modal-header">
           <h3 className="modal-title">
             {isUpdate ? 'Cập Nhật Cấu Hình PC' : 'Lưu Cấu Hình PC'}
@@ -53,7 +53,7 @@ export const SaveConfigurationModal = ({
           {/* Block if there are compatibility errors */}
           {hasErrors ? (
             <div className="alert alert-danger mb-4">
-              <strong>✕ Không thể lưu cấu hình</strong>
+              <strong>Không thể lưu cấu hình</strong>
               <p className="mt-1">
                 Cấu hình đang có {compatibility.errors.length} lỗi tương thích phần cứng. Vui lòng khắc phục các điểm không tương thích trước khi lưu.
               </p>
@@ -65,7 +65,7 @@ export const SaveConfigurationModal = ({
             </div>
           ) : hasWarnings ? (
             <div className="alert alert-warning mb-4">
-              <strong>⚠️ Lưu ý về cấu hình</strong>
+              <strong>Lưu ý về cấu hình</strong>
               <p className="mt-1">
                 Cấu hình có cảnh báo về công suất nguồn hoặc linh kiện. Bạn vẫn có thể lưu cấu hình này để theo dõi hoặc chia sẻ.
               </p>

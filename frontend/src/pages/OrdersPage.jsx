@@ -102,11 +102,11 @@ export default function OrdersPage() {
           <button className="btn btn-primary" onClick={() => fetchOrders(activeTab)}>Thử lại</button>
         </div>
       ) : orders.length === 0 ? (
-        <div className="orders-empty-state">
-          <div className="empty-icon">📦</div>
-          <h3>Chưa có đơn hàng nào</h3>
-          <p>Bạn chưa có đơn hàng nào trong trạng thái này.</p>
-          <Link to="/products" className="btn btn-primary">Mua sắm ngay</Link>
+        <div className="orders-empty-state" style={{ padding: '60px 20px', textAlign: 'center', background: 'var(--color-surface)', borderRadius: 'var(--radius-lg)', boxShadow: 'var(--shadow-card)', border: '1px solid var(--color-border)' }}>
+          <span className="badge badge-brand" style={{ fontSize: '12px', padding: '6px 14px', marginBottom: '16px' }}>LỊCH SỬ ĐƠN HÀNG</span>
+          <h3 style={{ fontSize: '22px', fontWeight: 800, color: 'var(--color-slate-900)', marginBottom: '8px' }}>Chưa có đơn hàng nào</h3>
+          <p style={{ color: 'var(--color-slate-500)', fontSize: '14px', maxWidth: '440px', margin: '0 auto 24px' }}>Bạn chưa có đơn hàng nào trong trạng thái đã chọn.</p>
+          <Link to="/products" className="btn btn-primary" style={{ padding: '10px 24px' }}>Mua sắm ngay</Link>
         </div>
       ) : (
         <div className="orders-list">
@@ -163,8 +163,8 @@ export default function OrdersPage() {
 
                   <div className="order-card-summary">
                     {hasCustomPc && (
-                      <div className="custom-pc-note">
-                        🛠️ Bao gồm cấu hình PC tùy chọn
+                      <div className="custom-pc-note" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: 600, color: 'var(--color-brand)', background: 'var(--color-brand-light)', padding: '4px 10px', borderRadius: '4px', marginBottom: '8px' }}>
+                        <span>[BUILDER]</span> Bao gồm cấu hình PC tùy chọn
                       </div>
                     )}
                     <div className="order-summary-row">

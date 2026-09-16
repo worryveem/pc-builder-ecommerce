@@ -12,12 +12,20 @@ export const BuilderProductCard = ({ product, onSelect, isCurrentSelected }) => 
   const stockCount = product.stockQuantity != null ? product.stockQuantity : 0;
 
   return (
-    <div className={`builder-product-card ${isCurrentSelected ? 'selected-item' : ''}`}>
+    <div className={`builder-product-card elevation-sm ${isCurrentSelected ? 'selected-item' : ''}`}>
       <div className="card-thumb">
         {imgUrl ? (
-          <img src={imgUrl} alt={product.name} />
+          <img
+            src={imgUrl}
+            alt={product.name}
+            loading="lazy"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = '/placeholder.svg';
+            }}
+          />
         ) : (
-          <span className="card-thumb-placeholder">⚙️</span>
+          <span className="card-thumb-placeholder">TECHPC</span>
         )}
       </div>
 
@@ -33,7 +41,11 @@ export const BuilderProductCard = ({ product, onSelect, isCurrentSelected }) => 
           <div className="card-specs-tags">
             {spec.socket && <span className="spec-tag">Socket: {spec.socket}</span>}
             {spec.ramType && <span className="spec-tag">RAM: {spec.ramType}</span>}
-            {spec.capacityGb && <span className="spec-tag">{spec.capacityGb}GB{spec.modulesCount ? ` (${spec.modulesCount}x${spec.capacityGb/spec.modulesCount}GB)` : ''}</span>}
+            {spec.capacityGb && (
+              <span className="spec-tag">
+                {spec.capacityGb}GB{spec.modulesCount ? ` (${spec.modulesCount}x${spec.capacityGb/spec.modulesCount}GB)` : ''}
+              </span>
+            )}
             {spec.speedMhz && <span className="spec-tag">{spec.speedMhz}MHz</span>}
             {spec.formFactor && <span className="spec-tag">Form: {spec.formFactor}</span>}
             {spec.psuWattage && <span className="spec-tag">Công suất: {spec.psuWattage}W</span>}
@@ -51,7 +63,7 @@ export const BuilderProductCard = ({ product, onSelect, isCurrentSelected }) => 
       <div className="card-action-column">
         <div className="price-tag">{formatPrice(product.price)}</div>
         <div className={`stock-info ${inStock ? 'in-stock' : 'out-of-stock'}`}>
-          {inStock ? `Còn hàng (${stockCount})` : 'Hết hàng'}
+          {inStock ? `Sẵn hàng (${stockCount})` : 'Hết hàng'}
         </div>
 
         <button
@@ -60,9 +72,11 @@ export const BuilderProductCard = ({ product, onSelect, isCurrentSelected }) => 
           onClick={() => onSelect(product)}
           disabled={!inStock}
         >
-          {isCurrentSelected ? '✓ Đang chọn' : inStock ? 'Chọn linh kiện' : 'Hết hàng'}
+          {isCurrentSelected ? 'Đang chọn' : inStock ? 'Chọn linh kiện' : 'Hết hàng'}
         </button>
       </div>
     </div>
   );
 };
+
+export default BuilderProductCard;

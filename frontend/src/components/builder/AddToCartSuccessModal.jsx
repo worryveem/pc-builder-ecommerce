@@ -19,15 +19,15 @@ export const AddToCartSuccessModal = ({
 
   return (
     <div className="selector-modal-backdrop" onClick={onClose}>
-      <div className="save-modal-container add-cart-success-modal" onClick={(e) => e.stopPropagation()}>
+      <div className="save-modal-container add-cart-success-modal elevation-modal" onClick={(e) => e.stopPropagation()}>
         <div className="save-modal-header">
-          <h3 className="modal-title text-success">✓ Thêm Vào Giỏ Hàng Thành Công</h3>
+          <h3 className="modal-title text-success">Thêm Vào Giỏ Hàng Thành Công</h3>
           <button type="button" className="btn-close" onClick={onClose}>✕</button>
         </div>
 
         <div className="save-modal-body">
           <div className="alert alert-success">
-            <strong>✓ Đã thêm toàn bộ linh kiện cấu hình PC vào giỏ hàng</strong>
+            <strong>Đã thêm toàn bộ linh kiện cấu hình PC vào giỏ hàng</strong>
             <p className="mt-1">
               Tất cả {itemCount} linh kiện trong cấu hình đã được đưa vào giỏ hàng của bạn và gắn kết theo bộ cấu hình.
             </p>
@@ -57,7 +57,7 @@ export const AddToCartSuccessModal = ({
             className="btn btn-primary"
             onClick={() => navigate('/cart')}
           >
-            🛒 Xem giỏ hàng ngay
+            Xem giỏ hàng ngay
           </button>
         </div>
       </div>

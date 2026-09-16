@@ -73,15 +73,18 @@ export const CartPage = () => {
 
   const formatPrice = (price) => {
     if (!price && price !== 0) return '0 ₫';
-    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
+    return Number(price).toLocaleString('vi-VN') + ' đ';
   };
 
   if (!isAuthenticated) {
     return (
-      <div className="container empty-state-container">
-        <span className="empty-icon">🔒</span>
-        <h2>Vui lòng đăng nhập để xem giỏ hàng</h2>
-        <p>Đăng nhập tài khoản giúp bạn lưu trữ và đồng bộ hóa giỏ hàng và cấu hình PC của mình.</p>
+      <div className="container empty-state-container" style={{ marginTop: '3.5rem' }}>
+        <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '0.5rem' }}>
+          Vui lòng đăng nhập để xem giỏ hàng
+        </h2>
+        <p style={{ color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
+          Đăng nhập tài khoản giúp bạn lưu trữ và đồng bộ hóa giỏ hàng cũng như cấu hình PC tự build.
+        </p>
         <Link to="/login" state={{ from: { pathname: '/cart' } }} className="btn btn-primary btn-lg">
           Đăng nhập ngay
         </Link>
@@ -108,7 +111,7 @@ export const CartPage = () => {
   const configGroups = {};
   const individualItems = [];
 
-  items.forEach(item => {
+  items.forEach((item) => {
     if (item.configurationId) {
       if (!configGroups[item.configurationId]) {
         configGroups[item.configurationId] = [];
@@ -119,38 +122,48 @@ export const CartPage = () => {
     }
   });
 
-  const hasConfigGroups = Object.keys(configGroups).length > 0;
-
   const renderItemRow = (item) => {
     const prod = item.product;
     const imgUrl = prod?.images && prod.images.length > 0 ? prod.images[0].imageUrl : null;
     const itemTotal = (prod?.price || 0) * (item.quantity || 1);
 
     return (
-      <div key={item.id} className="cart-item-row">
-        <div className="col-prod prod-info-cell">
-          <div className="cart-item-thumb">
+      <div key={item.id} className="cart-row-item">
+        <div className="cart-prod-cell">
+          <div className="cart-thumb-box">
             {imgUrl ? (
-              <img src={imgUrl} alt={prod?.name} />
+              <img
+                src={imgUrl}
+                alt={prod?.name}
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = '/placeholder.svg';
+                }}
+              />
             ) : (
-              <span>💻</span>
+              <span style={{ fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700 }}>TECHPC</span>
             )}
           </div>
-          <div className="cart-item-meta">
-            <Link to={`/products/${prod?.id}`} className="cart-item-name">
-              {prod?.name || 'Sản phẩm'}
+          <div>
+            <Link to={`/products/${prod?.id}`} className="cart-prod-name">
+              {prod?.name || 'Linh kiện máy tính'}
             </Link>
             {item.configurationId && (
-              <span className="badge badge-builder">PC Build #{item.configurationId}</span>
+              <div style={{ marginTop: '0.25rem' }}>
+                <span className="badge-builder">Cấu hình PC #{item.configurationId}</span>
+              </div>
             )}
+            <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '0.15rem' }}>
+              Hãng: {prod?.brand || 'Chính hãng'}
+            </div>
           </div>
         </div>
 
-        <div className="col-price">
+        <div className="cart-unit-price">
           {formatPrice(prod?.price)}
         </div>
 
-        <div className="col-qty">
+        <div>
           <div className="qty-buttons small">
             <button
               type="button"
@@ -170,18 +183,18 @@ export const CartPage = () => {
           </div>
         </div>
 
-        <div className="col-total font-weight-bold">
+        <div className="cart-line-total">
           {formatPrice(itemTotal)}
         </div>
 
-        <div className="col-action">
+        <div style={{ textAlign: 'right' }}>
           <button
             type="button"
             onClick={() => handleRemoveItem(item.id)}
-            className="btn-text-danger"
+            className="btn-remove-cart"
             title="Xóa khỏi giỏ hàng"
           >
-            🗑️ Xóa
+            ×
           </button>
         </div>
       </div>
@@ -189,134 +202,128 @@ export const CartPage = () => {
   };
 
   return (
-    <div className="container cart-page">
-      <div className="page-header">
-        <h1>Giỏ Hàng Của Bạn</h1>
-        <p>Quản lý các linh kiện và cấu hình máy tính đã chọn</p>
+    <div className="container cart-page-wrap">
+      {/* Breadcrumb */}
+      <div className="breadcrumb-nav">
+        <Link to="/">Trang chủ</Link>
+        <span className="breadcrumb-sep">/</span>
+        <span style={{ color: 'var(--text-main)', fontWeight: 600 }}>Giỏ hàng</span>
+      </div>
+
+      <div style={{ marginBottom: '1.75rem' }}>
+        <h1 style={{ fontSize: '1.85rem', fontWeight: 800, color: 'var(--text-main)', letterSpacing: '-0.02em', marginBottom: '0.35rem' }}>
+          Giỏ Hàng Mua Sắm
+        </h1>
+        <p style={{ color: 'var(--text-muted)', fontSize: '0.925rem' }}>
+          Kiểm tra danh sách linh kiện và cấu hình PC trước khi thanh toán
+        </p>
       </div>
 
       {actionMsg && <div className="alert alert-info">{actionMsg}</div>}
       {error && <div className="alert alert-danger">{error}</div>}
 
       {items.length === 0 ? (
-        <div className="empty-state-container">
-          <span className="empty-icon">🛒</span>
-          <h2>Giỏ hàng của bạn đang trống</h2>
-          <p>Hãy khám phá các linh kiện máy tính chất lượng cao hoặc tự build cấu hình PC ưng ý.</p>
-          <div className="empty-actions">
-            <Link to="/products" className="btn btn-primary">Mua sắm linh kiện</Link>
-            <Link to="/builder" className="btn btn-outline">Tự Build PC</Link>
+        <div className="empty-state-container elevation-sm">
+          <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '0.5rem' }}>
+            Giỏ hàng của bạn đang trống
+          </h2>
+          <p style={{ color: 'var(--text-muted)', marginBottom: '1.75rem' }}>
+            Hãy khám phá các linh kiện máy tính chất lượng cao hoặc trải nghiệm công cụ Tự Build PC thông minh.
+          </p>
+          <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
+            <Link to="/products" className="btn btn-primary">
+              Khám Phá Linh Kiện
+            </Link>
+            <Link to="/builder" className="btn btn-outline-primary">
+              Tự Build Cấu Hình PC
+            </Link>
           </div>
         </div>
       ) : (
-        <div className="cart-layout">
-          <div className="cart-items-list">
-            <div className="cart-header-row">
-              <span className="col-prod">Sản phẩm</span>
-              <span className="col-price">Đơn giá</span>
-              <span className="col-qty">Số lượng</span>
-              <span className="col-total">Thành tiền</span>
-              <span className="col-action">Thao tác</span>
+        <div className="cart-layout-grid">
+          {/* Items List */}
+          <div className="cart-table-card elevation-sm">
+            <div className="cart-table-head">
+              <span>Sản phẩm</span>
+              <span>Đơn giá</span>
+              <span>Số lượng</span>
+              <span>Thành tiền</span>
+              <span style={{ textAlign: 'right' }}>Xóa</span>
             </div>
 
-            {hasConfigGroups ? (
-              <>
-                {/* Render PC Configuration Groups */}
-                {Object.entries(configGroups).map(([configId, groupItems]) => {
-                  const groupTotal = groupItems.reduce(
-                    (sum, i) => sum + (i.product?.price || 0) * (i.quantity || 1),
-                    0
-                  );
-                  return (
-                    <div key={`group-${configId}`} className="cart-config-group-card mb-4">
-                      <div className="cart-config-header">
-                        <div className="cart-config-title-meta">
-                          <span className="badge badge-builder">⚙ PC CONFIGURATION</span>
-                          <h3 className="cart-config-title">Cấu hình PC #{configId}</h3>
-                          <span className="cart-config-count text-muted text-sm">
-                            ({groupItems.length} linh kiện)
-                          </span>
-                        </div>
-                        <div className="cart-config-actions">
-                          <Link
-                            to={`/builder/configuration/${configId}`}
-                            className="btn btn-outline btn-sm"
-                          >
-                            🔍 Xem lại cấu hình
-                          </Link>
-                        </div>
-                      </div>
+            {/* Config groups */}
+            {Object.keys(configGroups).map((configId) => (
+              <div key={configId} style={{ marginTop: '1rem', marginBottom: '1.5rem', background: '#f8fafc', padding: '1rem 1.25rem', borderRadius: 'var(--radius-lg)', border: '1px solid var(--border)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.75rem', paddingBottom: '0.5rem', borderBottom: '1px solid var(--border)' }}>
+                  <span style={{ fontWeight: 700, fontSize: '0.95rem', color: 'var(--primary)' }}>
+                    Bộ Cấu Hình PC #{configId}
+                  </span>
+                  <Link to={`/builder/configuration/${configId}`} style={{ fontSize: '0.825rem', color: 'var(--primary)', fontWeight: 600 }}>
+                    Chỉnh sửa trong Builder &rarr;
+                  </Link>
+                </div>
+                {configGroups[configId].map((item) => renderItemRow(item))}
+              </div>
+            ))}
 
-                      <div className="cart-config-items-wrapper">
-                        {groupItems.map(renderItemRow)}
-                      </div>
+            {/* Individual items */}
+            {individualItems.map((item) => renderItemRow(item))}
 
-                      <div className="cart-config-footer">
-                        <span>Tổng phụ cấu hình PC #{configId}:</span>
-                        <strong className="cart-config-subtotal-val">{formatPrice(groupTotal)}</strong>
-                      </div>
-                    </div>
-                  );
-                })}
-
-                {/* Render Individual Products */}
-                {individualItems.length > 0 && (
-                  <div className="cart-individual-items-card mb-4">
-                    <div className="cart-config-header individual-header">
-                      <div className="cart-config-title-meta">
-                        <span className="badge badge-secondary">📦 SẢN PHẨM MUA LẺ</span>
-                        <h3 className="cart-config-title">Linh Kiện & Phụ Kiện Mua Riêng</h3>
-                      </div>
-                    </div>
-                    <div className="cart-config-items-wrapper">
-                      {individualItems.map(renderItemRow)}
-                    </div>
-                  </div>
-                )}
-              </>
-            ) : (
-              /* Fallback flat list for standard cart without configurations */
-              items.map(renderItemRow)
-            )}
-
-            <div className="cart-actions-footer">
-              <button onClick={handleClearCart} className="btn btn-outline-danger btn-sm">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '1.5rem', paddingTop: '1.25rem', borderTop: '1px solid var(--border)' }}>
+              <button
+                type="button"
+                className="btn btn-sm btn-outline"
+                style={{ color: 'var(--price-red)', borderColor: 'var(--price-red-border)' }}
+                onClick={handleClearCart}
+              >
                 Làm trống giỏ hàng
               </button>
-              <Link to="/products" className="btn btn-outline btn-sm">
-                Tiếp tục mua hàng
+              <Link to="/products" className="btn btn-sm btn-outline">
+                &larr; Tiếp tục mua sắm
               </Link>
             </div>
           </div>
 
-          <div className="cart-summary-box">
-            <h3>Tổng Đơn Hàng</h3>
-            <div className="summary-row">
-              <span>Số lượng sản phẩm:</span>
-              <span>{items.reduce((s, i) => s + (i.quantity || 1), 0)}</span>
+          {/* Right Sticky Order Summary */}
+          <aside className="order-summary-card elevation-md">
+            <h3 className="summary-title">Tóm Tắt Đơn Hàng</h3>
+
+            <div className="summary-data-row">
+              <span>Tổng số lượng:</span>
+              <strong>{items.reduce((acc, i) => acc + (i.quantity || 1), 0)} linh kiện</strong>
             </div>
-            <div className="summary-row">
+
+            <div className="summary-data-row">
               <span>Tạm tính:</span>
               <span>{formatPrice(totalPrice)}</span>
             </div>
-            <div className="summary-row">
+
+            <div className="summary-data-row">
               <span>Phí vận chuyển:</span>
-              <span className="text-success">Miễn phí</span>
+              <span style={{ color: 'var(--success)', fontWeight: 600 }}>Miễn phí giao hàng</span>
             </div>
-            <div className="summary-divider"></div>
-            <div className="summary-row total-row">
+
+            <div className="summary-data-row total-bold-row">
               <span>Tổng thanh toán:</span>
-              <span className="total-amount">{formatPrice(totalPrice)}</span>
+              <span className="summary-total-price">{formatPrice(totalPrice)}</span>
             </div>
-            <Link
-              to="/checkout"
-              className="btn btn-primary btn-block btn-lg mt-3 text-center"
+
+            <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: '1.5rem' }}>
+              (Đã bao gồm thuế giá trị gia tăng VAT 10%)
+            </p>
+
+            <button
+              type="button"
+              className="btn btn-primary btn-block btn-lg"
+              onClick={() => navigate('/checkout')}
             >
-              Tiến hành thanh toán →
-            </Link>
-          </div>
+              Tiến Hành Đặt Hàng
+            </button>
+          </aside>
         </div>
       )}
     </div>
   );
 };
+
+export default CartPage;

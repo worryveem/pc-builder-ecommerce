@@ -144,7 +144,7 @@ export default function OrderDetailPage() {
                 <div key={configId} className="order-config-group">
                   <div className="order-config-header">
                     <div className="config-header-title">
-                      <span className="builder-tag">🛠️ Cấu hình PC #{configId}</span>
+                      <span className="builder-tag">[BUILDER] Cấu hình PC #{configId}</span>
                       <span className="config-items-count">({items.length} linh kiện)</span>
                     </div>
                     <span className="config-group-total">

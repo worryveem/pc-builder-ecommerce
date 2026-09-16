@@ -308,12 +308,12 @@ export const CartPage = () => {
               <span>Tổng thanh toán:</span>
               <span className="total-amount">{formatPrice(totalPrice)}</span>
             </div>
-            <button
-              className="btn btn-primary btn-block btn-lg mt-3"
-              onClick={() => alert('Chức năng đặt hàng & thanh toán sẽ hoàn thiện ở các phase tiếp theo!')}
+            <Link
+              to="/checkout"
+              className="btn btn-primary btn-block btn-lg mt-3 text-center"
             >
-              Tiến hành thanh toán
-            </button>
+              Tiến hành thanh toán →
+            </Link>
           </div>
         </div>
       )}

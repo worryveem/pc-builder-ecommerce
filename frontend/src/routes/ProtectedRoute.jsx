@@ -19,7 +19,12 @@ export const ProtectedRoute = ({ children, requiredRole }) => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (requiredRole && user?.role !== requiredRole) {
+  const roleMatches =
+    !requiredRole ||
+    user?.role === requiredRole ||
+    (requiredRole.includes('ADMIN') && (user?.role === 'ROLE_ADMIN' || user?.role === 'ADMIN'));
+
+  if (!roleMatches) {
     return (
       <div className="error-container">
         <h2>Không có quyền truy cập</h2>

@@ -2,42 +2,119 @@ import React, { useEffect, useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { productApi } from '../api/productApi';
 import { cartApi } from '../api/cartApi';
+import { wishlistApi } from '../api/wishlistApi';
+import { ratingApi } from '../api/ratingApi';
 import { useAuth } from '../context/AuthContext';
 
 export const ProductDetailPage = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
+  const [selectedImg, setSelectedImg] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [quantity, setQuantity] = useState(1);
   const [actionMsg, setActionMsg] = useState({ type: '', text: '' });
   const [addingToCart, setAddingToCart] = useState(false);
+  const [isWishlisted, setIsWishlisted] = useState(false);
 
-  const { isAuthenticated } = useAuth();
+  // Ratings state
+  const [ratings, setRatings] = useState([]);
+  const [ratingSummary, setRatingSummary] = useState({ averageRating: 0, totalRatings: 0 });
+  const [ratingsLoading, setRatingsLoading] = useState(false);
+  const [userRating, setUserRating] = useState(5);
+  const [userComment, setUserComment] = useState('');
+  const [submittingReview, setSubmittingReview] = useState(false);
+  const [reviewMsg, setReviewMsg] = useState({ type: '', text: '' });
+
+  const { isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      try {
-        setLoading(true);
-        setError('');
-        const res = await productApi.getProductById(id);
-        if (res?.data) {
-          setProduct(res.data);
-        } else {
-          setError('Không tìm thấy thông tin sản phẩm');
-        }
-      } catch (err) {
-        setError('Lỗi khi tải thông tin sản phẩm từ máy chủ');
-      } finally {
-        setLoading(false);
+  const fetchProductData = async () => {
+    try {
+      setLoading(true);
+      setError('');
+      const res = await productApi.getProductById(id);
+      const data = res?.data || res;
+      if (data) {
+        setProduct(data);
+        const firstImg = data.images && data.images.length > 0 ? data.images[0].imageUrl : '';
+        setSelectedImg(firstImg);
+      } else {
+        setError('Không tìm thấy thông tin sản phẩm');
       }
-    };
-
-    if (id) {
-      fetchProduct();
+    } catch (err) {
+      setError('Lỗi khi tải thông tin sản phẩm từ máy chủ');
+    } finally {
+      setLoading(false);
     }
-  }, [id]);
+  };
+
+  const fetchReviews = async () => {
+    try {
+      setRatingsLoading(true);
+      const [reviewData, summaryData] = await Promise.allSettled([
+        ratingApi.getProductRatings(id),
+        ratingApi.getProductRatingSummary(id)
+      ]);
+
+      if (reviewData.status === 'fulfilled') {
+        const revList = reviewData.value?.data || reviewData.value;
+        setRatings(Array.isArray(revList) ? revList : []);
+      }
+      if (summaryData.status === 'fulfilled') {
+        const sum = summaryData.value?.data || summaryData.value;
+        if (sum) {
+          setRatingSummary({
+            averageRating: Number(sum.averageRating || 0),
+            totalRatings: Number(sum.totalRatings || sum.totalReviews || 0)
+          });
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching reviews:', err);
+    } finally {
+      setRatingsLoading(false);
+    }
+  };
+
+  const checkWishlist = async () => {
+    if (!isAuthenticated) return;
+    try {
+      const wlData = await wishlistApi.getMyWishlist();
+      const items = Array.isArray(wlData) ? wlData : (wlData?.data || []);
+      const match = items.some((w) => String(w.productId || w.product?.id || w.id) === String(id));
+      setIsWishlisted(match);
+    } catch (err) {
+      // Optional
+    }
+  };
+
+  useEffect(() => {
+    if (id) {
+      fetchProductData();
+      fetchReviews();
+      checkWishlist();
+    }
+  }, [id, isAuthenticated]);
+
+  const handleToggleWishlist = async () => {
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: { pathname: `/products/${id}` } } });
+      return;
+    }
+
+    try {
+      if (isWishlisted) {
+        await wishlistApi.removeFromWishlist(id);
+        setIsWishlisted(false);
+      } else {
+        await wishlistApi.addToWishlist(id);
+        setIsWishlisted(true);
+      }
+    } catch (err) {
+      console.error('Wishlist error:', err);
+    }
+  };
 
   const handleAddToCart = async () => {
     if (!isAuthenticated) {
@@ -58,9 +135,38 @@ export const ProductDetailPage = () => {
     }
   };
 
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+    if (!isAuthenticated) {
+      navigate('/login', { state: { from: { pathname: `/products/${id}` } } });
+      return;
+    }
+
+    try {
+      setSubmittingReview(true);
+      setReviewMsg({ type: '', text: '' });
+      await ratingApi.addRating({
+        productId: Number(id),
+        rating: userRating,
+        comment: userComment
+      });
+      setReviewMsg({ type: 'success', text: 'Cảm ơn bạn đã gửi đánh giá!' });
+      setUserComment('');
+      await fetchReviews();
+    } catch (err) {
+      console.error('Review submit error:', err);
+      setReviewMsg({
+        type: 'error',
+        text: err.response?.data?.message || 'Không thể gửi đánh giá. Bạn có thể cần mua hàng trước khi đánh giá.'
+      });
+    } finally {
+      setSubmittingReview(false);
+    }
+  };
+
   const formatPrice = (price) => {
     if (!price && price !== 0) return 'Liên hệ';
-    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
+    return Number(price).toLocaleString('vi-VN') + ' đ';
   };
 
   if (loading) {
@@ -82,8 +188,8 @@ export const ProductDetailPage = () => {
     );
   }
 
-  const spec = product.specification;
-  const imgUrl = product.images && product.images.length > 0 ? product.images[0].imageUrl : null;
+  const spec = product.specification || product.specifications;
+  const images = product.images || [];
 
   return (
     <div className="container product-detail-page">
@@ -94,18 +200,50 @@ export const ProductDetailPage = () => {
       <div className="product-detail-layout">
         {/* Gallery */}
         <div className="product-gallery">
-          {imgUrl ? (
-            <img src={imgUrl} alt={product.name} className="product-detail-img" />
-          ) : (
-            <div className="product-img-placeholder large">
-              <span>💻</span>
+          <div className="main-image-wrap">
+            {selectedImg ? (
+              <img src={selectedImg} alt={product.name} className="product-detail-img" />
+            ) : (
+              <div className="product-img-placeholder large">
+                <span>💻</span>
+              </div>
+            )}
+            <button
+              className={`btn-wishlist-detail ${isWishlisted ? 'wishlisted' : ''}`}
+              title={isWishlisted ? 'Xóa khỏi yêu thích' : 'Lưu vào yêu thích'}
+              onClick={handleToggleWishlist}
+            >
+              {isWishlisted ? '❤️ Yêu thích' : '🤍 Lưu'}
+            </button>
+          </div>
+
+          {images.length > 1 && (
+            <div className="gallery-thumbnails">
+              {images.map((img, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  className={`thumb-btn ${selectedImg === img.imageUrl ? 'active' : ''}`}
+                  onClick={() => setSelectedImg(img.imageUrl)}
+                >
+                  <img src={img.imageUrl} alt={`Thumbnail ${idx + 1}`} />
+                </button>
+              ))}
             </div>
           )}
         </div>
 
         {/* Info & Buying */}
         <div className="product-main-info">
-          <span className="product-brand-badge">{product.brand || 'Chính hãng'}</span>
+          <div className="detail-top-tags">
+            <span className="product-brand-badge">{product.brand || 'Chính hãng'}</span>
+            {ratingSummary.totalRatings > 0 && (
+              <span className="rating-pill">
+                ⭐ {ratingSummary.averageRating.toFixed(1)} ({ratingSummary.totalRatings} đánh giá)
+              </span>
+            )}
+          </div>
+
           <h1 className="product-detail-title">{product.name}</h1>
           <p className="product-model-code">Mã model: {product.modelCode || 'N/A'}</p>
 
@@ -240,6 +378,111 @@ export const ProductDetailPage = () => {
           </table>
         </div>
       )}
+
+      {/* Ratings and Reviews Section */}
+      <div className="product-reviews-section">
+        <div className="reviews-header">
+          <h2>Đánh giá & Nhận xét của khách hàng</h2>
+          <div className="summary-banner">
+            <div className="big-rating">
+              <strong>{ratingSummary.averageRating.toFixed(1)}</strong>
+              <div className="stars-gold">
+                {'★'.repeat(Math.round(ratingSummary.averageRating))}
+                {'☆'.repeat(5 - Math.round(ratingSummary.averageRating))}
+              </div>
+              <span>{ratingSummary.totalRatings} lượt đánh giá</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Review Form */}
+        <div className="write-review-card">
+          <h3>Gửi đánh giá của bạn</h3>
+          {reviewMsg.text && (
+            <div className={`alert ${reviewMsg.type === 'success' ? 'alert-success' : 'alert-danger'}`}>
+              {reviewMsg.text}
+            </div>
+          )}
+
+          {isAuthenticated ? (
+            <form onSubmit={handleSubmitReview} className="review-form">
+              <div className="form-group">
+                <label>Chọn số sao đánh giá:</label>
+                <div className="star-rating-selector">
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <button
+                      key={star}
+                      type="button"
+                      className={`star-btn ${userRating >= star ? 'selected' : ''}`}
+                      onClick={() => setUserRating(star)}
+                    >
+                      ★
+                    </button>
+                  ))}
+                  <span className="star-desc">
+                    {userRating === 5 && 'Tuyệt vời'}
+                    {userRating === 4 && 'Hài lòng'}
+                    {userRating === 3 && 'Bình thường'}
+                    {userRating === 2 && 'Không hài lòng'}
+                    {userRating === 1 && 'Rất tệ'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="form-group">
+                <label>Bình luận nhận xét:</label>
+                <textarea
+                  rows="3"
+                  className="form-control"
+                  placeholder="Chia sẻ trải nghiệm thực tế về sản phẩm..."
+                  value={userComment}
+                  onChange={(e) => setUserComment(e.target.value)}
+                  required
+                ></textarea>
+              </div>
+
+              <button
+                type="submit"
+                className="btn btn-primary"
+                disabled={submittingReview}
+              >
+                {submittingReview ? 'Đang gửi...' : 'Gửi đánh giá'}
+              </button>
+            </form>
+          ) : (
+            <div className="login-to-review-hint">
+              <p>Vui lòng <Link to="/login" state={{ from: { pathname: `/products/${id}` } }}>đăng nhập</Link> để gửi đánh giá sản phẩm.</p>
+            </div>
+          )}
+        </div>
+
+        {/* Reviews List */}
+        <div className="reviews-list">
+          {ratingsLoading ? (
+            <p>Đang tải đánh giá...</p>
+          ) : ratings.length === 0 ? (
+            <p className="no-reviews-msg">Chưa có đánh giá nào cho sản phẩm này. Hãy là người đầu tiên đánh giá!</p>
+          ) : (
+            ratings.map((rev) => (
+              <div key={rev.id} className="review-item">
+                <div className="review-meta">
+                  <span className="reviewer-name">{rev.userName || rev.username || 'Khách hàng'}</span>
+                  <div className="reviewer-stars">
+                    {'★'.repeat(rev.rating || 5)}
+                    {'☆'.repeat(5 - (rev.rating || 5))}
+                  </div>
+                  <span className="review-date">
+                    {rev.createdAt ? new Date(rev.createdAt).toLocaleDateString('vi-VN') : ''}
+                  </span>
+                </div>
+                {rev.comment && <p className="review-content">{rev.comment}</p>}
+              </div>
+            ))
+          )}
+        </div>
+      </div>
     </div>
   );
 };
+
+export default ProductDetailPage;

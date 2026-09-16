@@ -7,14 +7,28 @@ import { RegisterPage } from './pages/RegisterPage';
 import { ProductsPage } from './pages/ProductsPage';
 import { ProductDetailPage } from './pages/ProductDetailPage';
 import { CartPage } from './pages/CartPage';
+import CheckoutPage from './pages/CheckoutPage';
+import WishlistPage from './pages/WishlistPage';
+import OrdersPage from './pages/OrdersPage';
+import OrderDetailPage from './pages/OrderDetailPage';
+import ProfilePage from './pages/ProfilePage';
 import { BuilderPage } from './pages/BuilderPage';
 import { SharedBuilderPage } from './pages/SharedBuilderPage';
-import { PlaceholderPage } from './pages/PlaceholderPage';
 import { ProtectedRoute } from './routes/ProtectedRoute';
+
+// Admin imports
+import AdminLayout from './pages/admin/AdminLayout';
+import AdminDashboardPage from './pages/admin/AdminDashboardPage';
+import AdminProductsPage from './pages/admin/AdminProductsPage';
+import AdminCategoriesPage from './pages/admin/AdminCategoriesPage';
+import AdminOrdersPage from './pages/admin/AdminOrdersPage';
+import AdminVouchersPage from './pages/admin/AdminVouchersPage';
+import AdminUsersPage from './pages/admin/AdminUsersPage';
 
 function App() {
   return (
     <Routes>
+      {/* Storefront with MainLayout */}
       <Route path="/" element={<MainLayout />}>
         {/* Public Routes */}
         <Route index element={<HomePage />} />
@@ -27,12 +41,28 @@ function App() {
         <Route path="register" element={<RegisterPage />} />
         <Route path="cart" element={<CartPage />} />
 
-        {/* Protected Routes (Reserved for future phases) */}
+        {/* Customer Protected Routes */}
+        <Route
+          path="checkout"
+          element={
+            <ProtectedRoute>
+              <CheckoutPage />
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="orders"
           element={
             <ProtectedRoute>
-              <PlaceholderPage title="Lịch Sử Đơn Hàng" />
+              <OrdersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="orders/:id"
+          element={
+            <ProtectedRoute>
+              <OrderDetailPage />
             </ProtectedRoute>
           }
         />
@@ -40,7 +70,7 @@ function App() {
           path="wishlist"
           element={
             <ProtectedRoute>
-              <PlaceholderPage title="Danh Sách Yêu Thích" />
+              <WishlistPage />
             </ProtectedRoute>
           }
         />
@@ -48,22 +78,31 @@ function App() {
           path="profile"
           element={
             <ProtectedRoute>
-              <PlaceholderPage title="Hồ Sơ Cá Nhân" />
+              <ProfilePage />
             </ProtectedRoute>
           }
         />
-        <Route
-          path="admin"
-          element={
-            <ProtectedRoute requiredRole="ROLE_ADMIN">
-              <PlaceholderPage title="Trang Quản Trị Hệ Thống" />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
+
+      {/* Admin Panel Routes */}
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute requiredRole="ROLE_ADMIN">
+            <AdminLayout />
+          </ProtectedRoute>
+        }
+      >
+        <Route index element={<AdminDashboardPage />} />
+        <Route path="products" element={<AdminProductsPage />} />
+        <Route path="categories" element={<AdminCategoriesPage />} />
+        <Route path="orders" element={<AdminOrdersPage />} />
+        <Route path="vouchers" element={<AdminVouchersPage />} />
+        <Route path="users" element={<AdminUsersPage />} />
+      </Route>
+
+      {/* Fallback */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

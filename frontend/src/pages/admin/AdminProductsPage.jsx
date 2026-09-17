@@ -80,8 +80,8 @@ export default function AdminProductsPage() {
     setEditingId(product.id);
     setFormError(null);
 
-    const specs = product.specifications || {};
-    const img = product.images?.[0]?.imageUrl || '';
+    const specs = product.specification || product.specifications || {};
+    const img = product.images?.[0]?.imageUrl || product.imageUrl || '';
 
     setFormData({
       name: product.name || '',
@@ -93,19 +93,19 @@ export default function AdminProductsPage() {
       description: product.description || '',
       warrantyMonths: product.warrantyMonths || 12,
       imageUrl: img,
-      // Specs
+      // Specs (support both backend field names and form field names)
       socket: specs.socket || '',
       ramType: specs.ramType || '',
       formFactor: specs.formFactor || '',
-      wattage: specs.wattage || '',
-      tdp: specs.tdp || '',
-      capacityGb: specs.capacityGb || '',
-      vramGb: specs.vramGb || '',
-      lengthMm: specs.lengthMm || '',
-      heightMm: specs.heightMm || '',
+      wattage: specs.psuWattage ?? specs.wattage ?? '',
+      tdp: specs.tdpW ?? specs.tdp ?? '',
+      capacityGb: specs.capacityGb ?? '',
+      vramGb: specs.vramGb ?? '',
+      lengthMm: specs.gpuLengthMm ?? specs.lengthMm ?? '',
+      heightMm: specs.coolerHeightMm ?? specs.heightMm ?? '',
       modularType: specs.modularType || '',
-      busSpeed: specs.busSpeed || '',
-      modulesCount: specs.modulesCount || ''
+      busSpeed: specs.speedMhz ?? specs.busSpeed ?? '',
+      modulesCount: specs.modulesCount ?? ''
     });
     setModalOpen(true);
   };
@@ -137,6 +137,26 @@ export default function AdminProductsPage() {
 
     try {
       setSubmitting(true);
+      const specPayload = {
+        socket: formData.socket ? formData.socket.trim() : null,
+        ramType: formData.ramType ? formData.ramType.trim() : null,
+        formFactor: formData.formFactor ? formData.formFactor.trim() : null,
+        psuWattage: formData.wattage ? Number(formData.wattage) : null,
+        wattage: formData.wattage ? Number(formData.wattage) : null,
+        tdpW: formData.tdp ? Number(formData.tdp) : null,
+        tdp: formData.tdp ? Number(formData.tdp) : null,
+        capacityGb: formData.capacityGb ? Number(formData.capacityGb) : null,
+        vramGb: formData.vramGb ? Number(formData.vramGb) : null,
+        gpuLengthMm: formData.lengthMm ? Number(formData.lengthMm) : null,
+        lengthMm: formData.lengthMm ? Number(formData.lengthMm) : null,
+        coolerHeightMm: formData.heightMm ? Number(formData.heightMm) : null,
+        heightMm: formData.heightMm ? Number(formData.heightMm) : null,
+        modularType: formData.modularType ? formData.modularType.trim() : null,
+        speedMhz: formData.busSpeed ? Number(formData.busSpeed) : null,
+        busSpeed: formData.busSpeed ? Number(formData.busSpeed) : null,
+        modulesCount: formData.modulesCount ? Number(formData.modulesCount) : 1
+      };
+
       const payload = {
         name: formData.name,
         brand: formData.brand,
@@ -146,21 +166,12 @@ export default function AdminProductsPage() {
         categoryId: Number(formData.categoryId),
         description: formData.description,
         warrantyMonths: Number(formData.warrantyMonths || 12),
-        imageUrl: formData.imageUrl,
-        specifications: {
-          socket: formData.socket || null,
-          ramType: formData.ramType || null,
-          formFactor: formData.formFactor || null,
-          wattage: formData.wattage ? Number(formData.wattage) : null,
-          tdp: formData.tdp ? Number(formData.tdp) : null,
-          capacityGb: formData.capacityGb ? Number(formData.capacityGb) : null,
-          vramGb: formData.vramGb ? Number(formData.vramGb) : null,
-          lengthMm: formData.lengthMm ? Number(formData.lengthMm) : null,
-          heightMm: formData.heightMm ? Number(formData.heightMm) : null,
-          modularType: formData.modularType || null,
-          busSpeed: formData.busSpeed ? Number(formData.busSpeed) : null,
-          modulesCount: formData.modulesCount ? Number(formData.modulesCount) : null
-        }
+        imageUrl: formData.imageUrl ? formData.imageUrl.trim() : '',
+        images: formData.imageUrl && formData.imageUrl.trim()
+          ? [{ imageUrl: formData.imageUrl.trim() }]
+          : [],
+        specification: specPayload,
+        specifications: specPayload
       };
 
       if (editingId) {

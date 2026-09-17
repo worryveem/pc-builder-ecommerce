@@ -173,15 +173,25 @@ public class ProductService {
         product.setCategory(category);
 
         try {
-            if (productsResponse.getImages() != null) {
-                List<ProductImage> images = new ArrayList<>();
+            List<ProductImage> images = new ArrayList<>();
+            if (productsResponse.getImages() != null && !productsResponse.getImages().isEmpty()) {
                 for (ProductImageResponse imgRes : productsResponse.getImages()) {
-                    ProductImage pi = new ProductImage();
-                    pi.setImageUrl(imgRes.getImageUrl());
-                    pi.setIsMain(images.isEmpty());
-                    pi.setProduct(product);
-                    images.add(pi);
+                    if (imgRes.getImageUrl() != null && !imgRes.getImageUrl().trim().isEmpty()) {
+                        ProductImage pi = new ProductImage();
+                        pi.setImageUrl(imgRes.getImageUrl().trim());
+                        pi.setIsMain(images.isEmpty());
+                        pi.setProduct(product);
+                        images.add(pi);
+                    }
                 }
+            } else if (productsResponse.getImageUrl() != null && !productsResponse.getImageUrl().trim().isEmpty()) {
+                ProductImage pi = new ProductImage();
+                pi.setImageUrl(productsResponse.getImageUrl().trim());
+                pi.setIsMain(true);
+                pi.setProduct(product);
+                images.add(pi);
+            }
+            if (!images.isEmpty()) {
                 product.setImages(images);
             }
 
@@ -219,19 +229,32 @@ public class ProductService {
 
         try {
             // Sync Images
-            if (productsResponse.getImages() != null) {
+            if (productsResponse.getImages() != null && !productsResponse.getImages().isEmpty()) {
                 if (product.getImages() == null) {
                     product.setImages(new ArrayList<>());
                 } else {
                     product.getImages().clear();
                 }
                 for (ProductImageResponse imgRes : productsResponse.getImages()) {
-                    ProductImage pi = new ProductImage();
-                    pi.setImageUrl(imgRes.getImageUrl());
-                    pi.setIsMain(product.getImages().isEmpty());
-                    pi.setProduct(product);
-                    product.getImages().add(pi);
+                    if (imgRes.getImageUrl() != null && !imgRes.getImageUrl().trim().isEmpty()) {
+                        ProductImage pi = new ProductImage();
+                        pi.setImageUrl(imgRes.getImageUrl().trim());
+                        pi.setIsMain(product.getImages().isEmpty());
+                        pi.setProduct(product);
+                        product.getImages().add(pi);
+                    }
                 }
+            } else if (productsResponse.getImageUrl() != null && !productsResponse.getImageUrl().trim().isEmpty()) {
+                if (product.getImages() == null) {
+                    product.setImages(new ArrayList<>());
+                } else {
+                    product.getImages().clear();
+                }
+                ProductImage pi = new ProductImage();
+                pi.setImageUrl(productsResponse.getImageUrl().trim());
+                pi.setIsMain(true);
+                pi.setProduct(product);
+                product.getImages().add(pi);
             }
 
             // Sync Specifications

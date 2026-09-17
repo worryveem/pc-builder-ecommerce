@@ -1,6 +1,7 @@
 package com.example.pcbuilderecommerce.dto.response.products;
 
 import com.example.pcbuilderecommerce.common.ProductType;
+import com.fasterxml.jackson.annotation.JsonAlias;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,7 +20,11 @@ public class ProductsResponse {
     private ProductType productType;
     private Integer stockQuantity;
     private List<ProductImageResponse> images;
+    private String imageUrl;
+
+    @JsonAlias({"specification", "specifications"})
     private ProductSpecificationResponse specification;
+
     private long categoryId;
     private CategoryResponse category;
 }

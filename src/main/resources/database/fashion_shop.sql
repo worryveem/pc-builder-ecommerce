@@ -637,107 +637,117 @@ INSERT INTO product_images (product_id, image_url, is_main) VALUES
 -- ==========================================================
 -- CPU COOLERS
 -- 171 - 176
+-- Real product photographs - NO AI
 -- ==========================================================
 INSERT INTO product_images (product_id, image_url, is_main) VALUES
-(171, 'https://images.unsplash.com/photo-1555617778-02518510b9fa?w=800', TRUE),
-(172, 'https://images.unsplash.com/photo-1555617778-02518510b9fa?w=800', TRUE),
-(173, 'https://images.unsplash.com/photo-1555617778-02518510b9fa?w=800', TRUE),
-(174, 'https://images.unsplash.com/photo-1555617778-02518510b9fa?w=800', TRUE),
-(175, 'https://images.unsplash.com/photo-1555617778-02518510b9fa?w=800', TRUE),
-(176, 'https://images.unsplash.com/photo-1555617778-02518510b9fa?w=800', TRUE);
+(171, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/DeepCool_AK400_1.jpg?width=1200', TRUE),
+(172, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/DeepCool_AK400_2.jpg?width=1200', TRUE),
+(173, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Noctua_NH-U12P_SE2_CPU_cooler.jpg?width=1200', TRUE),
+(174, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/CPU_cooler.png?width=1200', TRUE),
+(175, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Noctua_NH-C14s_CPU_cooler_IMGP6286_smial_wp.jpg?width=1200', TRUE),
+(176, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/NH-D15_cold_plate.jpg?width=1200', TRUE);
 
 
 -- ==========================================================
 -- PC CASES
 -- 181 - 186
+-- Real photographs
 -- ==========================================================
 INSERT INTO product_images (product_id, image_url, is_main) VALUES
-(181, 'https://images.unsplash.com/photo-1587831990711-23ca6441447b?w=800', TRUE),
-(182, 'https://images.unsplash.com/photo-1587202372583-49330a15584d?w=800', TRUE),
-(183, 'https://images.unsplash.com/photo-1587831990711-23ca6441447b?w=800', TRUE),
-(184, 'https://images.unsplash.com/photo-1587202372583-49330a15584d?w=800', TRUE),
-(185, 'https://images.unsplash.com/photo-1587831990711-23ca6441447b?w=800', TRUE),
-(186, 'https://images.unsplash.com/photo-1587202372583-49330a15584d?w=800', TRUE);
+(181, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Fractal_Design_Focus_G.jpg?width=1200', TRUE),
+(182, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/ATX_Computer_cases.jpg?width=1200', TRUE),
+(183, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/ATX_Computer_cases%2C_back_view.jpg?width=1200', TRUE),
+(184, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/ATX_computer_case_-_left_-_2018-05-18.jpg?width=1200', TRUE),
+(185, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Corsair_780T_Geh%C3%A4use.jpg?width=1200', TRUE),
+(186, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/PC_Case.jpg?width=1200', TRUE);
 
 
 -- ==========================================================
 -- CASE FANS
 -- 191 - 194
+-- Real photographs
 -- ==========================================================
 INSERT INTO product_images (product_id, image_url, is_main) VALUES
-(191, 'https://images.unsplash.com/photo-1563770660941-20978e870e26?w=800', TRUE),
-(192, 'https://images.unsplash.com/photo-1563770660941-20978e870e26?w=800', TRUE),
-(193, 'https://images.unsplash.com/photo-1563770660941-20978e870e26?w=800', TRUE),
-(194, 'https://images.unsplash.com/photo-1563770660941-20978e870e26?w=800', TRUE);
+(191, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Arctic_P12_Pro_A-RGB.jpg?width=1200', TRUE),
+(192, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/2023_Corsair_SP120_RGB_Elite.jpg?width=1200', TRUE),
+(193, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Corsair_AF140_Purple.jpg?width=1200', TRUE),
+(194, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Corsair_Logo_120mm_desktop_computer_case_fan_%2852504601012%29.jpg?width=1200', TRUE);
 
 
 -- ==========================================================
 -- MONITORS
 -- 201 - 204
+-- Real monitor photographs
 -- ==========================================================
 INSERT INTO product_images (product_id, image_url, is_main) VALUES
-(201, 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=800', TRUE),
-(202, 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=800', TRUE),
-(203, 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=800', TRUE),
-(204, 'https://images.unsplash.com/photo-1547082299-de196ea013d6?w=800', TRUE);
+(201, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Dell_Computer_Monitor.png?width=1200', TRUE),
+(202, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Computer_monitor.jpg?width=1200', TRUE),
+(203, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Computer_Screen_Monitor.jpg?width=1200', TRUE),
+(204, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Monitor_PC.jpg?width=1200', TRUE);
 
 
 -- ==========================================================
 -- KEYBOARDS
 -- 211 - 213
+-- Real mechanical keyboard photographs
 -- ==========================================================
 INSERT INTO product_images (product_id, image_url, is_main) VALUES
-(211, 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800', TRUE),
-(212, 'https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?w=800', TRUE),
-(213, 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800', TRUE);
+(211, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Mechanical_Keyboard.jpg?width=1200', TRUE),
+(212, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Keychron_K4_mechanical_keyboard.jpg?width=1200', TRUE),
+(213, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Cherry_MX_keyboard.jpg?width=1200', TRUE);
 
 
 -- ==========================================================
 -- MICE
 -- 221 - 223
+-- Real product photographs
 -- ==========================================================
 INSERT INTO product_images (product_id, image_url, is_main) VALUES
-(221, 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=800', TRUE),
-(222, 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800', TRUE),
-(223, 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=800', TRUE);
+(221, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Logitech_M171.jpg?width=1200', TRUE),
+(222, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Logitech_G5_with_weights.jpg?width=1200', TRUE),
+(223, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Logitech_MX_Master_3S_HS15.jpg?width=1200', TRUE);
 
 
 -- ==========================================================
 -- HEADSETS
 -- 231 - 233
+-- Real photographs
 -- ==========================================================
 INSERT INTO product_images (product_id, image_url, is_main) VALUES
-(231, 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800', TRUE),
-(232, 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=800', TRUE),
-(233, 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800', TRUE);
+(231, 'https://hyperx.com/cdn/shop/files/HyperX_Cloud_II_Gaming_Headset_Black_Red.jpg', TRUE),
+(232, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Tao_Chen_and_his_male_fan_holding_Logitech_G435_20230625a.jpg?width=1200', TRUE),
+(233, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/ST100VoidPro.jpg?width=1200', TRUE);
 
 
 -- ==========================================================
 -- WEBCAMS
 -- 241 - 242
+-- Real photographs
 -- ==========================================================
 INSERT INTO product_images (product_id, image_url, is_main) VALUES
-(241, 'https://images.unsplash.com/photo-1589254065878-42c9da997008?w=800', TRUE),
-(242, 'https://images.unsplash.com/photo-1589254065878-42c9da997008?w=800', TRUE);
+(241, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Webcam_01.jpg?width=1200', TRUE),
+(242, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Webcam_%28Logitech_c922%29.jpg?width=1200', TRUE);
 
 
 -- ==========================================================
 -- PREBUILT PC
 -- 301 - 304
+-- Real gaming PC photographs
 -- ==========================================================
 INSERT INTO product_images (product_id, image_url, is_main) VALUES
-(301, 'https://images.unsplash.com/photo-1587831990711-23ca6441447b?w=800', TRUE),
-(302, 'https://images.unsplash.com/photo-1587831990711-23ca6441447b?w=800', TRUE),
-(303, 'https://images.unsplash.com/photo-1587202372583-49330a15584d?w=800', TRUE),
-(304, 'https://images.unsplash.com/photo-1587202372583-49330a15584d?w=800', TRUE);
+(301, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Gaming_computer.jpg?width=1200', TRUE),
+(302, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Gaming_pc.jpg?width=1200', TRUE),
+(303, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Informatique_gaming_pc.jpg?width=1200', TRUE),
+(304, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Gaming_PC_%28Unsplash%29.jpg?width=1200', TRUE);
 
 
 -- ==========================================================
 -- LAPTOPS
 -- 401 - 404
+-- Real laptop photographs
 -- ==========================================================
 INSERT INTO product_images (product_id, image_url, is_main) VALUES
-(401, 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=800', TRUE),
-(402, 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=800', TRUE),
-(403, 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=800', TRUE),
-(404, 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=800', TRUE);
+(401, 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=1200', TRUE),
+(402, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Lenovo_Legion_Y7000P_Eclipse_Gray_Laptop.jpg?width=1200', TRUE),
+(403, 'https://commons.wikimedia.org/wiki/Special:Redirect/file/Lenovo_legion_%28laptop%29_%26_Lenovo_400_Wireless_%28Mouse%29_IMG_6309ab.jpg?width=1200', TRUE),
+(404, 'https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=1200', TRUE);

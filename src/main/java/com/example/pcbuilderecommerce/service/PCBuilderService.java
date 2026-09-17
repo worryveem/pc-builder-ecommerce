@@ -60,9 +60,44 @@ public class PCBuilderService {
             "CPU", "MAINBOARD", "GPU", "RAM", "SSD", "HDD", "PSU", "COOLER", "CPU_COOLER", "CASE", "FAN", "CASE_FAN"
     );
 
+    private static final Set<String> MANDATORY_BUILDER_TYPES = Set.of(
+            "CPU", "MAINBOARD", "GPU", "RAM", "SSD", "PSU"
+    );
+
     private static final Set<String> OPTIONAL_SETUP_GEAR_TYPES = Set.of(
             "MONITOR", "KEYBOARD", "MOUSE", "HEADSET", "WEBCAM"
     );
+
+    private void validateMandatoryComponents(List<PCConfigurationItem> items) {
+        Set<String> presentTypes = new HashSet<>();
+        for (PCConfigurationItem item : items) {
+            Product product = item.getProduct();
+            if (product != null && product.getCategory() != null) {
+                String type = product.getCategory().getBuilderComponentType();
+                if (type == null || type.trim().isEmpty()) {
+                    type = product.getCategory().getSlug();
+                }
+                if (type != null) {
+                    type = type.trim().toUpperCase();
+                    if ("MOTHERBOARD".equals(type)) {
+                        type = "MAINBOARD";
+                    }
+                    presentTypes.add(type);
+                }
+            }
+        }
+
+        List<String> missing = new ArrayList<>();
+        for (String req : MANDATORY_BUILDER_TYPES) {
+            if (!presentTypes.contains(req)) {
+                missing.add(req);
+            }
+        }
+
+        if (!missing.isEmpty()) {
+            throw new BadRequestException("Cấu hình PC bắt buộc phải có đủ: CPU, Mainboard, GPU, RAM, SSD, Nguồn (PSU). Đang thiếu: " + String.join(", ", missing));
+        }
+    }
 
     /**
      * Get builder categories divided into core components and optional setup gear.
@@ -273,6 +308,9 @@ public class PCBuilderService {
             }
         }
 
+        // Validate mandatory components (CPU, MAINBOARD, GPU, RAM, SSD, PSU)
+        validateMandatoryComponents(items);
+
         config.setTotalPrice(totalPrice);
         config.setItems(items);
 
@@ -343,6 +381,9 @@ public class PCBuilderService {
                 }
             }
         }
+
+        // Validate mandatory components (CPU, MAINBOARD, GPU, RAM, SSD, PSU)
+        validateMandatoryComponents(config.getItems());
 
         config.setTotalPrice(totalPrice);
         config.setUpdatedAt(LocalDateTime.now());

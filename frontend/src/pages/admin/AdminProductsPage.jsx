@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { adminApi } from '../../api/adminApi';
+import { formatCategorySlug } from '../../utils/categoryFormatter';
 import { categoryApi } from '../../api/categoryApi';
+import { getProductFallbackImage } from '../../utils/imagePlaceholder';
 
 const INITIAL_FORM = {
   name: '',
@@ -257,21 +259,27 @@ export default function AdminProductsPage() {
                 </tr>
               ) : (
                 filteredProducts.map((p) => {
-                  const img = p.images?.[0]?.imageUrl || '/placeholder.png';
+                  const fallbackUrl = getProductFallbackImage(p);
+                  const img = p.images?.[0]?.imageUrl || fallbackUrl;
                   return (
                     <tr key={p.id}>
                       <td className="product-thumb-cell">
                         <img
                           src={img}
                           alt={p.name}
-                          onError={(e) => { e.target.src = '/placeholder.png'; }}
+                          onError={(e) => { e.target.src = fallbackUrl; }}
                         />
                       </td>
                       <td>
                         <strong>{p.name}</strong>
                         {p.modelCode && <span className="text-muted d-block">{p.modelCode}</span>}
                       </td>
-                      <td>{p.category?.name || 'Chưa phân loại'}</td>
+                      <td>
+                        <span className="badge badge-builder" style={{ marginRight: '0.4rem', fontWeight: 800 }}>
+                          {formatCategorySlug(p.category?.slug || p.category?.builderComponentType || '')}
+                        </span>
+                        <span>{p.category?.name || 'Chưa phân loại'}</span>
+                      </td>
                       <td>{p.brand || '---'}</td>
                       <td className="text-primary font-bold">
                         {Number(p.price || 0).toLocaleString('vi-VN')} đ

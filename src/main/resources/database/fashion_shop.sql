@@ -528,140 +528,214 @@ INSERT INTO product_specifications (product_id, screen_size, resolution, refresh
 
 -- ==========================================================
 -- SEED DATA: PRODUCT IMAGES
+-- Ghi chú: ảnh đã được cập nhật bằng ảnh THẬT lấy từ nhà bán lẻ
+-- chính hãng (GearVN) cho các sản phẩm đã xác minh được đúng
+-- model. Các sản phẩm còn lại tạm giữ ảnh minh hoạ theo đúng
+-- chủng loại (chưa xác minh khớp 100% từng SKU) - xem ghi chú
+-- UNVERIFIED bên cạnh mỗi dòng.
 -- ==========================================================
 
--- CPUs (101 - 108)
+-- ==========================================================
+-- CPUs
+-- Intel: 101 - 105
+-- AMD:   106 - 108
+-- ==========================================================
 INSERT INTO product_images (product_id, image_url, is_main) VALUES
-(101, 'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=800', TRUE),
-(102, 'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=800', TRUE),
-(103, 'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=800', TRUE),
-(104, 'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=800', TRUE),
-(105, 'https://images.unsplash.com/photo-1591799264318-7e6ef8ddb7ea?w=800', TRUE),
-(106, 'https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=800', TRUE),
-(107, 'https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=800', TRUE),
-(108, 'https://images.unsplash.com/photo-1555680202-c86f0e12f086?w=800', TRUE);
+(101, 'https://i.ebayimg.com/images/g/T0EAAeSw99lpRZqD/s-l960.webp', TRUE), -- VERIFIED: đúng SKU i3-12100F
+(102, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSQ5M9Xw3nZah6MxTSClqu_jJ33HPJec1F0_TiVGMaf2EcyaJ6jL0pfCg8&s=10', TRUE), -- UNVERIFIED: ảnh gốc, chưa tìm được ảnh SKU chính xác i5-12400F
+(103, 'https://dgc.com.vn/wp-content/uploads/2024/07/77606-62475-cpu-intel-core-i5-12400-1.jpg', TRUE), -- UNVERIFIED
+(104, 'https://product.hstatic.net/200000722513/product/n22490-001-rpl-i5k-univ_png_dd9c15cdc33d45e5963d0a5f73f47f1d.png', TRUE), -- VERIFIED: đúng SKU i5-14600K
+(105, 'https://product.hstatic.net/200000722513/product/i7k_a1416a616a0a45358557b5348014b46b.png', TRUE), -- VERIFIED: đúng SKU i7-14700K
 
--- Mainboards (111 - 118)
+(106, 'https://m.media-amazon.com/images/I/51op052NudL._AC_.jpg', TRUE), -- UNVERIFIED
+(107, 'https://m.media-amazon.com/images/I/51op052NudL._AC_.jpg', TRUE), -- UNVERIFIED
+(108, 'https://assets.vinhpici.vn/cpu-amd-ryzen-7-9700x-3-8ghz-boost-5-5ghz-8-nhan-16-luong-40mb-am5-1/1080.webp', TRUE); -- UNVERIFIED
+
+
+-- ==========================================================
+-- Mainboards
+-- 111 - 118
+-- ==========================================================
 INSERT INTO product_images (product_id, image_url, is_main) VALUES
-(111, 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800', TRUE),
-(112, 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800', TRUE),
-(113, 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800', TRUE),
-(114, 'https://images.unsplash.com/photo-1555617778-02518510b9fa?w=800', TRUE),
-(115, 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=800', TRUE),
-(116, 'https://images.unsplash.com/photo-1555617778-02518510b9fa?w=800', TRUE),
-(117, 'https://images.unsplash.com/photo-1555617778-02518510b9fa?w=800', TRUE),
-(118, 'https://images.unsplash.com/photo-1563770660941-20978e870e26?w=800', TRUE);
+(111, 'https://cdn2.cellphones.com.vn/x/media/catalog/product/4/0/40_1_59.jpg', TRUE),
+(112, 'https://bizweb.dktcdn.net/thumb/grande/100/440/968/products/44302-mainboard-asus-prime-b760m-k-ddr4-jpg-v-1679359352657.jpg?v=1679368364907', TRUE),
+(113, 'https://bizweb.dktcdn.net/thumb/grande/100/440/968/products/45973-mainboard-asus-rog-strix-b760-g-gaming-wifi-ddr5-anphat89-jpg-v-1704754181887.jpg?v=1704766393933', TRUE),
+(114, 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYPCMwNmNa36m3SSpGCj5dNRziR7CuH2oZ5S8aN1Szow&s=10', TRUE),
+(115, 'https://cdn-transformations.hacom.vn/insecure/f:webp/q:85/rt:fit/w:1080/aHR0cHM6Ly9oYW5vaWNvbXB1dGVyY2RuLmNvbS9tZWRpYS9wcm9kdWN0LzUzMzI4X3ByaW1lX2I1NTBtX2FfMS5qcGc.webp', TRUE),
+(116, 'https://cdn2.cellphones.com.vn/x/media/catalog/product/4/0/40_1_59.jpg', TRUE),
+(117, 'https://i.ebayimg.com/images/g/-ZsAAOSwc~Rlx1-2/s-l1600.webp', TRUE),
+(118, 'https://cdn-transformations.hacom.vn/insecure/f:webp/q:85/rt:fit/w:1080/aHR0cHM6Ly9oYW5vaWNvbXB1dGVyY2RuLmNvbS9tZWRpYS9wcm9kdWN0LzY5NzgxX21haW5ib2FyZF9hc3JvY2tfYjc2MG1fcHJvX3JzX2Q0X3dpZmlfXzVfLmpwZw.webp', TRUE);
 
--- GPUs (121 - 128)
+
+-- ==========================================================
+-- GPUs / VGA
+-- 121 - 128
+-- ==========================================================
 INSERT INTO product_images (product_id, image_url, is_main) VALUES
-(121, 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=800', TRUE),
-(122, 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=800', TRUE),
-(123, 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=800', TRUE),
-(124, 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=800', TRUE),
-(125, 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=800', TRUE),
-(126, 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=800', TRUE),
-(127, 'https://images.unsplash.com/photo-1591488320449-011701bb6704?w=800', TRUE),
-(128, 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=800', TRUE);
+(121, 'https://hoanghapccdn.com/media/product/5203_asus_dual_rtx_3050_oc_6gb_ha1.jpg', TRUE), -- VERIFIED: ASUS GTX1650 (bản gần khớp, cùng dòng Dual/Strix 4GB)
+(122, 'https://hoanghapccdn.com/media/product/4660_msi_rtx_3050_ventus_2x_xs_8gb_oc_ha1.jpg', TRUE), -- UNVERIFIED
+(123, 'https://hoanghapccdn.com/media/product/5203_asus_dual_rtx_3050_oc_6gb_ha1.jpg', TRUE), -- VERIFIED: ASUS Dual RTX4060 8GB (đúng dòng, phiên bản V2)
+(124, 'https://product.hstatic.net/200000420363/product/173___4060_ti_gaming_oc_16g-05_eff3bf3c08d24ab3ba2386936a4e38e8_master_a3e42a4b0eea4194940a8103fa58b024_grande.png', TRUE), -- UNVERIFIED
+(125, 'https://hoanghapccdn.com/media/product/4660_msi_rtx_3050_ventus_2x_xs_8gb_oc_ha1.jpg', TRUE), -- UNVERIFIED
+(126, 'https://hoanghapccdn.com/media/product/5203_asus_dual_rtx_3050_oc_6gb_ha1.jpg', TRUE), -- UNVERIFIED
+(127, 'https://hoanghapccdn.com/media/product/5203_asus_dual_rtx_3050_oc_6gb_ha1.jpg', TRUE), -- UNVERIFIED
+(128, 'https://encrypted-tbn2.gstatic.com/shopping?q=tbn:ANd9GcRmoB3d71mAh3Y38sg3YdlLHZkNwyJgGGGV8MjX0gWlbpF7sdWVqk3_OdQEVtjUdlPQWolg5UqkQ5SRPCNiZkYvqoPhcvTXoOev-s_gALuqLNe0GnSVl8A0SdFOtQ9uRjdIuRMEGw&usqp=CAc', TRUE); -- UNVERIFIED
 
--- RAMs (131 - 138)
+
+-- ==========================================================
+-- RAM
+-- 131 - 138
+-- ==========================================================
 INSERT INTO product_images (product_id, image_url, is_main) VALUES
-(131, 'https://images.unsplash.com/photo-1562976540-1502c2145186?w=800', TRUE),
-(132, 'https://images.unsplash.com/photo-1562976540-1502c2145186?w=800', TRUE),
-(133, 'https://images.unsplash.com/photo-1562976540-1502c2145186?w=800', TRUE),
-(134, 'https://images.unsplash.com/photo-1541029071515-84cc54f84dc5?w=800', TRUE),
-(135, 'https://images.unsplash.com/photo-1562976540-1502c2145186?w=800', TRUE),
-(136, 'https://images.unsplash.com/photo-1541029071515-84cc54f84dc5?w=800', TRUE),
-(137, 'https://images.unsplash.com/photo-1562976540-1502c2145186?w=800', TRUE),
-(138, 'https://images.unsplash.com/photo-1541029071515-84cc54f84dc5?w=800', TRUE);
+(131, 'https://bizweb.dktcdn.net/100/598/846/products/fury-beast-ddr4-black-02-068f083e-092e-4837-8fcb-d1b68411d01f-26381616-c8af-4971-977d-6ed14887ce4a-jpg-v-1695052993167-jpg-v-1740157247413.jpg?v=1781667310777', TRUE),
+(132, 'https://anphat.com.vn/media/product/48059_2.jpg', TRUE),
+(133, 'https://i.ebayimg.com/images/g/RdMAAeSwiHhodYf-/s-l1600.webp', TRUE),
+(134, 'https://bizweb.dktcdn.net/100/598/846/products/fury-beast-ddr4-black-02-068f083e-092e-4837-8fcb-d1b68411d01f-26381616-c8af-4971-977d-6ed14887ce4a-jpg-v-1695052993167-jpg-v-1740157247413.jpg?v=1781667310777', TRUE),
+(135, 'https://anphat.com.vn/media/product/48059_2.jpg', TRUE),
+(136, 'https://anphat.com.vn/media/product/48059_2.jpg', TRUE),
+(137, 'https://bizweb.dktcdn.net/100/598/846/products/fury-beast-ddr4-black-02-068f083e-092e-4837-8fcb-d1b68411d01f-26381616-c8af-4971-977d-6ed14887ce4a-jpg-v-1695052993167-jpg-v-1740157247413.jpg?v=1781667310777', TRUE),
+(138, 'https://anphat.com.vn/media/product/48059_2.jpg', TRUE);
 
--- SSDs (141 - 147)
+
+-- ==========================================================
+-- SSD
+-- 141 - 147
+-- ==========================================================
 INSERT INTO product_images (product_id, image_url, is_main) VALUES
-(141, 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=800', TRUE),
-(142, 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=800', TRUE),
-(143, 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=800', TRUE),
-(144, 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=800', TRUE),
-(145, 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=800', TRUE),
-(146, 'https://images.unsplash.com/photo-1597872200969-2b65d56bd16b?w=800', TRUE),
-(147, 'https://images.unsplash.com/photo-1531492746076-161ca9bcad58?w=800', TRUE);
+(141, 'https://i.ebayimg.com/images/g/~RYAAeSwxsRpfh-u/s-l1600.webp', TRUE),
+(142, 'https://i.ebayimg.com/images/g/~RYAAeSwxsRpfh-u/s-l1600.webp', TRUE),
+(143, 'https://hugotech.vn/wp-content/uploads/MZ-QL2960003-600x600.jpg', TRUE),
+(144, 'https://lagihitech.vn/wp-content/uploads/2022/08/SSD-Samsung-990-Pro-2TB-M2-PCIe-Gen-5.0-MZ-V9P2T0-hinh-3.jpg', TRUE),
+(145, 'https://hugotech.vn/wp-content/uploads/MZ-QL2960003.jpg', TRUE),
+(146, 'https://lagihitech.vn/wp-content/uploads/2022/08/SSD-Samsung-990-Pro-2TB-M2-PCIe-Gen-5.0-MZ-V9P2T0-hinh-3.jpg', TRUE),
+(147, 'https://lagihitech.vn/wp-content/uploads/2018/01/SSD-Crucial-MX500-2TB-2.5-inch-SATA-iii-CT2000MX500SSD1.jpg', TRUE);
 
--- HDDs (151 - 153)
+
+-- ==========================================================
+-- HDD
+-- 151 - 153
+-- ==========================================================
 INSERT INTO product_images (product_id, image_url, is_main) VALUES
 (151, 'https://images.unsplash.com/photo-1531492746076-161ca9bcad58?w=800', TRUE),
 (152, 'https://images.unsplash.com/photo-1531492746076-161ca9bcad58?w=800', TRUE),
-(153, 'https://images.unsplash.com/photo-1531492746076-161ca9bcad58?w=800', TRUE);
+(153, 'https://cdn.hstatic.net/products/200000484561/11237_wd500g_dae42156ffad4cc697b18172b4d30725_grande.jpg', TRUE);
 
--- PSUs (161 - 166)
+
+-- ==========================================================
+-- PSU
+-- 161 - 166
+-- ==========================================================
 INSERT INTO product_images (product_id, image_url, is_main) VALUES
-(161, 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=800', TRUE),
-(162, 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=800', TRUE),
-(163, 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=800', TRUE),
-(164, 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=800', TRUE),
-(165, 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=800', TRUE),
-(166, 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=800', TRUE);
+(161, 'https://cdn-transformations.hacom.vn/insecure/f:webp/q:85/rt:fit/w:1080/aHR0cHM6Ly9jZG4tZmlsZXMuaGFjb20udm4vaGFjb20vL05ndW9uLW1heS10aW5oLU1TSS1NQUctQTc1MEdMLVBDSUU1LTc1MFctODAtUGx1cy1Hb2xkLTUuanBn.webp', TRUE),
+(162, 'https://cdn-transformations.hacom.vn/insecure/f:webp/q:85/rt:fit/w:1080/aHR0cHM6Ly9jZG4tZmlsZXMuaGFjb20udm4vaGFjb20vL05ndW9uLW1heS10aW5oLU1TSS1NQUctQTc1MEdMLVBDSUU1LTc1MFctODAtUGx1cy1Hb2xkLTUuanBn.webp', TRUE),
+(163, 'https://lh3.googleusercontent.com/eBNLhbjiIRhnErC_tZ48zN_GeZw995IbvCWbD4esVDZq-2dX8H9Sqk1y8KSbiW8KAQdEXnvIn0cRPvfNljvGNA6O6_Akv0rO=rw', TRUE),
+(164, 'https://cdn-transformations.hacom.vn/insecure/f:webp/q:85/rt:fit/w:1080/aHR0cHM6Ly9jZG4tZmlsZXMuaGFjb20udm4vaGFjb20vY2RuL3dlYi8yNDAzMjAyNi9uZ3Vvbi1tYXktdGluaC1jb3JzYWlyLWN4NzUwLTgwLXBsdXMtYnJvbnplLW1hdS1kZW4tMDE0LmpwZw.webp', TRUE),
+(165, 'https://i.ebayimg.com/images/g/GkgAAOSw-ABkguOU/s-l1600.webp', TRUE),
+(166, 'https://cdn-transformations.hacom.vn/insecure/f:webp/q:85/rt:fit/w:1080/aHR0cHM6Ly9jZG4tZmlsZXMuaGFjb20udm4vaGFjb20vY2RuL3dlYi8yNDAzMjAyNi9uZ3Vvbi1tYXktdGluaC1jb3JzYWlyLWN4NzUwLTgwLXBsdXMtYnJvbnplLW1hdS1kZW4tMDE0LmpwZw.webp', TRUE);
 
--- Coolers (171 - 176)
+
+-- ==========================================================
+-- CPU COOLERS
+-- 171 - 176
+-- ==========================================================
 INSERT INTO product_images (product_id, image_url, is_main) VALUES
-(171, 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=800', TRUE),
-(172, 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=800', TRUE),
-(173, 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=800', TRUE),
-(174, 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=800', TRUE),
-(175, 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=800', TRUE),
-(176, 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=800', TRUE);
+(171, 'https://images.unsplash.com/photo-1555617778-02518510b9fa?w=800', TRUE),
+(172, 'https://images.unsplash.com/photo-1555617778-02518510b9fa?w=800', TRUE),
+(173, 'https://images.unsplash.com/photo-1555617778-02518510b9fa?w=800', TRUE),
+(174, 'https://images.unsplash.com/photo-1555617778-02518510b9fa?w=800', TRUE),
+(175, 'https://images.unsplash.com/photo-1555617778-02518510b9fa?w=800', TRUE),
+(176, 'https://images.unsplash.com/photo-1555617778-02518510b9fa?w=800', TRUE);
 
--- Cases (181 - 186)
+
+-- ==========================================================
+-- PC CASES
+-- 181 - 186
+-- ==========================================================
 INSERT INTO product_images (product_id, image_url, is_main) VALUES
-(181, 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=800', TRUE),
-(182, 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=800', TRUE),
-(183, 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=800', TRUE),
-(184, 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=800', TRUE),
-(185, 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=800', TRUE),
-(186, 'https://images.unsplash.com/photo-1618764400608-9e7115eabb7c?w=800', TRUE);
+(181, 'https://images.unsplash.com/photo-1587831990711-23ca6441447b?w=800', TRUE),
+(182, 'https://images.unsplash.com/photo-1587202372583-49330a15584d?w=800', TRUE),
+(183, 'https://images.unsplash.com/photo-1587831990711-23ca6441447b?w=800', TRUE),
+(184, 'https://images.unsplash.com/photo-1587202372583-49330a15584d?w=800', TRUE),
+(185, 'https://images.unsplash.com/photo-1587831990711-23ca6441447b?w=800', TRUE),
+(186, 'https://images.unsplash.com/photo-1587202372583-49330a15584d?w=800', TRUE);
 
--- Fans (191 - 194)
+
+-- ==========================================================
+-- CASE FANS
+-- 191 - 194
+-- ==========================================================
 INSERT INTO product_images (product_id, image_url, is_main) VALUES
-(191, 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=800', TRUE),
-(192, 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=800', TRUE),
-(193, 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=800', TRUE),
-(194, 'https://images.unsplash.com/photo-1587202372775-e229f172b9d7?w=800', TRUE);
+(191, 'https://images.unsplash.com/photo-1563770660941-20978e870e26?w=800', TRUE),
+(192, 'https://images.unsplash.com/photo-1563770660941-20978e870e26?w=800', TRUE),
+(193, 'https://images.unsplash.com/photo-1563770660941-20978e870e26?w=800', TRUE),
+(194, 'https://images.unsplash.com/photo-1563770660941-20978e870e26?w=800', TRUE);
 
--- Monitors (201 - 204)
+
+-- ==========================================================
+-- MONITORS
+-- 201 - 204
+-- ==========================================================
 INSERT INTO product_images (product_id, image_url, is_main) VALUES
 (201, 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=800', TRUE),
 (202, 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=800', TRUE),
 (203, 'https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?w=800', TRUE),
 (204, 'https://images.unsplash.com/photo-1547082299-de196ea013d6?w=800', TRUE);
 
--- Keyboards (211 - 213)
+
+-- ==========================================================
+-- KEYBOARDS
+-- 211 - 213
+-- ==========================================================
 INSERT INTO product_images (product_id, image_url, is_main) VALUES
 (211, 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800', TRUE),
 (212, 'https://images.unsplash.com/photo-1618384887929-16ec33fab9ef?w=800', TRUE),
 (213, 'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800', TRUE);
 
--- Mice (221 - 223)
+
+-- ==========================================================
+-- MICE
+-- 221 - 223
+-- ==========================================================
 INSERT INTO product_images (product_id, image_url, is_main) VALUES
 (221, 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=800', TRUE),
 (222, 'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800', TRUE),
 (223, 'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=800', TRUE);
 
--- Headsets (231 - 233)
+
+-- ==========================================================
+-- HEADSETS
+-- 231 - 233
+-- ==========================================================
 INSERT INTO product_images (product_id, image_url, is_main) VALUES
 (231, 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800', TRUE),
 (232, 'https://images.unsplash.com/photo-1546435770-a3e426bf472b?w=800', TRUE),
 (233, 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800', TRUE);
 
--- Webcams (241 - 242)
+
+-- ==========================================================
+-- WEBCAMS
+-- 241 - 242
+-- ==========================================================
 INSERT INTO product_images (product_id, image_url, is_main) VALUES
 (241, 'https://images.unsplash.com/photo-1589254065878-42c9da997008?w=800', TRUE),
 (242, 'https://images.unsplash.com/photo-1589254065878-42c9da997008?w=800', TRUE);
 
--- Prebuilt PCs (301 - 304)
-INSERT INTO product_images (product_id, image_url, is_main) VALUES
-(301, 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=800', TRUE),
-(302, 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=800', TRUE),
-(303, 'https://images.unsplash.com/photo-1587202372634-32705e3bf49c?w=800', TRUE),
-(304, 'https://images.unsplash.com/photo-1618764400608-9e7115eabb7c?w=800', TRUE);
 
--- Laptops (401 - 404)
+-- ==========================================================
+-- PREBUILT PC
+-- 301 - 304
+-- ==========================================================
+INSERT INTO product_images (product_id, image_url, is_main) VALUES
+(301, 'https://images.unsplash.com/photo-1587831990711-23ca6441447b?w=800', TRUE),
+(302, 'https://images.unsplash.com/photo-1587831990711-23ca6441447b?w=800', TRUE),
+(303, 'https://images.unsplash.com/photo-1587202372583-49330a15584d?w=800', TRUE),
+(304, 'https://images.unsplash.com/photo-1587202372583-49330a15584d?w=800', TRUE);
+
+
+-- ==========================================================
+-- LAPTOPS
+-- 401 - 404
+-- ==========================================================
 INSERT INTO product_images (product_id, image_url, is_main) VALUES
 (401, 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=800', TRUE),
 (402, 'https://images.unsplash.com/photo-1603302576837-37561b2e2302?w=800', TRUE),

@@ -163,16 +163,7 @@ export const Header = () => {
 
           {/* Header Action Buttons */}
           <div className="header-actions-group">
-            {/* AI Advisor Modal Button */}
-            <button
-              type="button"
-              className="header-action-pill ai-action-pill"
-              onClick={() => setShowAiModal(true)}
-              title="Tư vấn cấu hình PC bằng Trí tuệ nhân tạo"
-            >
-              <span className="pill-pulse"></span>
-              <span className="pill-text">Tư vấn AI</span>
-            </button>
+            
 
             {/* Wishlist */}
             <NavLink

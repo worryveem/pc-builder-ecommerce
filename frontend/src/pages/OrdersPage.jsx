@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { orderApi } from '../api/orderApi';
+import { getProductFallbackImage } from '../utils/imagePlaceholder';
 
 const STATUS_TABS = [
   { label: 'Tất cả', value: 'ALL' },
@@ -140,9 +141,9 @@ export default function OrdersPage() {
                       <div key={idx} className="order-item-row">
                         <div className="order-item-img-wrap">
                           <img
-                            src={item.productImage || '/placeholder.png'}
+                            src={item.productImage || getProductFallbackImage({ name: item.productName })}
                             alt={item.productName}
-                            onError={(e) => { e.target.src = '/placeholder.png'; }}
+                            onError={(e) => { e.target.src = getProductFallbackImage({ name: item.productName }); }}
                           />
                         </div>
                         <div className="order-item-info">

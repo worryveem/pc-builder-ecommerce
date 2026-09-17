@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { adminApi } from '../../api/adminApi';
+import { formatCategorySlug } from '../../utils/categoryFormatter';
 
 const COMPONENT_TYPES = [
   { label: '-- Không phải linh kiện Builder --', value: '' },
@@ -182,7 +183,7 @@ export default function AdminCategoriesPage() {
                   <tr key={cat.id}>
                     <td>#{cat.id}</td>
                     <td><strong>{cat.name}</strong></td>
-                    <td className="text-muted">{cat.slug}</td>
+                    <td><strong className="text-primary">{formatCategorySlug(cat.slug)}</strong></td>
                     <td>
                       {cat.builderSupported ? (
                         <span className="badge-builder-supported">✓ Hỗ trợ Builder</span>
@@ -192,7 +193,7 @@ export default function AdminCategoriesPage() {
                     </td>
                     <td>
                       {cat.builderComponentType ? (
-                        <span className="badge-component-type">{cat.builderComponentType}</span>
+                        <span className="badge-component-type">{formatCategorySlug(cat.builderComponentType)}</span>
                       ) : (
                         '---'
                       )}

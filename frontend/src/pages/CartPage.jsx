@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { cartApi } from '../api/cartApi';
 import { useAuth } from '../context/AuthContext';
+import { getProductFallbackImage } from '../utils/imagePlaceholder';
 
 export const CartPage = () => {
   const [cart, setCart] = useState(null);
@@ -131,18 +132,14 @@ export const CartPage = () => {
       <div key={item.id} className="cart-row-item">
         <div className="cart-prod-cell">
           <div className="cart-thumb-box">
-            {imgUrl ? (
-              <img
-                src={imgUrl}
-                alt={prod?.name}
-                onError={(e) => {
-                  e.currentTarget.onerror = null;
-                  e.currentTarget.src = '/placeholder.svg';
-                }}
-              />
-            ) : (
-              <span style={{ fontSize: '0.75rem', color: 'var(--text-light)', fontWeight: 700 }}>TECHPC</span>
-            )}
+            <img
+              src={imgUrl || getProductFallbackImage(prod)}
+              alt={prod?.name}
+              onError={(e) => {
+                e.currentTarget.onerror = null;
+                e.currentTarget.src = getProductFallbackImage(prod);
+              }}
+            />
           </div>
           <div>
             <Link to={`/products/${prod?.id}`} className="cart-prod-name">

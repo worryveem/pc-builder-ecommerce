@@ -1,5 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { formatCategorySlug } from '../../utils/categoryFormatter';
+import { getProductFallbackImage } from '../../utils/imagePlaceholder';
 
 export const ProductCard = ({
   product,
@@ -14,7 +16,9 @@ export const ProductCard = ({
 }) => {
   if (!product) return null;
 
-  const imgUrl = product.images && product.images.length > 0 ? product.images[0].imageUrl : null;
+  const fallbackUrl = getProductFallbackImage(product);
+  const rawImgUrl = product.images && product.images.length > 0 ? product.images[0].imageUrl : null;
+  const imgUrl = rawImgUrl || fallbackUrl;
   const spec = product.specification;
   const inStock = product.stockQuantity != null ? product.stockQuantity > 0 : true;
   const stockCount = product.stockQuantity != null ? product.stockQuantity : 0;
@@ -51,23 +55,16 @@ export const ProductCard = ({
         )}
 
         <Link to={destination} className="product-img-wrapper">
-          {imgUrl ? (
-            <img
-              src={imgUrl}
-              alt={product.name}
-              className="product-img"
-              loading="lazy"
-              onError={(e) => {
-                e.currentTarget.onerror = null;
-                e.currentTarget.src = '/placeholder.svg';
-              }}
-            />
-          ) : (
-            <div className="product-img-placeholder">
-              <span className="placeholder-brand">TECHPC</span>
-              <span className="placeholder-sub">Hardware</span>
-            </div>
-          )}
+          <img
+            src={imgUrl}
+            alt={product.name}
+            className="product-img"
+            loading="lazy"
+            onError={(e) => {
+              e.currentTarget.onerror = null;
+              e.currentTarget.src = fallbackUrl;
+            }}
+          />
         </Link>
       </div>
 
@@ -75,7 +72,14 @@ export const ProductCard = ({
       <div className="product-info">
         {/* Brand & Stock Header */}
         <div className="product-meta-header">
-          <span className="product-brand">{product.brand || 'Chính hãng'}</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+            {product.category && (
+              <span className="badge badge-builder" style={{ fontSize: '0.68rem', padding: '0.15rem 0.4rem', fontWeight: 800 }}>
+                {formatCategorySlug(product.category.slug || product.category.builderComponentType || product.category.name)}
+              </span>
+            )}
+            <span className="product-brand">{product.brand || 'Chính hãng'}</span>
+          </div>
           <span className={`stock-status ${inStock ? 'in-stock' : 'out-of-stock'}`}>
             {inStock ? 'Sẵn hàng' : 'Hết hàng'}
           </span>

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { builderApi } from '../api/builderApi';
 import { useAuth } from '../context/AuthContext';
 import { ShareConfigurationModal } from '../components/builder/ShareConfigurationModal';
+import { formatCategorySlug } from '../utils/categoryFormatter';
 
 export const SavedConfigurationsPage = () => {
   const [configurations, setConfigurations] = useState([]);
@@ -220,10 +221,15 @@ export const SavedConfigurationsPage = () => {
                     {config.items && config.items.length > 0 ? (
                       <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
                         {config.items.map((item, idx) => (
-                          <li key={idx} style={{ display: 'flex', justifyContent: 'space-between', gap: '0.5rem', marginBottom: '0.4rem', borderBottom: '1px dashed #e2e8f0', paddingBottom: '0.3rem' }}>
-                            <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '210px' }}>
-                              • {item.product?.name || item.componentType || 'Linh kiện'}
-                            </span>
+                          <li key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem', marginBottom: '0.4rem', borderBottom: '1px dashed #e2e8f0', paddingBottom: '0.3rem' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', overflow: 'hidden' }}>
+                              <span className="badge badge-builder" style={{ fontSize: '0.65rem', padding: '0.1rem 0.35rem', fontWeight: 800 }}>
+                                {formatCategorySlug(item.componentType || item.product?.category?.builderComponentType || item.product?.category?.slug || 'LINH KIỆN')}
+                              </span>
+                              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', maxWidth: '170px' }}>
+                                {item.product?.name || 'Linh kiện'}
+                              </span>
+                            </div>
                             <span style={{ fontWeight: 600, color: 'var(--text-main)', whiteSpace: 'nowrap' }}>
                               x{item.quantity || 1}
                             </span>

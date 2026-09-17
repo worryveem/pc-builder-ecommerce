@@ -5,6 +5,7 @@ import { categoryApi } from '../api/categoryApi';
 import { wishlistApi } from '../api/wishlistApi';
 import { useAuth } from '../context/AuthContext';
 import { ProductCard } from '../components/common/ProductCard';
+import { formatCategorySlug } from '../utils/categoryFormatter';
 
 export const ProductsPage = () => {
   const [products, setProducts] = useState([]);

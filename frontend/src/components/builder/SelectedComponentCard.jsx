@@ -1,23 +1,26 @@
 import React from 'react';
+import { formatCategorySlug } from '../../utils/categoryFormatter';
+import { getProductFallbackImage } from '../../utils/imagePlaceholder';
 
 const CATEGORY_TAGS = {
   CPU: 'CPU',
-  MAINBOARD: 'MB',
+  MAINBOARD: 'MOTHERBOARD',
+  MOTHERBOARD: 'MOTHERBOARD',
   RAM: 'RAM',
   GPU: 'GPU',
   SSD: 'SSD',
   HDD: 'HDD',
   PSU: 'PSU',
-  COOLER: 'COOL',
-  CPU_COOLER: 'COOL',
+  COOLER: 'COOLER',
+  CPU_COOLER: 'COOLER',
   CASE: 'CASE',
   FAN: 'FAN',
   CASE_FAN: 'FAN',
-  MONITOR: 'MON',
-  KEYBOARD: 'KB',
-  MOUSE: 'MS',
-  HEADSET: 'AUDIO',
-  WEBCAM: 'CAM'
+  MONITOR: 'MONITOR',
+  KEYBOARD: 'KEYBOARD',
+  MOUSE: 'MOUSE',
+  HEADSET: 'HEADSET',
+  WEBCAM: 'WEBCAM'
 };
 
 export const SelectedComponentCard = ({
@@ -27,8 +30,8 @@ export const SelectedComponentCard = ({
   onRemove,
   onUpdateQuantity
 }) => {
-  const compType = category.builderComponentType ? category.builderComponentType.toUpperCase() : '';
-  const tag = CATEGORY_TAGS[compType] || compType || 'HW';
+  const compType = formatCategorySlug(category.builderComponentType || category.slug);
+  const tag = CATEGORY_TAGS[compType] || compType || 'HARDWARE';
 
   const formatPrice = (price) => {
     if (!price && price !== 0) return '0 ₫';
@@ -51,7 +54,6 @@ export const SelectedComponentCard = ({
         <span className="slot-tech-badge">{tag}</span>
         <div className="slot-cat-info">
           <span className="slot-cat-name">{category.name}</span>
-          <span className="slot-cat-type">{category.builderComponentType || 'Linh kiện'}</span>
         </div>
       </div>
 
@@ -60,18 +62,14 @@ export const SelectedComponentCard = ({
         {product ? (
           <div className="slot-selected-content">
             <div className="slot-thumb">
-              {imgUrl ? (
-                <img
-                  src={imgUrl}
-                  alt={product.name}
-                  onError={(e) => {
-                    e.currentTarget.onerror = null;
-                    e.currentTarget.src = '/placeholder.svg';
-                  }}
-                />
-              ) : (
-                <span className="slot-thumb-empty">PC</span>
-              )}
+              <img
+                src={imgUrl || getProductFallbackImage(product)}
+                alt={product.name}
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = getProductFallbackImage(product);
+                }}
+              />
             </div>
 
             <div className="slot-meta">
@@ -95,8 +93,8 @@ export const SelectedComponentCard = ({
           </div>
         ) : (
           <div className="slot-empty-prompt">
-            <span className="empty-text">Chưa chọn {category.name}</span>
-            <span className="empty-subtext">Nhấn nút bên phải để chọn linh kiện phù hợp chuẩn tương thích</span>
+            <span className="empty-text">Chưa chọn linh kiện</span>
+            <span className="empty-subtext">Nhấn nút bên phải để chọn {category.name}</span>
           </div>
         )}
       </div>

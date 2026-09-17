@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { orderApi } from '../api/orderApi';
+import { getProductFallbackImage } from '../utils/imagePlaceholder';
 
 export default function OrderDetailPage() {
   const { id } = useParams();
@@ -155,10 +156,10 @@ export default function OrderDetailPage() {
                     {items.map((item) => (
                       <div key={item.id} className="order-item-detail-row">
                         <img
-                          src={item.productImage || '/placeholder.png'}
+                          src={item.productImage || getProductFallbackImage({ name: item.productName, category: { slug: item.componentType } })}
                           alt={item.productName}
                           className="item-detail-img"
-                          onError={(e) => { e.target.src = '/placeholder.png'; }}
+                          onError={(e) => { e.target.src = getProductFallbackImage({ name: item.productName, category: { slug: item.componentType } }); }}
                         />
                         <div className="item-detail-content">
                           <Link to={`/products/${item.productId}`} className="item-detail-name">
@@ -191,10 +192,10 @@ export default function OrderDetailPage() {
                 {standaloneItems.map((item) => (
                   <div key={item.id} className="order-item-detail-row">
                     <img
-                      src={item.productImage || '/placeholder.png'}
+                      src={item.productImage || getProductFallbackImage({ name: item.productName, category: { slug: item.componentType } })}
                       alt={item.productName}
                       className="item-detail-img"
-                      onError={(e) => { e.target.src = '/placeholder.png'; }}
+                      onError={(e) => { e.target.src = getProductFallbackImage({ name: item.productName, category: { slug: item.componentType } }); }}
                     />
                     <div className="item-detail-content">
                       <Link to={`/products/${item.productId}`} className="item-detail-name">

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { productApi } from '../api/productApi';
 import { categoryApi } from '../api/categoryApi';
 import { ProductCard } from '../components/common/ProductCard';
+import { formatCategorySlug } from '../utils/categoryFormatter';
 
 export const HomePage = () => {
   const [categories, setCategories] = useState([]);
@@ -221,8 +222,8 @@ export const HomePage = () => {
           <div className="category-cards-grid">
             {categories.map((cat) => (
               <Link to={`/products?category=${cat.id}`} key={cat.id} className="category-card elevation-sm">
-                {cat.builderComponentType && (
-                  <span className="category-card-tag">{cat.builderComponentType}</span>
+                {(cat.builderComponentType || cat.slug) && (
+                  <span className="category-card-tag">{formatCategorySlug(cat.builderComponentType || cat.slug)}</span>
                 )}
                 <h3 className="category-card-name">{cat.name}</h3>
                 <p className="category-card-desc">{cat.description || 'Linh kiện phần cứng chính hãng'}</p>
@@ -235,13 +236,13 @@ export const HomePage = () => {
         <section className="promo-campaign-banner elevation-lg">
           <div className="promo-campaign-content">
             <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#38bdf8', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              CÔNG NGHỆ THÔNG MINH
+              CÔNG CỤ THÔNG MINH
             </span>
             <h2 className="promo-campaign-title">
               Chưa Rõ Cấu Hình Nào Tối Ưu Với Ngân Sách?
             </h2>
             <p className="promo-campaign-desc">
-              Sử dụng trợ lý AI của TechPC để nhận gợi ý bộ PC hoàn chỉnh phù hợp cho nhu cầu Chơi game Esports, Dựng hình 3D, Đồ họa Premiere Pro hoặc Lập trình trí tuệ nhân tạo.
+              Sử dụng công cụ Tự Build PC thông minh của TechStore để tự thiết kế bộ máy tính hoàn hảo, tự động kiểm tra tương thích linh kiện và cân đối chi phí theo nhu cầu chơi game, dựng hình 3D hoặc lập trình.
             </p>
             <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
               <Link to="/builder" className="btn btn-primary">

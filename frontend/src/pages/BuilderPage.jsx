@@ -9,6 +9,7 @@ import { BuilderProductSelector } from '../components/builder/BuilderProductSele
 import { SaveConfigurationModal } from '../components/builder/SaveConfigurationModal';
 import { ShareConfigurationModal } from '../components/builder/ShareConfigurationModal';
 import { AddToCartSuccessModal } from '../components/builder/AddToCartSuccessModal';
+import { formatCategorySlug } from '../utils/categoryFormatter';
 
 export const BuilderPage = () => {
   const { id } = useParams();
@@ -213,19 +214,59 @@ export const BuilderPage = () => {
     triggerValidation({});
   };
 
+  // Mandatory components check helper
+  const MANDATORY_TYPES = ['CPU', 'MAINBOARD', 'GPU', 'RAM', 'SSD', 'PSU'];
+  const MANDATORY_LABELS = {
+    CPU: 'CPU',
+    MAINBOARD: 'Bo mạch chủ (Mainboard)',
+    GPU: 'Card màn hình (GPU)',
+    RAM: 'Bộ nhớ RAM',
+    SSD: 'Ổ cứng SSD',
+    PSU: 'Nguồn máy tính (PSU)'
+  };
+
+  const getMissingMandatoryComponents = (selected = selectedComponents) => {
+    const selectedTypes = new Set();
+    Object.entries(selected).forEach(([slug, item]) => {
+      if (item?.product) {
+        const cat = categories.coreComponents.find(c => c.slug === slug);
+        const type = (cat?.builderComponentType || slug || '').trim().toUpperCase();
+        if (type === 'MOTHERBOARD') selectedTypes.add('MAINBOARD');
+        else selectedTypes.add(type);
+      }
+    });
+
+    return MANDATORY_TYPES.filter(t => !selectedTypes.has(t));
+  };
+
   // 8. Open Save / Update modal
   const handleOpenSaveModal = () => {
+    const missing = getMissingMandatoryComponents();
+    if (missing.length > 0) {
+      const missingNames = missing.map(m => MANDATORY_LABELS[m] || m).join(', ');
+      setErrorMsg(`Cấu hình PC chưa đủ điều kiện tạo/lưu. BẮT BUỘC phải có đủ: CPU, Mainboard, GPU, RAM, SSD, Nguồn (PSU). Đang thiếu: ${missingNames}.`);
+      return;
+    }
+
     if (!isAuthenticated) {
       if (window.confirm('Bạn cần đăng nhập tài khoản để lưu cấu hình PC. Chuyển đến trang Đăng nhập ngay?')) {
         navigate('/login', { state: { from: location } });
       }
       return;
     }
+    setErrorMsg('');
     setIsSaveModalOpen(true);
   };
 
   // 9. Execute Save or Update
   const handleSaveConfiguration = async (name) => {
+    const missing = getMissingMandatoryComponents();
+    if (missing.length > 0) {
+      const missingNames = missing.map(m => MANDATORY_LABELS[m] || m).join(', ');
+      setErrorMsg(`Cấu hình PC chưa đủ điều kiện tạo/lưu. BẮT BUỘC phải có đủ: CPU, Mainboard, GPU, RAM, SSD, Nguồn (PSU). Đang thiếu: ${missingNames}.`);
+      return;
+    }
+
     const items = Object.values(selectedComponents)
       .filter(i => i && i.product)
       .map(i => ({
@@ -381,12 +422,12 @@ export const BuilderPage = () => {
           )}
         </p>
 
-        {/* 8-Component Hardware Step Indicator */}
+        {/* Hardware Step Indicator */}
         <div className="builder-core-stepper-wrap elevation-sm">
           <div className="stepper-summary-info">
             <div className="stepper-summary-left">
               <span className="stepper-title">Tiến độ cấu hình:</span>
-              <span className="stepper-counter">{coreItemsCount} / 8 linh kiện cốt lõi</span>
+              <span className="stepper-counter">{coreItemsCount} / {categories.coreComponents.length} linh kiện cốt lõi</span>
             </div>
             <div className="stepper-quick-jump">
               <select
@@ -400,7 +441,7 @@ export const BuilderPage = () => {
                 aria-label="Chọn nhanh linh kiện"
               >
                 <option value="" disabled>Chọn nhanh linh kiện...</option>
-                <optgroup label="Linh kiện cốt lõi (8 bước)">
+                <optgroup label="Linh kiện cốt lõi">
                   {(categories.coreComponents || []).map((cat, idx) => (
                     <option key={cat.slug} value={cat.slug}>
                       {idx + 1}. {cat.name} {selectedComponents[cat.slug]?.product ? '✓' : '(Chưa chọn)'}
@@ -424,22 +465,24 @@ export const BuilderPage = () => {
           <div className="stepper-progress-track">
             <div
               className="stepper-progress-fill"
-              style={{ width: `${Math.round((coreItemsCount / 8) * 100)}%` }}
+              style={{ width: `${Math.round((coreItemsCount / (categories.coreComponents.length || 1)) * 100)}%` }}
             ></div>
           </div>
 
           <div className="builder-core-steps">
             {(categories.coreComponents || []).map((cat, idx) => {
               const isSelected = !!selectedComponents[cat.slug]?.product;
+              const type = (cat.builderComponentType || cat.slug || '').trim().toUpperCase();
+              const isMandatory = MANDATORY_TYPES.includes(type === 'MOTHERBOARD' ? 'MAINBOARD' : type);
               return (
                 <div
                   key={cat.id || cat.slug}
-                  className={`core-step-pill ${isSelected ? 'pill-completed' : 'pill-empty'}`}
-                  title={`${cat.name}: ${isSelected ? selectedComponents[cat.slug].product.name : 'Chưa chọn'}`}
+                  className={`core-step-pill ${isSelected ? 'pill-completed' : 'pill-empty'} ${isMandatory ? 'pill-mandatory-star' : ''}`}
+                  title={`${cat.name}${isMandatory ? ' (Bắt buộc)' : ''}: ${isSelected ? selectedComponents[cat.slug].product.name : 'Chưa chọn'}`}
                   onClick={() => setActiveCategory(cat)}
                 >
                   <span className="pill-idx">{idx + 1}</span>
-                  <span className="pill-name">{cat.builderComponentType || cat.name}</span>
+                  <span className="pill-name">{formatCategorySlug(cat.builderComponentType || cat.slug || cat.name)}</span>
                   <span className="pill-status">{isSelected ? '✓' : '+'}</span>
                 </div>
               );
@@ -518,6 +561,7 @@ export const BuilderPage = () => {
               shareToken={shareToken}
               saving={saving}
               addingToCart={addingToCart}
+              missingMandatory={getMissingMandatoryComponents()}
             />
           </div>
         </aside>

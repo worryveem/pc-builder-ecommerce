@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { builderApi } from '../api/builderApi';
 import { CompatibilityPanel } from '../components/builder/CompatibilityPanel';
+import { formatCategorySlug } from '../utils/categoryFormatter';
+import { getProductFallbackImage } from '../utils/imagePlaceholder';
 
 export const SharedBuilderPage = () => {
   const { token } = useParams();
@@ -154,22 +156,18 @@ export const SharedBuilderPage = () => {
                 return (
                   <div key={item.id || idx} className="shared-item-row">
                     <div className="shared-item-thumb">
-                      {imgUrl ? (
-                        <img
-                          src={imgUrl}
-                          alt={p?.name}
-                          onError={(e) => {
-                            e.currentTarget.onerror = null;
-                            e.currentTarget.src = '/placeholder.svg';
-                          }}
-                        />
-                      ) : (
-                        <span className="slot-thumb-empty">PC</span>
-                      )}
+                      <img
+                        src={imgUrl || getProductFallbackImage(p)}
+                        alt={p?.name}
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = getProductFallbackImage(p);
+                        }}
+                      />
                     </div>
 
                     <div className="shared-item-info">
-                      <span className="slot-cat-type">{item.componentType || p?.category?.builderComponentType || 'LINH KIỆN'}</span>
+                      <span className="slot-cat-type">{formatCategorySlug(item.componentType || p?.category?.builderComponentType || p?.category?.slug || 'LINH KIỆN')}</span>
                       <h4 className="shared-item-name">
                         <Link to={`/products/${p?.id}`}>{p?.name}</Link>
                       </h4>

@@ -5,6 +5,8 @@ import { cartApi } from '../api/cartApi';
 import { wishlistApi } from '../api/wishlistApi';
 import { ratingApi } from '../api/ratingApi';
 import { useAuth } from '../context/AuthContext';
+import { formatCategorySlug } from '../utils/categoryFormatter';
+import { getProductFallbackImage } from '../utils/imagePlaceholder';
 
 export const ProductDetailPage = () => {
   const { id } = useParams();
@@ -223,7 +225,7 @@ export const ProductDetailPage = () => {
           <>
             <span className="breadcrumb-sep">/</span>
             <Link to={`/products?category=${product.category.id}`}>
-              {product.category.name}
+              {formatCategorySlug(product.category.slug || product.category.builderComponentType || product.category.name)}
             </Link>
           </>
         )}
@@ -237,21 +239,15 @@ export const ProductDetailPage = () => {
           {/* Gallery Left Column */}
           <div className="product-gallery-col">
             <div className="main-preview-frame">
-              {selectedImg ? (
-                <img
-                  src={selectedImg}
-                  alt={product.name}
-                  className="main-preview-img"
-                  onError={(e) => {
-                    e.currentTarget.onerror = null;
-                    e.currentTarget.src = '/placeholder.svg';
-                  }}
-                />
-              ) : (
-                <div className="product-img-placeholder">
-                  <span>TECHPC</span>
-                </div>
-              )}
+              <img
+                src={selectedImg || getProductFallbackImage(product)}
+                alt={product.name}
+                className="main-preview-img"
+                onError={(e) => {
+                  e.currentTarget.onerror = null;
+                  e.currentTarget.src = getProductFallbackImage(product);
+                }}
+              />
             </div>
 
             {images.length > 1 && (
@@ -280,6 +276,11 @@ export const ProductDetailPage = () => {
           {/* Product Info Right Column */}
           <div className="product-details-col">
             <div className="detail-header-meta">
+              {product.category && (
+                <span className="badge badge-builder" style={{ fontWeight: 800 }}>
+                  {formatCategorySlug(product.category.slug || product.category.builderComponentType || product.category.name)}
+                </span>
+              )}
               <span className="brand-pill">{product.brand || 'Chính hãng'}</span>
               <span className="model-code-text">Model: {product.modelCode || 'N/A'}</span>
             </div>

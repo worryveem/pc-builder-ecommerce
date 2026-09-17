@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { builderApi } from '../../api/builderApi';
 import { BuilderProductCard } from './BuilderProductCard';
+import { formatCategorySlug } from '../../utils/categoryFormatter';
 
 export const BuilderProductSelector = ({
   category,
@@ -81,7 +82,7 @@ export const BuilderProductSelector = ({
         {/* Header */}
         <div className="selector-modal-header">
           <div>
-            <span className="modal-category-badge">{category.builderComponentType || 'COMPONENT'}</span>
+            <span className="modal-category-badge">{formatCategorySlug(category.builderComponentType || category.slug || 'COMPONENT')}</span>
             <h3 className="modal-title">Chọn {category.name}</h3>
             <p className="modal-subtitle">
               Hệ thống tự động lọc các linh kiện tương thích với cấu hình đã chọn

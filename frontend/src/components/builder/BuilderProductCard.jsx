@@ -1,4 +1,6 @@
 import React from 'react';
+import { formatCategorySlug } from '../../utils/categoryFormatter';
+import { getProductFallbackImage } from '../../utils/imagePlaceholder';
 
 export const BuilderProductCard = ({ product, onSelect, isCurrentSelected }) => {
   const formatPrice = (price) => {
@@ -6,7 +8,9 @@ export const BuilderProductCard = ({ product, onSelect, isCurrentSelected }) => 
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
   };
 
-  const imgUrl = product.images && product.images.length > 0 ? product.images[0].imageUrl : null;
+  const fallbackUrl = getProductFallbackImage(product);
+  const rawImgUrl = product.images && product.images.length > 0 ? product.images[0].imageUrl : null;
+  const imgUrl = rawImgUrl || fallbackUrl;
   const spec = product.specification;
   const inStock = product.stockQuantity != null ? product.stockQuantity > 0 : true;
   const stockCount = product.stockQuantity != null ? product.stockQuantity : 0;
@@ -14,23 +18,24 @@ export const BuilderProductCard = ({ product, onSelect, isCurrentSelected }) => 
   return (
     <div className={`builder-product-card elevation-sm ${isCurrentSelected ? 'selected-item' : ''}`}>
       <div className="card-thumb">
-        {imgUrl ? (
-          <img
-            src={imgUrl}
-            alt={product.name}
-            loading="lazy"
-            onError={(e) => {
-              e.currentTarget.onerror = null;
-              e.currentTarget.src = '/placeholder.svg';
-            }}
-          />
-        ) : (
-          <span className="card-thumb-placeholder">TECHPC</span>
-        )}
+        <img
+          src={imgUrl}
+          alt={product.name}
+          loading="lazy"
+          onError={(e) => {
+            e.currentTarget.onerror = null;
+            e.currentTarget.src = fallbackUrl;
+          }}
+        />
       </div>
 
       <div className="card-details">
         <div className="card-brand-model">
+          {product.category && (
+            <span className="badge badge-builder" style={{ fontSize: '0.68rem', padding: '0.15rem 0.4rem', fontWeight: 800 }}>
+              {formatCategorySlug(product.category.slug || product.category.builderComponentType || product.category.name)}
+            </span>
+          )}
           <span className="brand-badge">{product.brand || 'Chính hãng'}</span>
           {product.modelCode && <span className="model-code">Mã: {product.modelCode}</span>}
         </div>

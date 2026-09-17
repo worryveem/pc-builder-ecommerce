@@ -8279,12 +8279,17 @@ button, input, select, textarea {
     font-size: 0.7rem;
   }
 
-  .save-modal-container,
-  .ai-modal-card,
-  .ai-modal-container {
+  .save-modal-container {
     width: 98vw;
     max-width: 98vw;
   }
+}
+
+/* Saved Configurations Page Enhancements */
+.saved-config-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px -6px rgba(0, 0, 0, 0.12), 0 4px 8px -4px rgba(0, 0, 0, 0.06);
+  border-color: #93c5fd !important;
 }
 
 

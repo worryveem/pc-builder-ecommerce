@@ -14,6 +14,7 @@ import OrderDetailPage from './pages/OrderDetailPage';
 import ProfilePage from './pages/ProfilePage';
 import { BuilderPage } from './pages/BuilderPage';
 import { SharedBuilderPage } from './pages/SharedBuilderPage';
+import { SavedConfigurationsPage } from './pages/SavedConfigurationsPage';
 import { ProtectedRoute } from './routes/ProtectedRoute';
 
 // Admin imports
@@ -71,6 +72,14 @@ function App() {
           element={
             <ProtectedRoute>
               <WishlistPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="saved-configurations"
+          element={
+            <ProtectedRoute>
+              <SavedConfigurationsPage />
             </ProtectedRoute>
           }
         />

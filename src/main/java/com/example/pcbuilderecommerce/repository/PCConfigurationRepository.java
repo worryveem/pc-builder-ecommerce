@@ -10,5 +10,7 @@ import java.util.Optional;
 @Repository
 public interface PCConfigurationRepository extends JpaRepository<PCConfiguration, Integer> {
     List<PCConfiguration> findByUserId(Integer userId);
+    List<PCConfiguration> findByUserUsernameOrderByUpdatedAtDesc(String username);
+    List<PCConfiguration> findByUserIdOrderByUpdatedAtDesc(Long userId);
     Optional<PCConfiguration> findByShareToken(String shareToken);
 }

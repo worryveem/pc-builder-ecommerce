@@ -352,6 +352,35 @@ public class PCBuilderService {
     }
 
     /**
+     * Get all saved PC configurations belonging to user
+     */
+    public List<PCConfigurationDTO> getUserConfigurations(String username) {
+        if (username == null) {
+            throw new UnauthorizedException("Vui lòng đăng nhập để xem danh sách cấu hình đã lưu");
+        }
+        List<PCConfiguration> configs = pcConfigurationRepository.findByUserUsernameOrderByUpdatedAtDesc(username);
+        return configs.stream().map(this::mapToDTO).collect(Collectors.toList());
+    }
+
+    /**
+     * Delete saved PC configuration with ownership check
+     */
+    @Transactional
+    public void deleteConfiguration(Integer id, String username) {
+        if (username == null) {
+            throw new UnauthorizedException("Vui lòng đăng nhập để thực hiện thao tác này");
+        }
+        PCConfiguration config = pcConfigurationRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Không tìm thấy cấu hình với ID: " + id));
+
+        if (config.getUser() != null && !config.getUser().getUsername().equals(username)) {
+            throw new UnauthorizedException("Bạn không có quyền xóa cấu hình này");
+        }
+
+        pcConfigurationRepository.delete(config);
+    }
+
+    /**
      * Add entire PCConfiguration to Cart with transactional safety.
      * Validates compatibility, stock, and ownership. Rollback completely on any failure.
      */

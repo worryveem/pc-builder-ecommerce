@@ -199,6 +199,9 @@ export default function ProfilePage() {
             <Link to="/orders" className="quick-link-btn">
               Đơn hàng của tôi
             </Link>
+            <Link to="/saved-configurations" className="quick-link-btn">
+              Cấu hình PC đã lưu
+            </Link>
             <Link to="/wishlist" className="quick-link-btn">
               Sản phẩm yêu thích
             </Link>

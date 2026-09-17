@@ -26,7 +26,8 @@ export default function AdminUsersPage() {
   }, []);
 
   const handleToggleStatus = async (user) => {
-    const nextStatus = !user.active;
+    const isCurrentlyActive = user.active !== false && user.status !== 'LOCKED';
+    const nextStatus = !isCurrentlyActive;
     const actionText = nextStatus ? 'mở khóa' : 'khóa';
     if (!window.confirm(`Bạn có chắc muốn ${actionText} tài khoản "${user.username}"?`)) {
       return;
@@ -36,7 +37,7 @@ export default function AdminUsersPage() {
       setActionLoading(user.id);
       await adminApi.updateUserStatus(user.id, nextStatus);
       setUsers((prev) =>
-        prev.map((u) => (u.id === user.id ? { ...u, active: nextStatus } : u))
+        prev.map((u) => (u.id === user.id ? { ...u, active: nextStatus, status: nextStatus ? 'ACTIVE' : 'LOCKED' } : u))
       );
     } catch (err) {
       console.error('Failed to update user status:', err);
@@ -83,36 +84,41 @@ export default function AdminUsersPage() {
                   <td colSpan="8" className="text-center py-4">Chưa có người dùng nào</td>
                 </tr>
               ) : (
-                users.map((u) => (
-                  <tr key={u.id}>
-                    <td>#{u.id}</td>
-                    <td><strong>{u.username}</strong></td>
-                    <td>{u.fullName || '---'}</td>
-                    <td>{u.email}</td>
-                    <td>{u.phoneNumber || '---'}</td>
-                    <td>
-                      <span className={`role-badge ${u.role === 'ROLE_ADMIN' ? 'role-admin' : 'role-user'}`}>
-                        {u.role === 'ROLE_ADMIN' ? 'Admin' : 'Khách hàng'}
-                      </span>
-                    </td>
-                    <td>
-                      <span className={`status-badge ${u.active !== false ? 'status-completed' : 'status-cancelled'}`}>
-                        {u.active !== false ? 'Hoạt động' : 'Bị khóa'}
-                      </span>
-                    </td>
-                    <td>
-                      {u.role !== 'ROLE_ADMIN' && (
-                        <button
-                          className={`btn btn-xs ${u.active !== false ? 'btn-outline-danger' : 'btn-outline'}`}
-                          disabled={actionLoading === u.id}
-                          onClick={() => handleToggleStatus(u)}
-                        >
-                          {u.active !== false ? 'Khóa TK' : 'Mở khóa'}
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))
+                users.map((u) => {
+                  const isActive = u.active !== false && u.status !== 'LOCKED';
+                  const isAdminUser = u.role === 'ROLE_ADMIN' || u.role === 'ADMIN';
+
+                  return (
+                    <tr key={u.id}>
+                      <td>#{u.id}</td>
+                      <td><strong>{u.username}</strong></td>
+                      <td>{u.fullName || '---'}</td>
+                      <td>{u.email}</td>
+                      <td>{u.phoneNumber || u.phone || '---'}</td>
+                      <td>
+                        <span className={`role-badge ${isAdminUser ? 'role-admin' : 'role-user'}`}>
+                          {isAdminUser ? 'Admin' : 'Khách hàng'}
+                        </span>
+                      </td>
+                      <td>
+                        <span className={`status-badge ${isActive ? 'status-completed' : 'status-cancelled'}`}>
+                          {isActive ? 'Hoạt động' : 'Bị khóa'}
+                        </span>
+                      </td>
+                      <td>
+                        {!isAdminUser && (
+                          <button
+                            className={`btn btn-xs ${isActive ? 'btn-outline-danger' : 'btn-outline'}`}
+                            disabled={actionLoading === u.id}
+                            onClick={() => handleToggleStatus(u)}
+                          >
+                            {isActive ? 'Khóa TK' : 'Mở khóa'}
+                          </button>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>

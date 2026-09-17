@@ -4,7 +4,6 @@ import { productApi } from '../api/productApi';
 import { categoryApi } from '../api/categoryApi';
 import { wishlistApi } from '../api/wishlistApi';
 import { useAuth } from '../context/AuthContext';
-import AiRecommendationModal from '../components/common/AiRecommendationModal';
 import { ProductCard } from '../components/common/ProductCard';
 
 export const ProductsPage = () => {
@@ -18,7 +17,6 @@ export const ProductsPage = () => {
   const [customPrice, setCustomPrice] = useState({ min: '', max: '' });
   const [inStockOnly, setInStockOnly] = useState(false);
   const [wishlistIds, setWishlistIds] = useState(new Set());
-  const [aiModalOpen, setAiModalOpen] = useState(false);
   const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
 
   const { isAuthenticated } = useAuth();
@@ -280,13 +278,6 @@ export const ProductsPage = () => {
             onClick={() => setMobileFilterOpen(!mobileFilterOpen)}
           >
             {mobileFilterOpen ? 'Đóng bộ lọc' : 'Bộ lọc tìm kiếm'}
-          </button>
-          <button
-            className="btn btn-outline-primary"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
-            onClick={() => setAiModalOpen(true)}
-          >
-            <span>Tư vấn phần cứng AI</span>
           </button>
         </div>
       </div>
@@ -588,12 +579,6 @@ export const ProductsPage = () => {
           )}
         </main>
       </div>
-
-      {/* AI Recommendation Modal */}
-      <AiRecommendationModal
-        isOpen={aiModalOpen}
-        onClose={() => setAiModalOpen(false)}
-      />
     </div>
   );
 };

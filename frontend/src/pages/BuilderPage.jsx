@@ -308,6 +308,41 @@ export const BuilderPage = () => {
     }
   };
 
+  // 11. Buy Now handler (Add to cart & navigate to checkout)
+  const handleBuyNow = async () => {
+    if (!isAuthenticated) {
+      if (window.confirm('Bạn cần đăng nhập tài khoản để mua cấu hình PC. Chuyển đến trang Đăng nhập ngay?')) {
+        navigate('/login', { state: { from: location } });
+      }
+      return;
+    }
+
+    if (!configurationId) {
+      setErrorMsg('Vui lòng lưu cấu hình trước khi mua.');
+      return;
+    }
+
+    if (compatibility?.errors && compatibility.errors.length > 0) {
+      setErrorMsg('Không thể mua cấu hình. Cấu hình hiện tại có linh kiện không tương thích phần cứng.');
+      window.scrollTo({ top: 100, behavior: 'smooth' });
+      return;
+    }
+
+    try {
+      setAddingToCart(true);
+      setErrorMsg('');
+      await builderApi.addConfigurationToCart(configurationId);
+      setIsShareModalOpen(false);
+      navigate('/checkout');
+    } catch (err) {
+      console.error('Failed to buy configuration now:', err);
+      const msg = err.response?.data?.message || 'Không thể tiến hành mua ngay. Vui lòng kiểm tra số lượng tồn kho.';
+      setErrorMsg(msg);
+    } finally {
+      setAddingToCart(false);
+    }
+  };
+
   if (loadingCategories) {
     return (
       <div className="container loading-container">
@@ -539,11 +574,15 @@ export const BuilderPage = () => {
         saving={saving}
       />
 
-      {/* Share Configuration Modal */}
+      {/* Share & Post-Save Actions Modal */}
       <ShareConfigurationModal
         isOpen={isShareModalOpen}
         configurationName={configurationName}
         shareToken={shareToken}
+        configurationId={configurationId}
+        onAddToCart={handleAddToCart}
+        onBuyNow={handleBuyNow}
+        isCompatible={compatibility?.isCompatible}
         onClose={() => setIsShareModalOpen(false)}
       />
 

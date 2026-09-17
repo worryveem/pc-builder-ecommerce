@@ -73,5 +73,21 @@ export const builderApi = {
   addConfigurationToCart: async (id) => {
     const response = await axiosInstance.post(`/builder/configurations/${id}/add-to-cart`);
     return response.data;
+  },
+
+  /**
+   * Get all saved PC configurations of current user
+   */
+  getMyConfigurations: async () => {
+    const response = await axiosInstance.get('/builder/configurations/my');
+    return response.data;
+  },
+
+  /**
+   * Delete a saved PC configuration
+   */
+  deleteConfiguration: async (id) => {
+    const response = await axiosInstance.delete(`/builder/configurations/${id}`);
+    return response.data;
   }
 };

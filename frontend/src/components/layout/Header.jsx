@@ -3,7 +3,6 @@ import { Link, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { categoryApi } from '../../api/categoryApi';
 import { cartApi } from '../../api/cartApi';
-import AiRecommendationModal from '../common/AiRecommendationModal';
 
 export const Header = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -11,7 +10,6 @@ export const Header = () => {
   const location = useLocation();
 
   const [searchQuery, setSearchQuery] = useState('');
-  const [showAiModal, setShowAiModal] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false);
@@ -225,6 +223,9 @@ export const Header = () => {
                     <Link to="/orders" className="dropdown-item">
                       Lịch sử đơn hàng
                     </Link>
+                    <Link to="/saved-configurations" className="dropdown-item">
+                      Cấu hình PC đã lưu
+                    </Link>
                     <Link to="/wishlist" className="dropdown-item">
                       Sản phẩm đã lưu
                     </Link>
@@ -421,14 +422,6 @@ export const Header = () => {
               <NavLink to="/products?category=16" className={({ isActive }) => (isActive ? 'nav-link-item active' : 'nav-link-item')}>
                 Máy bộ lắp sẵn
               </NavLink>
-
-              <button
-                type="button"
-                className="nav-link-item nav-ai-trigger"
-                onClick={() => setShowAiModal(true)}
-              >
-                Tư vấn cấu hình AI
-              </button>
             </div>
           </div>
         </nav>
@@ -440,11 +433,12 @@ export const Header = () => {
           <div className="mobile-drawer-content elevation-modal" onClick={(e) => e.stopPropagation()}>
             <div className="mobile-drawer-header">
               <div className="brand-logo-text">
-                TECH<span className="logo-highlight">PC</span> STORE
+                <span className="brand-primary">TECH</span>
+                <span className="brand-accent">STORE</span>
               </div>
               <button
                 type="button"
-                className="btn-drawer-close"
+                className="btn-close"
                 onClick={() => setMobileDrawerOpen(false)}
                 aria-label="Đóng menu"
               >
@@ -452,55 +446,43 @@ export const Header = () => {
               </button>
             </div>
 
-            {/* Search inside drawer */}
-            <form onSubmit={handleSearch} className="drawer-search-form">
-              <input
-                type="text"
-                placeholder="Tìm linh kiện..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-              <button type="submit">Tìm</button>
-            </form>
-
-            {/* Flagship Builder in Drawer */}
-            <div className="drawer-flagship-box">
-              <Link
-                to="/builder"
-                className="drawer-builder-btn"
-                onClick={() => setMobileDrawerOpen(false)}
-              >
-                <div className="drawer-builder-tag">FLAGSHIP TOOL</div>
-                <div className="drawer-builder-title">TỰ BUILD PC CHUẨN TƯƠNG THÍCH</div>
-                <div className="drawer-builder-desc">Tự ráp cấu hình máy tính, kiểm tra socket và nguồn tức thì</div>
-              </Link>
-            </div>
-
-            {/* Main Drawer Links */}
-            <div className="drawer-nav-list">
-              <Link to="/" className="drawer-nav-link" onClick={() => setMobileDrawerOpen(false)}>
+            {/* Drawer Nav Links */}
+            <div className="drawer-nav-links">
+              <NavLink to="/" end className="drawer-nav-link" onClick={() => setMobileDrawerOpen(false)}>
                 Trang chủ
-              </Link>
-              <Link to="/products" className="drawer-nav-link" onClick={() => setMobileDrawerOpen(false)}>
-                Tất cả sản phẩm
-              </Link>
-              <Link to="/products?category=16" className="drawer-nav-link" onClick={() => setMobileDrawerOpen(false)}>
-                Máy bộ dựng sẵn
-              </Link>
+              </NavLink>
 
-              {/* Accordion Categories */}
-              <div className="drawer-accordion-block">
+              <NavLink to="/products" className="drawer-nav-link" onClick={() => setMobileDrawerOpen(false)}>
+                Tất cả sản phẩm
+              </NavLink>
+
+              {/* Mobile PC Builder Highlight Link */}
+              <NavLink to="/builder" className="drawer-nav-link drawer-builder-highlight" onClick={() => setMobileDrawerOpen(false)}>
+                <span className="drawer-builder-badge">BUILD PC</span>
+                <span>Tự Build PC Chuyên Nghiệp</span>
+              </NavLink>
+
+              <NavLink to="/saved-configurations" className="drawer-nav-link" onClick={() => setMobileDrawerOpen(false)}>
+                Cấu hình PC đã lưu
+              </NavLink>
+
+              <NavLink to="/products?category=16" className="drawer-nav-link" onClick={() => setMobileDrawerOpen(false)}>
+                Máy bộ PC lắp sẵn
+              </NavLink>
+
+              {/* Mobile Categories Accordion */}
+              <div className="drawer-accordion">
                 <button
                   type="button"
-                  className="drawer-accordion-toggle"
+                  className="drawer-accordion-btn"
                   onClick={() => setMobileAccordionOpen(!mobileAccordionOpen)}
                 >
                   <span>Danh mục linh kiện</span>
-                  <span className={`accordion-caret ${mobileAccordionOpen ? 'open' : ''}`}>▼</span>
+                  <span className={`accordion-icon ${mobileAccordionOpen ? 'open' : ''}`}>▼</span>
                 </button>
 
                 {mobileAccordionOpen && (
-                  <div className="drawer-accordion-body">
+                  <div className="drawer-accordion-content">
                     <Link to="/products?category=1" className="drawer-sub-link" onClick={() => setMobileDrawerOpen(false)}>
                       Bộ vi xử lý (CPU)
                     </Link>
@@ -508,22 +490,19 @@ export const Header = () => {
                       Bo mạch chủ (Mainboard)
                     </Link>
                     <Link to="/products?category=3" className="drawer-sub-link" onClick={() => setMobileDrawerOpen(false)}>
-                      Card màn hình (GPU/VGA)
+                      Card màn hình (VGA)
                     </Link>
                     <Link to="/products?category=4" className="drawer-sub-link" onClick={() => setMobileDrawerOpen(false)}>
-                      Bộ nhớ trong (RAM)
+                      Bộ nhớ RAM
                     </Link>
                     <Link to="/products?category=5" className="drawer-sub-link" onClick={() => setMobileDrawerOpen(false)}>
-                      Ổ cứng SSD M.2 NVMe
+                      Ổ cứng SSD NVMe
                     </Link>
                     <Link to="/products?category=7" className="drawer-sub-link" onClick={() => setMobileDrawerOpen(false)}>
                       Nguồn máy tính (PSU)
                     </Link>
-                    <Link to="/products?category=8" className="drawer-sub-link" onClick={() => setMobileDrawerOpen(false)}>
-                      Tản nhiệt CPU (Cooler)
-                    </Link>
                     <Link to="/products?category=9" className="drawer-sub-link" onClick={() => setMobileDrawerOpen(false)}>
-                      Vỏ thùng máy (Case)
+                      Vỏ Case
                     </Link>
                     <Link to="/products?category=11" className="drawer-sub-link" onClick={() => setMobileDrawerOpen(false)}>
                       Màn hình máy tính
@@ -534,17 +513,6 @@ export const Header = () => {
                   </div>
                 )}
               </div>
-
-              <button
-                type="button"
-                className="drawer-nav-link text-left"
-                onClick={() => {
-                  setMobileDrawerOpen(false);
-                  setShowAiModal(true);
-                }}
-              >
-                Tư vấn cấu hình bằng AI
-              </button>
             </div>
 
             {/* Drawer Account Links */}
@@ -557,6 +525,7 @@ export const Header = () => {
                   <div className="drawer-user-links">
                     <Link to="/profile" onClick={() => setMobileDrawerOpen(false)}>Hồ sơ</Link>
                     <Link to="/orders" onClick={() => setMobileDrawerOpen(false)}>Đơn hàng</Link>
+                    <Link to="/saved-configurations" onClick={() => setMobileDrawerOpen(false)}>Cấu hình đã lưu</Link>
                     <Link to="/wishlist" onClick={() => setMobileDrawerOpen(false)}>Yêu thích</Link>
                     <button type="button" onClick={handleLogout} className="drawer-logout-btn">
                       Đăng xuất
@@ -577,12 +546,6 @@ export const Header = () => {
           </div>
         </div>
       )}
-
-      {/* Global AI Recommendation modal */}
-      <AiRecommendationModal
-        isOpen={showAiModal}
-        onClose={() => setShowAiModal(false)}
-      />
     </>
   );
 };

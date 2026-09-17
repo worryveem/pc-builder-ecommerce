@@ -75,11 +75,33 @@ public class PCBuilderController {
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 
+    // 4.1 Lấy tất cả cấu hình PC đã lưu của người dùng hiện tại
+    @GetMapping("/configurations/my")
+    public ResponseEntity<ResponseData> getMyConfigurations(Authentication authentication) {
+        String username = (authentication != null && authentication.isAuthenticated()) ? authentication.getName() : null;
+        ResponseData res = new ResponseData();
+        res.setData(pcBuilderService.getUserConfigurations(username));
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
     // 5. Tải lại cấu hình đã lưu (bằng ID hoặc shareToken)
     @GetMapping("/configurations/{idOrToken}")
     public ResponseEntity<ResponseData> getConfiguration(@PathVariable String idOrToken) {
         ResponseData res = new ResponseData();
         res.setData(pcBuilderService.getConfiguration(idOrToken));
+        return new ResponseEntity<>(res, HttpStatus.OK);
+    }
+
+    // 5.1 Xóa cấu hình đã lưu
+    @DeleteMapping("/configurations/{id}")
+    public ResponseEntity<ResponseData> deleteConfiguration(
+            @PathVariable Integer id,
+            Authentication authentication
+    ) {
+        String username = (authentication != null && authentication.isAuthenticated()) ? authentication.getName() : null;
+        pcBuilderService.deleteConfiguration(id, username);
+        ResponseData res = new ResponseData();
+        res.setMessage("Đã xóa cấu hình PC thành công");
         return new ResponseEntity<>(res, HttpStatus.OK);
     }
 

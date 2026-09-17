@@ -100,6 +100,7 @@ public class UserService {
             userDTO.setPhone(user.getPhone());
             userDTO.setRole(user.getRole() != null ? user.getRole().name() : "USER");
             userDTO.setStatus(user.getStatus() != null ? user.getStatus().name() : "ACTIVE");
+            userDTO.setActive(user.getStatus() == null || user.getStatus() == Status.ACTIVE);
             Address address = user.getAddress();
             if (address != null) {
                 AddressDTO addressDTO = new AddressDTO();
@@ -127,6 +128,7 @@ public class UserService {
         userDTO.setPhone(user.getPhone());
         userDTO.setRole(user.getRole() != null ? user.getRole().name() : "USER");
         userDTO.setStatus(user.getStatus() != null ? user.getStatus().name() : "ACTIVE");
+        userDTO.setActive(user.getStatus() == null || user.getStatus() == Status.ACTIVE);
         Address address = user.getAddress();
         if (address != null) {
             AddressDTO addressDTO = new AddressDTO();
@@ -148,7 +150,7 @@ public class UserService {
             return false;
         }
 
-        if (user.getRole().name().equals("ADMIN")) {
+        if (user.getRole() != null && "ADMIN".equalsIgnoreCase(user.getRole().name())) {
             return false;
         }
 
@@ -161,7 +163,10 @@ public class UserService {
     // khoa tai khoan
     public boolean banUser(long id) {
         User user = userRepository.findById(id).orElse(null);
-        if (user.getRole().name().equals("ADMIN")) {
+        if (user == null) {
+            return false;
+        }
+        if (user.getRole() != null && "ADMIN".equalsIgnoreCase(user.getRole().name())) {
             return false;
         }
         user.setStatus(Status.LOCKED);
@@ -170,7 +175,7 @@ public class UserService {
             userRepository.save(user);
             return true;
         }
-        catch (EmptyResultDataAccessException e)
+        catch (Exception e)
         {
             return false;
         }
@@ -178,13 +183,16 @@ public class UserService {
     // mo khoa tai khoan
     public boolean unBanUser(long id) {
         User user = userRepository.findById(id).orElse(null);
+        if (user == null) {
+            return false;
+        }
         user.setStatus(Status.ACTIVE);
         try
         {
             userRepository.save(user);
             return true;
         }
-        catch (EmptyResultDataAccessException e)
+        catch (Exception e)
         {
             return false;
         }

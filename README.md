@@ -1,262 +1,653 @@
-# PC Builder E-commerce
+# 🖥️ PC Builder E-commerce Platform
 
-> A full-stack E-commerce platform specialized in PC components, pre-built PCs, laptops, and custom PC building with automated hardware compatibility validation and AI-driven recommendations.
-
----
-
-## 📌 Overview
-
-**PC Builder E-commerce** is an end-to-end e-commerce solution engineered to meet the demands of modern computer hardware retailing. Beyond standard retail operations (browsing, cart, checkout, order tracking, admin management), the core differentiator of this system is its **Custom PC Builder**: an interactive tool powered by a backend **Compatibility Engine** that prevents incompatible hardware configurations before purchase, complemented by an **AI-powered Hardware Consultation Assistant**.
+> A full-stack e-commerce platform for PC components featuring a **Custom PC Builder** that helps customers create compatible PC configurations based on their requirements, budget, and usage needs.
 
 ---
 
-## ✨ Main Features
+## 📸 Overview
 
-- **Authentication & Security**: Secure user registration, login, and stateless JWT-based authorization with Role-Based Access Control (`ROLE_CUSTOMER`, `ROLE_ADMIN`).
-- **Product Catalog & Discovery**: Fast filtering by category, hardware component type, price range, and real-time search with responsive card layouts.
-- **Product Details & Hardware Specs**: Comprehensive specifications (Socket, RAM type, Form factor, TDP, Bus speed, Cooler dimensions, Wattage) with gallery thumbnails and warranty info.
-- **Wishlist**: Save favorite hardware items with live synchronization across product cards and user accounts.
-- **Ratings & Reviews**: Real-time product review submissions with star ratings, community feedback, and average ratings summary.
-- **Shopping Cart**: Fully supports both individual components and cohesive **Custom PC Configuration Groups** (`configuration_id`), preserving system integrity during checkout.
-- **Checkout & Address Management**: Comprehensive checkout flow with multi-address management, voucher discount application, and COD payment support.
-- **Voucher & Discount Engine**: Server-authoritative voucher codes with percentage/fixed-amount discounts, minimum order threshold, and usage limits.
-- **Order Tracking & History**: Real-time order progress tracking (`PENDING`, `CONFIRMED`, `SHIPPING`, `COMPLETED`, `CANCELLED`) with cancellation support for pending orders.
-- **User Profile**: Account details management, default shipping address updates, member discount tiers, and password security.
-- **Admin Dashboard & Management**:
-  - Real-time KPIs: Revenue, order counts, pending alerts, catalog stock, user stats.
-  - Product Catalog CRUD with full hardware specification configuration.
-  - Category Management with PC Builder flags (`builder_supported`, `builder_component_type`).
-  - Order Management with status updating and invoice inspection.
-  - Voucher & Promotions Management.
-  - User status moderation (active/deactivated).
-- **Interactive PC Builder**:
-  - Component selection for CPU, Motherboard, RAM, GPU, Storage, PSU, Case, and Cooler.
-  - Real-time compatibility verification (Socket, RAM capacity/type/slots, PSU wattage, Form factor, Dimensions).
-  - Save, Load, and Share custom PC configurations via shareable tokens/URLs.
-  - Single-click **"Add Entire PC to Cart"** transaction.
-- **AI-Powered Recommendation Assistant**:
-  - Semantic query consultation (e.g. *"PC gaming 25 triệu"*, *"Laptop sinh viên CNTT"*).
-  - Grounded database retrieval avoiding hallucinations.
-  - Graceful, intelligent fallback when OpenAI is offline.
-  - Quick action: **"Dùng trong PC Builder"** to immediately test recommended parts.
+Building a custom PC can be challenging for customers who are not familiar with hardware specifications and compatibility requirements.
 
----
+**PC Builder E-commerce** addresses this problem by combining a hardware-focused e-commerce platform with a custom PC configuration system.
 
-## ⚙️ PC Builder & Compatibility Engine
+Customers can specify their requirements, select and customize components, and build a complete PC while the system continuously validates hardware compatibility and power requirements.
 
-The platform incorporates a deterministic rules engine built directly into the Spring Boot backend (`CompatibilityService`):
-
-| Rule Dimension | Validation Logic |
-| :--- | :--- |
-| **CPU ↔ Motherboard** | CPU socket must match Motherboard socket (e.g., LGA1700, AM5). |
-| **RAM ↔ Motherboard** | Memory generation must match (DDR4 / DDR5). Total capacity must not exceed `max_ram_capacity`. Total modules must not exceed available `ram_slots`. |
-| **GPU ↔ Case** | GPU card length (mm) must fit within Case `max_gpu_length_mm`. |
-| **Cooler ↔ CPU / Case** | Cooler height (mm) must fit within Case `max_cooler_height_mm`. Socket must be supported. |
-| **Motherboard ↔ Case** | Motherboard form factor (ATX, Micro-ATX, Mini-ITX) must be supported by Case form factor list. |
-| **PSU ↔ Power Consumption**| System calculates total estimated TDP (CPU + GPU + peripherals) with a 20-30% safety headroom to recommend minimum PSU wattage. |
-
-> **Authority Principle**: The backend `CompatibilityService` is the single source of truth. The AI may suggest products, but the Compatibility Engine strictly determines mechanical and electrical validity.
-
----
-
-## 🤖 AI Product Recommendation
-
-The recommendation system is designed for high reliability and safety:
+### Core User Flow
 
 ```text
-User Query ("Build PC gaming 25 triệu")
-                   │
-                   ▼
-┌───────────────────────────────────────┐
-│ 1. Local Candidate Retrieval (DB)     │
-│    - Keyword & budget pre-filtering   │
-│    - Top candidate hardware selection │
-└──────────────────┬────────────────────┘
-                   │
-                   ▼
-┌───────────────────────────────────────┐
-│ 2. LLM Recommendation (OpenAI)        │
-│    - Selects ONLY from existing items │
-│    - Generates concise advice         │
-└──────────────────┬────────────────────┘
-                   │
-                   ▼
-┌───────────────────────────────────────┐
-│ 3. Server-side ID Verification        │
-│    - Re-validates IDs against MySQL   │
-│    - Rejects any hallucinated IDs     │
-└──────────────────┬────────────────────┘
-                   │ (If API fails or key omitted)
-                   ▼
-┌───────────────────────────────────────┐
-│ 4. Fallback Rule Engine               │
-│    - Local semantic scoring & keyword │
-│    - Seamless user continuity         │
-└───────────────────────────────────────┘
+Customer Requirements
+        │
+        ▼
+Component Recommendation
+        │
+        ▼
+Component Selection
+        │
+        ▼
+Compatibility Validation
+        │
+        ▼
+Complete PC Configuration
+        │
+        ├───────────────┐
+        ▼               ▼
+ Save & Share       Add to Cart
 ```
 
 ---
 
-## 🛠️ Tech Stack
+# ⭐ Custom PC Builder
 
-### Backend
-- **Java 17**
-- **Spring Boot 4.0.3**
-- **Spring Security & JJWT** (Stateless Token Authentication)
-- **Spring Data JPA / Hibernate**
-- **MySQL 8.0**
-- **Maven**
-- **WebClient** (Reactive client for AI integration)
+The **Custom PC Builder** is the core feature of the platform.
 
-### Frontend
-- **React 18**
-- **Vite**
-- **React Router v6**
-- **Axios** (Centralized API client with interceptors)
-- **Vanilla CSS3** (Modular hardware-store design system, responsive grid)
+Instead of requiring customers to manually verify whether individual components are compatible, the system continuously validates the configuration and filters unsuitable products.
 
----
+The builder supports customer-driven PC configuration with context-aware component recommendations and server-side compatibility validation.
 
-## 📐 Architecture
+## How It Works
 
 ```text
-+-------------------------------------------------------------+
-|                      React Frontend                         |
-|   (Vite + React Router + Axios Interceptor + AuthContext)   |
-+------------------------------+------------------------------+
-                               │ REST / JSON (JWT in Header)
-                               ▼
-+-------------------------------------------------------------+
-|                   Spring Boot Backend                       |
-|                                                             |
-|   [ Controllers ]                                           |
-|       AuthController, ProductController, CartController     |
-|       PCBuilderController, OrderController, AdminController |
-|       RecommendationController                              |
-|                                                             |
-|   [ Services (Business & Validation Layer) ]                |
-|       CompatibilityService, PCBuilderService, CartService   |
-|       OrderService, ProductService, RecommendationService   |
-|                                                             |
-|   [ Data Access Layer ]                                     |
-|       Spring Data JPA Repositories                          |
-+------------------------------+------------------------------+
-                               │ JDBC / Connection Pool
-                               ▼
-+-------------------------------------------------------------+
-|                      MySQL 8.0 Database                     |
-|  products, categories, product_specifications,              |
-|  pc_configurations, pc_configuration_items, orders, cart    |
-+-------------------------------------------------------------+
+1. Customer specifies requirements
+          │
+          ▼
+2. System identifies suitable components
+          │
+          ▼
+3. Customer selects / modifies components
+          │
+          ▼
+4. System dynamically filters compatible products
+          │
+          ▼
+5. Compatibility & power validation
+          │
+          ▼
+6. Final PC configuration
+          │
+          ├── Save
+          ├── Share / Clone
+          └── Add to Cart
+```
+
+### Example
+
+A customer may want:
+
+```text
+Budget:        $1,000
+Purpose:       Gaming
+Target:        1440p
+Priority:      GPU performance
+Requirement:   Future upgradeability
+```
+
+The system can then guide the customer toward a suitable configuration while ensuring that the selected components are compatible with each other.
+
+---
+
+# 🧠 Hardware Compatibility Engine
+
+The backend contains a dedicated `CompatibilityService` that acts as the **single source of truth** for hardware compatibility.
+
+Compatibility validation is performed on the server side to prevent invalid configurations from being added to the cart.
+
+| Compatibility Rule     | Validation                                                         |
+| ---------------------- | ------------------------------------------------------------------ |
+| **CPU ↔ Motherboard**  | CPU socket compatibility                                           |
+| **RAM ↔ Motherboard**  | DDR generation, maximum capacity, and slot count                   |
+| **Motherboard ↔ Case** | Supported motherboard form factors                                 |
+| **GPU ↔ Case**         | GPU length must fit the case's maximum GPU clearance               |
+| **CPU Cooler ↔ Case**  | Cooler height must fit the case's maximum cooler clearance         |
+| **Cooler ↔ CPU**       | CPU socket must be supported by the cooler                         |
+| **System ↔ PSU**       | Estimated power consumption must meet the recommended PSU capacity |
+
+### PSU Recommendation
+
+The system calculates the estimated power consumption of the selected components and applies a configurable safety margin.
+
+```text
+Recommended PSU Wattage
+        =
+Estimated System Power × 1.25
+```
+
+The PSU validation helps prevent customers from selecting an insufficient power supply for their configuration.
+
+> The 25% margin is a project-defined calculation rule and is not intended to represent a universal hardware standard.
+
+---
+
+# 🔎 Context-Aware Component Filtering
+
+The builder dynamically filters products based on components that have already been selected.
+
+For example:
+
+```text
+Selected CPU
+     │
+     ▼
+Filter compatible Motherboards
+     │
+     ▼
+Selected Motherboard
+     │
+     ▼
+Filter compatible RAM
+     │
+     ▼
+Selected Case
+     │
+     ▼
+Filter compatible GPU & Cooler
+```
+
+The filtering system can consider:
+
+* Component type
+* Brand
+* Price range
+* Existing build configuration
+* Hardware compatibility requirements
+
+This reduces invalid choices and makes the PC building process easier for customers.
+
+---
+
+# 🧩 Component System
+
+The builder separates components into required and optional categories.
+
+### Core Components
+
+A complete PC build requires:
+
+* CPU
+* Motherboard
+* RAM
+* GPU
+* SSD
+* PSU
+
+### Optional Components
+
+Customers can additionally configure:
+
+* CPU Cooler
+* Case
+* Case Fans
+
+### Peripherals
+
+The platform also supports optional peripherals:
+
+* Monitor
+* Keyboard
+* Mouse
+* Headset
+* Webcam
+
+---
+
+# 💾 Saved PC Configurations
+
+Customers can save multiple PC configurations to their accounts.
+
+Example configurations:
+
+* `1440p Gaming PC`
+* `3D Rendering Workstation`
+* `Budget Office PC`
+* `Future Upgrade Build`
+
+Saved configurations can be:
+
+* Viewed
+* Updated
+* Deleted
+* Loaded back into the builder
+
+---
+
+# 🔗 Public Sharing & Clone
+
+Each saved configuration can be shared through a unique public token.
+
+```text
+/builder/share/{token}
+```
+
+Anyone with the link can view the shared configuration, including:
+
+* Selected components
+* Product prices
+* Total configuration price
+* Compatibility status
+
+A shared configuration can also be **cloned and customized**, allowing customers to use an existing PC build as a starting point.
+
+```text
+Shared Build
+     │
+     ▼
+View Configuration
+     │
+     ▼
+Clone / Customize
+     │
+     ▼
+Personal PC Build
 ```
 
 ---
 
-## 📡 API Overview
+# 🛒 Atomic Add-to-Cart
 
-| Group | Method | Endpoint | Description |
-| :--- | :--- | :--- | :--- |
-| **Auth** | `POST` | `/api/auth/login` | Login, returns JWT token & user info |
-| | `POST` | `/api/auth/register` | Register new customer account |
-| **Products** | `GET` | `/api/products` | Get all products |
-| | `GET` | `/api/products/{id}` | Get product details with specs & gallery |
-| | `GET` | `/api/products/category/{id}` | Filter products by category |
-| **PC Builder** | `GET` | `/api/builder/categories` | Get builder-supported component groups |
-| | `GET` | `/api/builder/filter-products` | Get compatible products for builder slots |
-| | `POST` | `/api/builder/validate` | Run full compatibility validation on configuration |
-| | `POST` | `/api/builder/configurations` | Save a new PC build configuration |
-| | `GET` | `/api/builder/share/{token}` | Load a shared configuration by token |
-| | `POST` | `/api/builder/configurations/{id}/add-to-cart` | Transfer complete configuration into cart |
-| **Cart** | `GET` | `/api/cart` | Get current user's cart (items & PC builds) |
-| | `POST` | `/api/cart/add` | Add individual product |
-| | `DELETE`| `/api/cart/clear` | Empty cart |
-| **Orders** | `POST` | `/api/order` | Place order (COD) |
-| | `GET` | `/api/order/user` | Get orders of current authenticated user |
-| | `GET` | `/api/order/user/{id}` | Get detailed invoice with PC build breakdowns |
-| | `PUT` | `/api/order/user/{id}/cancel`| Cancel pending order |
-| **Wishlist** | `GET` | `/api/wishlist` | Get user's wishlist |
-| | `POST` | `/api/wishlist/add/{productId}` | Add to wishlist |
-| | `DELETE`| `/api/wishlist/remove/{productId}` | Remove from wishlist |
-| **AI** | `POST` | `/api/recommendations` | Consultation query with database verification |
-| **Admin** | `GET` | `/api/admin/dashboard/stats` | Aggregate business KPIs |
-| | `POST` | `/api/admin/products` | Create hardware product with specifications |
-| | `PUT` | `/api/admin/orders/{id}/status` | Update order processing status |
+Customers can add an entire PC configuration to the shopping cart with a single action.
+
+Before adding the configuration, the backend performs:
+
+1. Compatibility validation
+2. Product availability validation
+3. Inventory checks
+4. Configuration grouping
+
+The operation is handled transactionally using Spring's `@Transactional`.
+
+If one component fails validation or is unavailable, the transaction is rolled back instead of leaving the cart with only part of the PC configuration.
+
+Each component belonging to a PC configuration is associated with a `configuration_id`, allowing the system to distinguish between individually purchased products and products belonging to a complete PC build.
 
 ---
 
-## 🚀 Getting Started
+# 🛍️ E-commerce Features
 
-### Prerequisites
-- **JDK 17** or higher
-- **Node.js 18** or higher & `npm`
-- **MySQL 8.0**
-- **Maven 3.8+** (or use included `./mvnw`)
+In addition to the PC Builder, the platform provides standard e-commerce functionality.
 
-### 1. Database Setup
-Create a MySQL database:
-```sql
-CREATE DATABASE fashion_shop CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+## Authentication & Authorization
+
+* User registration and login
+* Stateless JWT authentication
+* Role-based access control
+* `ROLE_CUSTOMER`
+* `ROLE_ADMIN`
+
+## Product Catalog
+
+* Product search
+* Category filtering
+* Price filtering
+* Brand filtering
+* Pagination
+* Product details
+* Hardware specifications
+* Product image gallery
+
+## Shopping Cart
+
+* Add products
+* Remove products
+* Update quantities
+* Clear cart
+* Support for individual products
+* Support for complete PC configurations
+
+## Orders
+
+* COD checkout
+* Order history
+* Order details
+* Order cancellation
+* Order status tracking
+
+Example order lifecycle:
+
+```text
+PENDING
+   ↓
+CONFIRMED
+   ↓
+SHIPPING
+   ↓
+COMPLETED
 ```
 
-### 2. Backend Configuration
-Copy `.env.example` to `.env` or set environment variables:
+Orders can be cancelled while they are still in the pending state.
+
+## Vouchers
+
+The platform supports:
+
+* Percentage-based discounts
+* Fixed-amount discounts
+* Minimum order requirements
+* Server-side voucher validation
+
+## Wishlist
+
+Customers can:
+
+* Add products to their wishlist
+* Remove products
+* View saved products
+
+## Ratings & Reviews
+
+Customers can:
+
+* Rate products from 1–5 stars
+* Write reviews
+* View product rating summaries
+
+---
+
+# 👨‍💼 Admin Dashboard
+
+Administrators have access to a dedicated management dashboard.
+
+## Dashboard
+
+* Revenue statistics
+* Order statistics
+* User statistics
+* Low-stock products
+
+## Product Management
+
+* Create products
+* Update products
+* Delete products
+* Manage product specifications
+
+## Category Management
+
+Builder-specific category configuration includes:
+
+* `builder_supported`
+* `builder_component_type`
+* `display_order`
+
+## Order Management
+
+* View orders
+* View order details
+* Update order status
+
+## User Management
+
+* View users
+* Enable / disable accounts
+
+## Voucher Management
+
+* Create vouchers
+* Update vouchers
+* Manage active promotions
+
+---
+
+# 🏗️ System Architecture
+
+```text
+┌──────────────────────────────────────────────────────────┐
+│                     React Frontend                       │
+│                                                          │
+│ Builder │ Products │ Cart │ Orders │ Admin               │
+└──────────────────────────┬───────────────────────────────┘
+                           │
+                           │ REST API
+                           │ JWT Bearer Token
+                           ▼
+┌──────────────────────────────────────────────────────────┐
+│                  Spring Boot Backend                     │
+│                                                          │
+│ Controllers                                              │
+│      │                                                   │
+│      ▼                                                   │
+│ Service Layer                                            │
+│      │                                                   │
+│      ├── PCBuilderService                                │
+│      ├── CompatibilityService                            │
+│      ├── ProductService                                  │
+│      ├── CartService                                     │
+│      ├── OrderService                                    │
+│      ├── VoucherService                                  │
+│      ├── RatingService                                   │
+│      └── WishlistService                                 │
+│      │                                                   │
+│      ▼                                                   │
+│ Spring Data JPA / Hibernate                              │
+└──────────────────────────┬───────────────────────────────┘
+                           │
+                           ▼
+┌──────────────────────────────────────────────────────────┐
+│                       MySQL 8.0                          │
+│                                                          │
+│ products                                                 │
+│ categories                                               │
+│ product_specifications                                   │
+│ pc_configurations                                        │
+│ pc_configuration_items                                   │
+│ carts / cart_items                                       │
+│ orders / order_items                                     │
+│ users / roles                                            │
+│ vouchers / ratings / wishlist                            │
+└──────────────────────────────────────────────────────────┘
+```
+
+---
+
+# 🛠️ Tech Stack
+
+## Backend
+
+* **Java**
+* **Spring Boot**
+* **Spring Security**
+* **JJWT**
+* **Spring Data JPA**
+* **Hibernate**
+* **MySQL 8**
+* **Maven**
+* **Spring WebClient**
+
+## Frontend
+
+* **React**
+* **Vite**
+* **React Router DOM**
+* **Axios**
+* **React Context API**
+* **Vanilla CSS**
+
+## Infrastructure
+
+* **Docker**
+* **Docker Compose**
+
+---
+
+# 📡 API Highlights
+
+The backend exposes RESTful APIs organized by business domain.
+
+| Module     | Endpoint                                            | Description                       |
+| ---------- | --------------------------------------------------- | --------------------------------- |
+| PC Builder | `GET /api/builder/filter-products`                  | Context-aware component filtering |
+| PC Builder | `POST /api/builder/validate`                        | Validate hardware compatibility   |
+| PC Builder | `POST /api/builder/configurations`                  | Save a PC configuration           |
+| PC Builder | `POST /api/builder/configurations/{id}/add-to-cart` | Add a complete PC build to cart   |
+| Products   | `GET /api/products`                                 | Search and browse products        |
+| Cart       | `GET /api/user/cart`                                | Retrieve current cart             |
+| Orders     | `POST /api/order`                                   | Create an order                   |
+| Ratings    | `POST /api/ratings`                                 | Submit a product review           |
+| Wishlist   | `POST /api/wishlist/add/{productId}`                | Add a product to wishlist         |
+
+> For the complete API reference, consider maintaining a separate API document or Swagger/OpenAPI specification instead of listing every endpoint in this README.
+
+---
+
+# 🧪 Testing
+
+The backend includes automated tests covering core business logic and API behavior.
+
+Test coverage includes:
+
+* PC compatibility rules
+* CPU / motherboard socket validation
+* DDR4 / DDR5 compatibility
+* GPU / case dimensions
+* Cooler / case dimensions
+* PSU power validation
+* PC configuration lifecycle
+* Add-to-cart transaction flow
+* Voucher calculation
+* Authentication and authorization
+* Controller behavior
+* Exception handling
+
+Run backend tests with:
+
 ```bash
-# In project root
-cp .env.example .env
+mvn test
 ```
-Run the Spring Boot application:
-```bash
-./mvnw clean spring-boot:run
-```
-The backend starts on `http://localhost:8080`.
 
-### 3. Frontend Setup
+Build the frontend for production:
+
 ```bash
 cd frontend
 npm install
-npm run dev
-```
-The frontend starts on `http://localhost:5173`.
-
----
-
-## 🐳 Docker Deployment
-
-The project provides a unified `compose.yml` to orchestrate MySQL, Backend, and Frontend:
-
-```bash
-# Build and run the entire stack
-docker compose up -d --build
-```
-
-- **Frontend Application**: `http://localhost:80`
-- **Backend API**: `http://localhost:8080/api`
-- **MySQL**: `localhost:3306`
-
----
-
-## 🧪 Testing
-
-### Backend Unit & Integration Tests
-Execute the full test suite (111 tests covering compatibility, checkout, builder, vouchers, AI fallback):
-```bash
-mvn clean test
-```
-
-### Frontend Production Build Test
-Validate compilation, asset bundling, and JSX syntax:
-```bash
-cd frontend
 npm run build
 ```
 
 ---
 
-## 👤 Demo Accounts (Test Environment)
+# 🚀 Getting Started
 
-| Role | Username | Password | Notes |
-| :--- | :--- | :--- | :--- |
-| **Customer** | `customer1` | `password123` | Default customer account for shopping & building PCs |
-| **Admin** | `admin` | `admin123` | Access to `/admin` dashboard and management tools |
+## Prerequisites
 
-*(Demo accounts are created for local development and demonstration testing only)*
+* Java 17+
+* Node.js 18+
+* MySQL 8.0
+* Maven 3.8+
+* Docker (optional)
+
+> Make sure the Java version matches the version configured in the project's Maven configuration.
+
+## 1. Clone the Repository
+
+```bash
+git clone https://github.com/worryveem/pc-builder-ecommerce.git
+cd pc-builder-ecommerce
+```
+
+## 2. Configure the Database
+
+Create a MySQL database for the application and configure the database connection in the backend environment configuration.
+
+Example:
+
+```text
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=pc_builder
+DB_USERNAME=root
+DB_PASSWORD=your_password
+```
+
+Do not commit real credentials or secrets to the repository.
+
+## 3. Start the Backend
+
+Using Maven Wrapper:
+
+```bash
+./mvnw spring-boot:run
+```
+
+On Windows PowerShell:
+
+```powershell
+.\mvnw.cmd spring-boot:run
+```
+
+The backend runs on:
+
+```text
+http://localhost:8080
+```
+
+## 4. Start the Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The frontend runs on:
+
+```text
+http://localhost:5173
+```
+
+---
+
+# 🐳 Docker
+
+The project includes Docker Compose configuration for running the application services.
+
+Start the application with:
+
+```bash
+docker compose up -d --build
+```
+
+Typical services:
+
+```text
+Frontend → :80
+Backend  → :8080
+MySQL    → :3306
+```
+
+---
+
+# 👤 Demo Accounts
+
+The following accounts can be used for local development and evaluation.
+
+| Role     | Username    | Password      |
+| -------- | ----------- | ------------- |
+| Customer | `customer1` | `password123` |
+| Admin    | `admin`     | `admin123`    |
+
+> These credentials are intended only for the local/demo environment. Do not use them in production.
+
+---
+
+# 🔮 Future Improvements
+
+Possible future improvements include:
+
+* More advanced PC performance estimation
+* Additional hardware compatibility rules
+* Payment gateway integration
+* Real-time inventory synchronization
+* PC build performance benchmarking
+* Automated deployment pipeline
+* Expanded monitoring and observability
+
+---
+
+# 👨‍💻 Author
+
+**Hoàng Đỗ**
+
+GitHub: [@worryveem](https://github.com/worryveem)
+
+---
+
+# 📄 License
+
+This project is developed for educational and portfolio purposes.

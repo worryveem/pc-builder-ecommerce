@@ -135,4 +135,116 @@ class GlobalExceptionHandlerTest {
         assertEquals("Internal Server Error", response.getError());
         assertEquals("Lỗi hệ thống bất ngờ", response.getMessage());
     }
+
+    @Test
+    @DisplayName("Handle UsernameNotFoundException returns 404 NOT_FOUND")
+    void testHandleUsernameNotFoundException() {
+        org.springframework.security.core.userdetails.UsernameNotFoundException ex = 
+                new org.springframework.security.core.userdetails.UsernameNotFoundException("User not found: testuser");
+
+        ErrorResponse response = globalExceptionHandler.handleUsernameNotFoundException(ex, webRequest);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatus());
+        assertEquals("Not Found", response.getError());
+        assertEquals("User not found: testuser", response.getMessage());
+    }
+
+    @Test
+    @DisplayName("Handle BadCredentialsException returns 401 UNAUTHORIZED")
+    void testHandleBadCredentialsException() {
+        org.springframework.security.authentication.BadCredentialsException ex = 
+                new org.springframework.security.authentication.BadCredentialsException("Bad credentials");
+
+        ErrorResponse response = globalExceptionHandler.handleBadCredentialsException(ex, webRequest);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.UNAUTHORIZED.value(), response.getStatus());
+        assertEquals("Unauthorized", response.getError());
+        assertEquals("Tên đăng nhập hoặc mật khẩu không chính xác!", response.getMessage());
+    }
+
+    @Test
+    @DisplayName("Handle ForbiddenException returns 403 FORBIDDEN")
+    void testHandleForbiddenException() {
+        ForbiddenException ex = new ForbiddenException("Bạn không có quyền truy cập");
+
+        ErrorResponse response = globalExceptionHandler.handleForbiddenException(ex, webRequest);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatus());
+        assertEquals("Forbidden", response.getError());
+        assertEquals("Bạn không có quyền truy cập", response.getMessage());
+    }
+
+    @Test
+    @DisplayName("Handle AccessDeniedException returns 403 FORBIDDEN")
+    void testHandleAccessDeniedException() {
+        org.springframework.security.access.AccessDeniedException ex = 
+                new org.springframework.security.access.AccessDeniedException("Access is denied");
+
+        ErrorResponse response = globalExceptionHandler.handleAccessDeniedException(ex, webRequest);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.FORBIDDEN.value(), response.getStatus());
+        assertEquals("Forbidden", response.getError());
+        assertEquals("Bạn không có quyền thực hiện thao tác này!", response.getMessage());
+    }
+
+    @Test
+    @DisplayName("Handle MethodArgumentTypeMismatchException returns 400 BAD_REQUEST")
+    void testHandleMethodArgumentTypeMismatchException() {
+        org.springframework.web.method.annotation.MethodArgumentTypeMismatchException ex = 
+                mock(org.springframework.web.method.annotation.MethodArgumentTypeMismatchException.class);
+        when(ex.getName()).thenReturn("id");
+
+        ErrorResponse response = globalExceptionHandler.handleMethodArgumentTypeMismatchException(ex, webRequest);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        assertEquals("Bad Request", response.getError());
+        assertEquals("Tham số 'id' có giá trị không hợp lệ!", response.getMessage());
+    }
+
+    @Test
+    @DisplayName("Handle HttpMessageNotReadableException returns 400 BAD_REQUEST")
+    void testHandleHttpMessageNotReadableException() {
+        org.springframework.http.converter.HttpMessageNotReadableException ex = 
+                mock(org.springframework.http.converter.HttpMessageNotReadableException.class);
+
+        ErrorResponse response = globalExceptionHandler.handleHttpMessageNotReadableException(ex, webRequest);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.BAD_REQUEST.value(), response.getStatus());
+        assertEquals("Bad Request", response.getError());
+        assertEquals("Dữ liệu yêu cầu gửi lên không đúng định dạng JSON!", response.getMessage());
+    }
+
+    @Test
+    @DisplayName("Handle DataIntegrityViolationException returns 409 CONFLICT")
+    void testHandleDataIntegrityViolationException() {
+        org.springframework.dao.DataIntegrityViolationException ex = 
+                new org.springframework.dao.DataIntegrityViolationException("FK constraint fail");
+
+        ErrorResponse response = globalExceptionHandler.handleDataIntegrityViolationException(ex, webRequest);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.CONFLICT.value(), response.getStatus());
+        assertEquals("Conflict", response.getError());
+        assertEquals("Dữ liệu bị trùng lặp hoặc vi phạm ràng buộc toàn vẹn hệ thống!", response.getMessage());
+    }
+
+    @Test
+    @DisplayName("Handle HttpRequestMethodNotSupportedException returns 405 METHOD_NOT_ALLOWED")
+    void testHandleHttpRequestMethodNotSupportedException() {
+        org.springframework.web.HttpRequestMethodNotSupportedException ex = 
+                new org.springframework.web.HttpRequestMethodNotSupportedException("POST");
+
+        ErrorResponse response = globalExceptionHandler.handleHttpRequestMethodNotSupportedException(ex, webRequest);
+
+        assertNotNull(response);
+        assertEquals(HttpStatus.METHOD_NOT_ALLOWED.value(), response.getStatus());
+        assertEquals("Method Not Allowed", response.getError());
+        assertEquals("Phương thức HTTP 'POST' không được hỗ trợ cho đường dẫn này!", response.getMessage());
+    }
 }
